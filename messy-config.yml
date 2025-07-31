@@ -1,0 +1,41 @@
+# messy-config.yml - Contains multiple linting issues
+---
+app_name:MyApp    
+version: 1.0.0
+
+# Server configuration
+server:
+host: 0.0.0.0
+  port:   8080
+    timeout: 30
+
+database:
+  type:postgresql
+  host:localhost
+  port: 5432
+  credentials:
+      username: admin
+    password: secret123
+
+# Features list with inconsistent formatting
+features: [user_auth,email_notifications, analytics,reporting]
+
+# Long description line that exceeds the recommended maximum line length and should be broken down into multiple lines for better readability
+description: "This is an extremely long description that violates the line length rule and should be reformatted to improve readability and maintainability of the YAML file and make it easier to work with"
+
+# Inconsistent boolean values
+debug_mode: yes
+production_ready:true
+maintenance: false
+
+# Trailing spaces and empty lines issues
+
+
+logging:
+  level: INFO  
+  file: /var/log/app.log	
+
+# Mixed quotes and escaping issues
+message: 'Don't use mixed quotes'
+path: "C:\Windows\System32"
+regex: "[a-zA-Z0-9]+"
