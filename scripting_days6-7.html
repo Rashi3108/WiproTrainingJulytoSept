@@ -1,0 +1,3765 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scripting & Automation - Days 6-7</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .slide {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            margin-bottom: 30px;
+            padding: 35px;
+            min-height: 85vh;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            page-break-after: always;
+            page-break-inside: avoid;
+        }
+
+        .slide-number {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            background: #667eea;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .author-credit {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #888;
+            font-size: 11px;
+            font-style: italic;
+            opacity: 0.7;
+            text-align: center;
+        }
+
+        .slide h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 15px;
+        }
+
+        .slide h2 {
+            color: #34495e;
+            font-size: 2em;
+            margin-bottom: 15px;
+            border-left: 5px solid #667eea;
+            padding-left: 15px;
+        }
+
+        .slide h3 {
+            color: #2c3e50;
+            font-size: 1.4em;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .slide p {
+            line-height: 1.6;
+            margin-bottom: 15px;
+            color: #34495e;
+            font-size: 1.1em;
+        }
+
+        .slide ul {
+            margin-left: 20px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            margin-bottom: 10px;
+            color: #34495e;
+            font-size: 1.05em;
+            line-height: 1.5;
+        }
+
+        .agenda-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .agenda-item {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            padding: 20px;
+            border-radius: 10px;
+            color: white;
+            text-align: center;
+        }
+
+        .agenda-item h4 {
+            font-size: 1.2em;
+            margin-bottom: 10px;
+        }
+
+        .concept-box {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin: 20px 0;
+            color: white;
+            text-align: center;
+        }
+
+        .example-box {
+            background: #f8f9fa;
+            border-left: 5px solid #28a745;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .example-box h4 {
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        .code-box {
+            background: #2d3748;
+            color: #cbd5e0;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+            font-size: 14px;
+        }
+
+        .activity-box {
+            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #e67e22;
+        }
+
+        .activity-box h4 {
+            color: #d35400;
+            margin-bottom: 10px;
+        }
+
+        .warning-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+
+        .warning-box h4 {
+            color: #856404;
+            margin-bottom: 10px;
+        }
+
+        @media print {
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            body {
+                background: white !important;
+                margin: 0;
+                padding: 0;
+                font-size: 12px;
+            }
+            
+            .presentation-container {
+                max-width: none !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            
+            .slide {
+                background: white !important;
+                box-shadow: none !important;
+                border-radius: 0 !important;
+                margin: 0 !important;
+                padding: 25px !important;
+                min-height: 95vh !important;
+                max-height: none !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+                display: block !important;
+                overflow: visible !important;
+            }
+            
+            .slide:last-child {
+                page-break-after: avoid !important;
+            }
+            
+            .slide h1 {
+                font-size: 1.8em !important;
+                margin-bottom: 15px !important;
+                padding-bottom: 10px !important;
+                line-height: 1.2 !important;
+            }
+            
+            .slide h2 {
+                font-size: 1.4em !important;
+                margin-bottom: 12px !important;
+                line-height: 1.3 !important;
+            }
+            
+            .slide h3 {
+                font-size: 1.2em !important;
+                margin-bottom: 10px !important;
+                margin-top: 15px !important;
+                line-height: 1.3 !important;
+            }
+            
+            .slide p {
+                font-size: 0.9em !important;
+                line-height: 1.3 !important;
+                margin-bottom: 8px !important;
+            }
+            
+            .slide li {
+                font-size: 0.85em !important;
+                line-height: 1.3 !important;
+                margin-bottom: 4px !important;
+            }
+            
+            .agenda-grid {
+                display: grid !important;
+                grid-template-columns: repeat(2, 1fr) !important;
+                gap: 10px !important;
+                margin-top: 15px !important;
+            }
+            
+            .code-box {
+                font-size: 0.8em !important;
+                padding: 12px !important;
+                line-height: 1.4 !important;
+                white-space: pre-wrap !important;
+                word-wrap: break-word !important;
+                background: #f5f5f5 !important;
+                color: #333 !important;
+                border: 1px solid #ddd !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Slide 1: Title Slide -->
+        <div class="slide">
+            <div class="slide-number">1</div>
+            <h1>🐍 Scripting & Automation</h1>
+            <div class="concept-box">
+                <h2>Days 6-7: DevOps Automation Through Code</h2>
+                <p style="font-size: 1.3em; margin-top: 15px;">Shell Scripting, Python Programming & Configuration Management</p>
+            </div>
+            <div style="text-align: center; margin-top: 30px;">
+                <p style="font-size: 1.2em; color: #667eea;"><strong>Training Period:</strong> 23rd July - 19th September, 2025</p>
+                <p style="font-size: 1.1em; margin-top: 15px;"><strong>Focus:</strong> Automation Scripts, Python for DevOps, YAML & Configuration as Code</p>
+            </div>
+            
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-top: 30px;">
+                <h3 style="color: #2c3e50; text-align: center; margin-bottom: 20px;">🎯 "Automate Everything" - The DevOps Mantra</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; text-align: center;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #e74c3c;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">⚡</div>
+                        <h4 style="color: #e74c3c;">Speed</h4>
+                        <p style="font-size: 0.9em; color: #666;">Scripts execute faster than humans</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #27ae60;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🎯</div>
+                        <h4 style="color: #27ae60;">Accuracy</h4>
+                        <p style="font-size: 0.9em; color: #666;">No human errors or typos</p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; border-left: 5px solid #3498db;">
+                        <div style="font-size: 2em; margin-bottom: 10px;">🔄</div>
+                        <h4 style="color: #3498db;">Consistency</h4>
+                        <p style="font-size: 0.9em; color: #666;">Same result every time</p>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 2: Days 6-7 Learning Roadmap -->
+        <div class="slide">
+            <div class="slide-number">2</div>
+            <h1>🗺️ Days 6-7: Learning Roadmap</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #ff6b6b, #ee5a52); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🚀 "From Manual Tasks to Automated Solutions"
+                    </h2>
+                </div>
+            </div>
+
+            <div class="agenda-grid">
+                <div class="agenda-item" style="background: linear-gradient(135deg, #ff6b6b, #ee5a52);">
+                    <h4>🐧 Day 6: Shell Scripting</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em; text-align: left;">
+                        <li>• Linux fundamentals & file system</li>
+                        <li>• Essential commands & navigation</li>
+                        <li>• Bash scripting basics</li>
+                        <li>• Variables, loops & conditions</li>
+                        <li>• File operations & text processing</li>
+                        <li>• System administration scripts</li>
+                    </ul>
+                </div>
+                
+                <div class="agenda-item" style="background: linear-gradient(135deg, #4ecdc4, #44a08d);">
+                    <h4>🐍 Day 6-7: Python for DevOps</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em; text-align: left;">
+                        <li>• Python syntax & data structures</li>
+                        <li>• File handling & system operations</li>
+                        <li>• API interactions & web requests</li>
+                        <li>• Error handling & logging</li>
+                        <li>• DevOps libraries & modules</li>
+                        <li>• Automation script development</li>
+                    </ul>
+                </div>
+                
+                <div class="agenda-item" style="background: linear-gradient(135deg, #45b7d1, #96c93d);">
+                    <h4>📄 Day 7: YAML & Configuration</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em; text-align: left;">
+                        <li>• YAML syntax & structure</li>
+                        <li>• Configuration file management</li>
+                        <li>• CI/CD pipeline configurations</li>
+                        <li>• Docker Compose files</li>
+                        <li>• Kubernetes manifests</li>
+                        <li>• Best practices & validation</li>
+                    </ul>
+                </div>
+                
+                <div class="agenda-item" style="background: linear-gradient(135deg, #f093fb, #f5576c);">
+                    <h4>🛠️ Hands-on Projects</h4>
+                    <ul style="list-style: none; padding: 0; font-size: 0.95em; text-align: left;">
+                        <li>• Server health monitoring script</li>
+                        <li>• Automated backup solution</li>
+                        <li>• Log analysis & reporting</li>
+                        <li>• API integration project</li>
+                        <li>• Configuration management</li>
+                        <li>• DevOps workflow automation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px; margin-top: 30px;">
+                <h3 style="color: white; text-align: center; margin-bottom: 15px;">🎓 By the End of Days 6-7, You Will:</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; font-size: 1.05em;">
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 8px 0;">✅ Write powerful shell scripts for system automation</li>
+                        <li style="margin: 8px 0;">✅ Develop Python programs for DevOps tasks</li>
+                        <li style="margin: 8px 0;">✅ Handle files, APIs, and system operations</li>
+                    </ul>
+                    <ul style="list-style: none; padding: 0;">
+                        <li style="margin: 8px 0;">✅ Create and manage YAML configurations</li>
+                        <li style="margin: 8px 0;">✅ Build automated monitoring solutions</li>
+                        <li style="margin: 8px 0;">✅ Implement configuration as code practices</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 4: Linux Fundamentals - The DevOps Foundation -->
+        <div class="slide">
+            <div class="slide-number">3</div>
+            <h1>🐧 Linux Fundamentals: The DevOps Foundation</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🌍 "90% of cloud servers run Linux - Master the foundation!"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Why Linux for DevOps -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🤔 Why Linux Dominates DevOps?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">📊 Market Reality:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li>96% of top 1 million web servers</li>
+                            <li>100% of supercomputers worldwide</li>
+                            <li>85% of smartphones (Android)</li>
+                            <li>All major cloud platforms</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">💪 DevOps Advantages:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li>Free and open source</li>
+                            <li>Powerful command-line tools</li>
+                            <li>Excellent for automation</li>
+                            <li>Stable and secure</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Linux File System -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">🗂️ Linux File System: Your Digital Filing Cabinet</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">🏠</div>
+                            <h4 style="color: #1976d2; margin-bottom: 8px;">/</h4>
+                            <p style="font-size: 0.85em; color: #666;">Root directory<br>"The main cabinet"</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">👤</div>
+                            <h4 style="color: #1976d2; margin-bottom: 8px;">/home</h4>
+                            <p style="font-size: 0.85em; color: #666;">User directories<br>"Your personal drawer"</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">⚙️</div>
+                            <h4 style="color: #1976d2; margin-bottom: 8px;">/etc</h4>
+                            <p style="font-size: 0.85em; color: #666;">Configuration files<br>"The settings manual"</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">📊</div>
+                            <h4 style="color: #1976d2; margin-bottom: 8px;">/var</h4>
+                            <p style="font-size: 0.85em; color: #666;">Variable data<br>"Logs & databases"</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">🔧</div>
+                            <h4 style="color: #1976d2; margin-bottom: 8px;">/usr</h4>
+                            <p style="font-size: 0.85em; color: #666;">User programs<br>"Application storage"</p>
+                        </div>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">💾</div>
+                            <h4 style="color: #1976d2; margin-bottom: 8px;">/tmp</h4>
+                            <p style="font-size: 0.85em; color: #666;">Temporary files<br>"Scratch paper"</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Essential Commands -->
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px;">
+                <h3 style="color: white; text-align: center; margin-bottom: 20px;">⌨️ Essential Linux Commands</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);">
+                        <h4 style="color: white; margin-bottom: 10px; text-align: center;">🧭 Navigation</h4>
+                        <div style="font-family: monospace; font-size: 0.9em;">
+                            <p style="margin: 5px 0;"><strong>pwd</strong> - where am I?</p>
+                            <p style="margin: 5px 0;"><strong>ls</strong> - what's here?</p>
+                            <p style="margin: 5px 0;"><strong>cd</strong> - go somewhere</p>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);">
+                        <h4 style="color: white; margin-bottom: 10px; text-align: center;">📁 File Operations</h4>
+                        <div style="font-family: monospace; font-size: 0.9em;">
+                            <p style="margin: 5px 0;"><strong>cp</strong> - copy files</p>
+                            <p style="margin: 5px 0;"><strong>mv</strong> - move/rename</p>
+                            <p style="margin: 5px 0;"><strong>rm</strong> - delete files</p>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);">
+                        <h4 style="color: white; margin-bottom: 10px; text-align: center;">👀 File Viewing</h4>
+                        <div style="font-family: monospace; font-size: 0.9em;">
+                            <p style="margin: 5px 0;"><strong>cat</strong> - show file content</p>
+                            <p style="margin: 5px 0;"><strong>less</strong> - page through file</p>
+                            <p style="margin: 5px 0;"><strong>head/tail</strong> - first/last lines</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 5: Essential Linux Text Processing Commands -->
+        <div class="slide">
+            <div class="slide-number">4</div>
+            <h1>🔍 Essential Linux Text Processing Commands</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #673ab7, #9c27b0); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        📚 "Understanding the tools before using them"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- grep Command -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🔍 grep - Global Regular Expression Print</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">🤔 What does grep do?</h4>
+                        <p style="color: #666; font-size: 0.95em; line-height: 1.4; margin-bottom: 15px;">
+                            <strong>grep</strong> searches for specific patterns (text) in files or input. Think of it as "Find" function in a text editor, but much more powerful.
+                        </p>
+                        <div style="background: #f0f8ff; padding: 12px; border-radius: 8px;">
+                            <strong style="color: #28a745;">💡 Simple Analogy:</strong><br>
+                            <span style="font-size: 0.9em; color: #666;">
+                                Like using Ctrl+F to find words in a document, but grep can search through thousands of files at once!
+                            </span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">📝 Common grep Examples:</h4>
+                        <div class="code-box"># Find lines containing "ERROR"
+grep "ERROR" logfile.txt
+
+# Case-insensitive search
+grep -i "error" logfile.txt
+
+# Count matching lines
+grep -c "WARNING" logfile.txt
+
+# Show line numbers
+grep -n "INFO" logfile.txt
+
+# Search in multiple files
+grep "password" *.conf</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- sort Command -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">📊 sort - Arrange Lines in Order</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🤔 What does sort do?</h4>
+                        <p style="color: #666; font-size: 0.95em; line-height: 1.4; margin-bottom: 15px;">
+                            <strong>sort</strong> arranges lines of text in alphabetical, numerical, or custom order. Essential for organizing data.
+                        </p>
+                        <div style="background: #f0f8ff; padding: 12px; border-radius: 8px;">
+                            <strong style="color: #1976d2;">💡 Simple Analogy:</strong><br>
+                            <span style="font-size: 0.9em; color: #666;">
+                                Like organizing a deck of cards - you can sort by number, suit, or any pattern you want!
+                            </span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">📝 Common sort Examples:</h4>
+                        <div class="code-box"># Sort lines alphabetically
+sort names.txt
+
+# Sort numbers properly
+sort -n numbers.txt
+
+# Reverse sort (Z to A)
+sort -r names.txt
+
+# Sort by specific column
+sort -k2 data.txt
+
+# Remove duplicates while sorting
+sort -u list.txt</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- uniq Command -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">🎯 uniq - Remove or Count Duplicates</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🤔 What does uniq do?</h4>
+                        <p style="color: #666; font-size: 0.95em; line-height: 1.4; margin-bottom: 15px;">
+                            <strong>uniq</strong> removes duplicate lines or counts how many times each line appears. Works best with sorted data.
+                        </p>
+                        <div style="background: #f0f8ff; padding: 12px; border-radius: 8px;">
+                            <strong style="color: #856404;">💡 Simple Analogy:</strong><br>
+                            <span style="font-size: 0.9em; color: #666;">
+                                Like removing duplicate contacts from your phone book, or counting how many times each name appears!
+                            </span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📝 Common uniq Examples:</h4>
+                        <div class="code-box"># Remove duplicate lines
+uniq data.txt
+
+# Count occurrences
+uniq -c data.txt
+
+# Show only duplicates
+uniq -d data.txt
+
+# Show only unique lines
+uniq -u data.txt
+
+# Common pattern: sort then uniq
+sort data.txt | uniq -c</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- sed and cut Commands -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">✂️ cut & sed - Text Extraction and Editing</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">✂️ cut - Extract Columns</h4>
+                        <p style="color: #666; font-size: 0.9em; line-height: 1.3; margin-bottom: 10px;">
+                            Extracts specific columns or characters from each line.
+                        </p>
+                        <div class="code-box"># Extract 1st column (space-separated)
+cut -d' ' -f1 file.txt
+
+# Extract characters 1-5
+cut -c1-5 file.txt
+
+# Extract multiple columns
+cut -d',' -f1,3 data.csv</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">🔧 sed - Stream Editor</h4>
+                        <p style="color: #666; font-size: 0.9em; line-height: 1.3; margin-bottom: 10px;">
+                            Powerful tool for find and replace operations.
+                        </p>
+                        <div class="code-box"># Replace first occurrence
+sed 's/old/new/' file.txt
+
+# Replace all occurrences
+sed 's/old/new/g' file.txt
+
+# Delete lines containing pattern
+sed '/pattern/d' file.txt</div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 6: Hands-On Linux Commands Workshop -->
+        <div class="slide">
+            <div class="slide-number">5</div>
+            <h1>⌨️ Hands-On Linux Commands Workshop</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #e67e22, #d35400); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🎯 "Practice makes perfect - Let's get our hands dirty!"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Exercise 1: Navigation & File Exploration -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">🧭 Exercise 1: Navigation & File Exploration</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">📝 Commands to Try:</h4>
+                        <div class="code-box"># Find out where you are
+pwd
+
+# See what's in current directory
+ls
+
+# See detailed file information
+ls -la
+
+# See hidden files
+ls -a
+
+# Navigate to home directory
+cd ~
+
+# Go to root directory
+cd /
+
+# Go back to previous directory
+cd -
+
+# Navigate to parent directory
+cd ..</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🎯 What You'll Learn:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li><strong>pwd</strong> - Shows current directory path</li>
+                            <li><strong>ls</strong> - Lists files and folders</li>
+                            <li><strong>ls -la</strong> - Shows permissions, size, date</li>
+                            <li><strong>cd ~</strong> - Goes to your home folder</li>
+                            <li><strong>cd /</strong> - Goes to system root</li>
+                            <li><strong>cd -</strong> - Goes to previous location</li>
+                            <li><strong>cd ..</strong> - Goes up one level</li>
+                        </ul>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong style="color: #1976d2;">💡 Pro Tip:</strong> Use <code>Tab</code> key for auto-completion!
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 2: File Operations -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">📁 Exercise 2: File & Directory Operations</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">🚀 Step-by-Step Practice:</h4>
+                    <div class="code-box"># Create a practice directory
+mkdir devops_practice
+
+cd devops_practice
+
+# Create some files
+touch server1.log server2.log config.txt
+
+# Create a file with content
+echo "Hello DevOps World!" > welcome.txt
+
+echo "This is line 2" >> welcome.txt
+
+# Create a subdirectory
+mkdir logs backup
+
+# Copy files
+cp welcome.txt backup/
+
+cp *.log logs/
+
+# List everything
+ls -la
+
+ls logs/
+
+ls backup/
+
+# Move and rename files
+mv config.txt settings.conf
+
+mv settings.conf backup/
+
+# View file contents
+cat welcome.txt
+
+head -n 1 welcome.txt
+
+tail -n 1 welcome.txt</div>
+                </div>
+            </div>
+
+            <!-- Exercise 3: Text Processing -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">📄 Exercise 3: Text Processing & Search</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📝 Create Sample Log File:</h4>
+                        <div class="code-box"># Create a sample log file
+cat > sample.log << EOF
+2024-01-15 10:30:15 INFO Server started
+2024-01-15 10:30:20 INFO Database connected
+2024-01-15 10:35:10 ERROR Connection timeout
+2024-01-15 10:35:15 WARN Retrying connection
+2024-01-15 10:35:20 INFO Connection restored
+2024-01-15 10:40:05 ERROR Disk space low
+2024-01-15 10:45:30 INFO Backup completed
+EOF</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🔍 Practice Text Commands:</h4>
+                        <div class="code-box"># Search for errors
+grep "ERROR" sample.log
+
+# Count lines
+wc -l sample.log
+
+# Count words
+wc -w sample.log
+
+# Show first 3 lines
+head -n 3 sample.log
+
+# Show last 2 lines
+tail -n 2 sample.log
+
+# Search and count
+grep -c "INFO" sample.log
+
+# Case insensitive search
+grep -i "error" sample.log</div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 6: Linux File Permissions & System Commands -->
+        <div class="slide">
+            <div class="slide-number">6</div>
+            <h1>🔐 Linux Permissions & System Commands</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #9c27b0, #673ab7); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🛡️ "Understanding who can do what with files"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Understanding File Permissions -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">🔍 Understanding File Permissions</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">📊 Permission Structure:</h4>
+                        <div class="code-box"># Example: -rwxr-xr--
+# Position: -rwx r-x r--
+#           |  |   |   |
+#           |  |   |   └── Others (everyone else)
+#           |  |   └────── Group (file's group)
+#           |  └────────── Owner (file creator)
+#           └───────────── File type (- = file, d = directory)
+
+# Permission meanings:
+# r = read (4)
+# w = write (2)  
+# x = execute (1)</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">🎯 Common Permission Patterns:</h4>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.9em;">
+                            <p style="margin: 5px 0;"><strong>755</strong> - rwxr-xr-x (executable files)</p>
+                            <p style="margin: 5px 0;"><strong>644</strong> - rw-r--r-- (regular files)</p>
+                            <p style="margin: 5px 0;"><strong>600</strong> - rw------- (private files)</p>
+                            <p style="margin: 5px 0;"><strong>777</strong> - rwxrwxrwx (full access - dangerous!)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hands-on Permission Exercise -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🛠️ Exercise 4: Working with Permissions</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #28a745; margin-bottom: 10px;">📝 Create and Check Permissions:</h4>
+                            <div class="code-box"># Create test files
+touch public_file.txt
+
+touch private_file.txt
+
+touch script.sh
+
+# Check current permissions
+ls -la
+
+# View permissions in detail
+ls -l public_file.txt
+
+# Check who you are
+whoami
+
+groups</div>
+                        </div>
+                        <div>
+                            <h4 style="color: #28a745; margin-bottom: 10px;">🔧 Modify Permissions:</h4>
+                            <div class="code-box"># Make file private (owner only)
+chmod 600 private_file.txt
+
+# Make script executable
+chmod +x script.sh
+
+# or alternatively
+chmod 755 script.sh
+
+# Make file readable by everyone
+chmod 644 public_file.txt
+
+# Remove write permission for group/others
+chmod go-w public_file.txt
+
+# Check changes
+ls -la</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- System Information Commands -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">💻 Exercise 5: System Information Commands</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📊 System Status:</h4>
+                        <div class="code-box"># Check system uptime
+uptime
+
+# See current date and time
+date
+
+# Check disk usage
+df -h
+
+# Check memory usage
+free -h
+
+# See running processes
+ps aux | head -10
+
+# Check current users
+who
+
+# System information
+uname -a</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🔍 Process Management:</h4>
+                        <div class="code-box"># Find processes by name
+ps aux | grep bash
+
+# Check CPU usage
+top -n 1
+
+# Find files by name
+find . -name "*.txt"
+
+# Find files by size
+find . -size +1M
+
+# Check network connections
+netstat -tuln
+
+# Check environment variables
+env | head -5</div>
+                    </div>
+                </div>
+                
+                <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">🎯 Challenge Exercise:</h4>
+                    <p style="color: #666; margin-bottom: 10px;">Create a directory structure for a web application and set appropriate permissions:</p>
+                    <div class="code-box"># Create directory structure
+mkdir -p webapp/{public,private,logs,config}
+
+# Create sample files
+touch webapp/public/index.html
+
+touch webapp/private/database.conf
+
+touch webapp/logs/app.log
+
+touch webapp/config/settings.ini
+
+# Set appropriate permissions
+chmod 755 webapp/public/
+
+chmod 644 webapp/public/index.html
+
+chmod 700 webapp/private/
+
+chmod 600 webapp/private/database.conf
+
+chmod 755 webapp/logs/
+
+chmod 644 webapp/logs/app.log
+
+# Verify permissions
+ls -la webapp/
+
+ls -la webapp/*/</div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 7: Linux Text Processing & Pipes -->
+        <div class="slide">
+            <div class="slide-number">7</div>
+            <h1>🔧 Linux Text Processing & Pipes Mastery</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #ff5722, #e64a19); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🚰 "Connecting commands like water through pipes"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Understanding Pipes -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">🚰 Understanding Pipes & Redirection</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">📝 Pipe Concept:</h4>
+                        <p style="color: #666; font-size: 0.95em; margin-bottom: 15px;">
+                            Pipes (<code>|</code>) take output from one command and send it as input to another command.
+                        </p>
+                        <div class="code-box"># Basic pipe example
+command1 | command2 | command3
+
+# Real example
+ls -la | grep ".txt" | wc -l
+
+# This means:
+# 1. ls -la (list files)
+# 2. | grep ".txt" (filter for .txt files)  
+# 3. | wc -l (count lines)</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">📤 Redirection Operators:</h4>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; font-family: monospace; font-size: 0.9em;">
+                            <p style="margin: 5px 0;"><strong>&gt;</strong> - Redirect output (overwrite)</p>
+                            <p style="margin: 5px 0;"><strong>&gt;&gt;</strong> - Redirect output (append)</p>
+                            <p style="margin: 5px 0;"><strong>&lt;</strong> - Redirect input</p>
+                            <p style="margin: 5px 0;"><strong>2&gt;</strong> - Redirect errors</p>
+                            <p style="margin: 5px 0;"><strong>&amp;&gt;</strong> - Redirect all output</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 6: Text Processing -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">📊 Exercise 6: Log Analysis with Pipes</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">🗂️ First, Create a Realistic Log File:</h4>
+                    <div class="code-box"># Create a comprehensive log file
+cat > server.log << 'EOF'
+2024-01-15 08:30:15 INFO [web-01] Server started successfully
+2024-01-15 08:30:20 INFO [db-01] Database connection established
+2024-01-15 08:35:10 ERROR [web-01] Connection timeout to database
+2024-01-15 08:35:15 WARN [web-01] Retrying database connection
+2024-01-15 08:35:20 INFO [web-01] Database connection restored
+2024-01-15 08:40:05 ERROR [disk] Disk space low on /var partition
+2024-01-15 08:45:30 INFO [backup] Daily backup completed successfully
+2024-01-15 09:15:45 ERROR [web-02] Memory usage critical: 95%
+2024-01-15 09:20:10 WARN [web-02] High CPU usage detected: 85%
+2024-01-15 09:25:30 INFO [web-02] System performance normalized
+2024-01-15 10:30:15 ERROR [api] Rate limit exceeded for user 12345
+2024-01-15 10:35:20 INFO [api] User authentication successful
+EOF</div>
+                    
+                    <div style="margin-top: 20px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">🔍 Now Practice Text Processing:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div class="code-box"># Count total log entries
+wc -l server.log
+
+# Find all ERROR entries
+grep "ERROR" server.log
+
+# Count ERROR entries
+grep -c "ERROR" server.log
+
+# Find errors and warnings
+grep -E "(ERROR|WARN)" server.log
+
+# Show only timestamps and messages
+cut -d' ' -f1,2,4- server.log</div>
+                            <div class="code-box"># Get unique server names
+grep -o '\[.*\]' server.log | sort | uniq
+
+# Find web server issues
+grep "web-" server.log
+
+# Show last 5 log entries
+tail -n 5 server.log
+
+# Show first 3 entries
+head -n 3 server.log
+
+# Search case-insensitive
+grep -i "database" server.log</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Advanced Pipe Combinations -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">🚀 Exercise 7: Advanced Pipe Combinations</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">🎯 Real DevOps Scenarios:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h5 style="color: #856404; margin-bottom: 8px;">📈 Log Analysis Pipelines:</h5>
+                            <div class="code-box"># Find top error sources
+grep "ERROR" server.log | \
+  cut -d' ' -f4 | \
+  sort | uniq -c | \
+  sort -nr
+
+# Get hourly error count
+grep "ERROR" server.log | \
+  cut -d' ' -f2 | \
+  cut -d':' -f1 | \
+  sort | uniq -c
+
+# Find critical memory issues
+grep "Memory usage critical" server.log | \
+  wc -l</div>
+                        </div>
+                        <div>
+                            <h5 style="color: #856404; margin-bottom: 8px;">🔍 System Monitoring:</h5>
+                            <div class="code-box"># Find largest files
+ls -la | sort -k5 -nr | head -5
+
+# Count files by extension
+ls -1 | grep '\.' | \
+  sed 's/.*\.//' | \
+  sort | uniq -c | \
+  sort -nr
+
+# Monitor disk usage
+df -h | grep -v "tmpfs" | \
+  awk '{print $5 " " $6}' | \
+  sort -nr</div>
+                        </div>
+                    </div>
+                    
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🏆 Master Challenge:</h4>
+                        <p style="color: #666; margin-bottom: 10px;">Create a one-liner to find the most active hour in the log file:</p>
+                        <div class="code-box"># Solution: Extract hour, count occurrences, sort by count
+cat server.log | \
+  cut -d' ' -f2 | \
+  cut -d':' -f1 | \
+  sort | uniq -c | \
+  sort -nr | \
+  head -1</div>
+                        <p style="color: #666; font-size: 0.9em; margin-top: 10px;">
+                            <strong>Explanation:</strong> This pipeline extracts the hour from each log entry, counts how many times each hour appears, sorts by count (highest first), and shows the top result.
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 8: Shell Scripting Basics -->
+        <div class="slide">
+            <div class="slide-number">8</div>
+            <h1>📜 Shell Scripting: Automating Linux Tasks</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #ff9800, #f57c00); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🤖 "Turn repetitive commands into powerful scripts"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- What is Shell Scripting -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">🤔 What is Shell Scripting?</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 15px;">
+                    <p style="color: #856404; font-size: 1.1em; margin-bottom: 15px;">
+                        <strong>Simple Definition:</strong> A shell script is a file containing a series of commands that the shell can execute automatically.
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #856404;">❌ Without Scripts:</h4>
+                            <ul style="color: #666; font-size: 0.9em; line-height: 1.3;">
+                                <li>Type same commands repeatedly</li>
+                                <li>Risk of typos and errors</li>
+                                <li>Time-consuming manual work</li>
+                                <li>Hard to share procedures</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <h4 style="color: #856404;">✅ With Scripts:</h4>
+                            <ul style="color: #666; font-size: 0.9em; line-height: 1.3;">
+                                <li>Run complex tasks with one command</li>
+                                <li>Consistent execution every time</li>
+                                <li>Save time and reduce errors</li>
+                                <li>Easy to share and version control</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Your First Shell Script -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🚀 Your First Shell Script</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 hello_devops.sh</h4>
+                    <div class="code-box">#!/bin/bash
+# This is a comment - my first DevOps script!
+
+echo "Hello, DevOps World!"
+echo "Today is: $(date)"
+echo "Current user: $(whoami)"
+echo "Current directory: $(pwd)"
+
+# Let's check system info
+echo "System uptime:"
+uptime</div>
+                    <div style="margin-top: 15px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">🏃‍♂️ How to run it:</h4>
+                        <div class="code-box">chmod +x hello_devops.sh
+./hello_devops.sh</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Script Components -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">🧩 Shell Script Components</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">📋 Essential Elements:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.3;">
+                            <li><strong>#!/bin/bash</strong> - Shebang line</li>
+                            <li><strong># comments</strong> - Documentation</li>
+                            <li><strong>echo</strong> - Print output</li>
+                            <li><strong>$(command)</strong> - Command substitution</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">🔧 Advanced Features:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.3;">
+                            <li><strong>Variables</strong> - Store data</li>
+                            <li><strong>Loops</strong> - Repeat actions</li>
+                            <li><strong>Conditions</strong> - Make decisions</li>
+                            <li><strong>Functions</strong> - Reusable code</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 9: Advanced Shell Scripting -->
+        <div class="slide">
+            <div class="slide-number">9</div>
+            <h1>🔧 Advanced Shell Scripting: Variables, Loops & Logic</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🧠 "Making scripts smart and dynamic"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Variables in Shell Scripts -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">📦 Variables: Storing Information</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #1976d2; margin-bottom: 10px;">📝 Basic Variables:</h4>
+                            <div class="code-box">#!/bin/bash
+
+# Define variables
+SERVER_NAME="web-server-01"
+PORT=8080
+LOG_FILE="/var/log/app.log"
+
+# Use variables
+echo "Checking $SERVER_NAME"
+echo "Port: $PORT"
+echo "Log file: $LOG_FILE"</div>
+                        </div>
+                        <div>
+                            <h4 style="color: #1976d2; margin-bottom: 10px;">🔄 Command Variables:</h4>
+                            <div class="code-box">#!/bin/bash
+
+# Store command output
+CURRENT_DATE=$(date +%Y-%m-%d)
+DISK_USAGE=$(df -h / | tail -1)
+USER_COUNT=$(who | wc -l)
+
+echo "Date: $CURRENT_DATE"
+echo "Disk: $DISK_USAGE"
+echo "Users online: $USER_COUNT"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Loops and Conditions -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">🔄 Loops & Conditions: Smart Automation</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">🔁 For Loop Example:</h4>
+                        <div class="code-box">#!/bin/bash
+
+# Check multiple servers
+SERVERS=("web1" "web2" "web3")
+
+for server in "${SERVERS[@]}"; do
+    echo "Pinging $server..."
+    if ping -c 1 $server &> /dev/null; then
+        echo "✅ $server is UP"
+    else
+        echo "❌ $server is DOWN"
+    fi
+done</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">❓ If-Else Logic:</h4>
+                        <div class="code-box">#!/bin/bash
+
+# Check disk space
+DISK_USAGE=$(df / | tail -1 | awk '{print $5}' | sed 's/%//')
+
+if [ $DISK_USAGE -gt 80 ]; then
+    echo "🚨 ALERT: Disk usage is ${DISK_USAGE}%"
+    echo "Cleaning up logs..."
+    # Add cleanup commands here
+elif [ $DISK_USAGE -gt 60 ]; then
+    echo "⚠️ WARNING: Disk usage is ${DISK_USAGE}%"
+else
+    echo "✅ Disk usage is healthy: ${DISK_USAGE}%"
+fi</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real DevOps Script Example -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🚀 Real DevOps Script: Server Health Check</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <div class="code-box">#!/bin/bash
+# server_health_check.sh - Complete server monitoring script
+
+LOG_FILE="/var/log/health_check.log"
+DATE=$(date '+%Y-%m-%d %H:%M:%S')
+
+echo "[$DATE] Starting server health check..." | tee -a $LOG_FILE
+
+# Check CPU usage
+CPU_USAGE=$(top -bn1 | grep "Cpu(s)" | awk '{print $2}' | sed 's/%us,//')
+echo "CPU Usage: $CPU_USAGE%" | tee -a $LOG_FILE
+
+# Check memory usage
+MEMORY_USAGE=$(free | grep Mem | awk '{printf("%.2f%%", $3/$2 * 100.0)}')
+echo "Memory Usage: $MEMORY_USAGE" | tee -a $LOG_FILE
+
+# Check disk space
+DISK_USAGE=$(df -h / | tail -1 | awk '{print $5}')
+echo "Disk Usage: $DISK_USAGE" | tee -a $LOG_FILE
+
+# Check running services
+SERVICES=("nginx" "mysql" "redis")
+for service in "${SERVICES[@]}"; do
+    if systemctl is-active --quiet $service; then
+        echo "✅ $service is running" | tee -a $LOG_FILE
+    else
+        echo "❌ $service is not running" | tee -a $LOG_FILE
+    fi
+done
+
+echo "[$DATE] Health check completed!" | tee -a $LOG_FILE</div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 10: Python for DevOps Introduction -->
+        <div class="slide">
+            <div class="slide-number">10</div>
+            <h1>🐍 Python for DevOps: The Automation Powerhouse</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #3776ab, #ffd43b); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🚀 "Simple syntax, powerful capabilities"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Why Python for DevOps -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #3776ab;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">🤔 Why Python Dominates DevOps?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #3776ab; margin-bottom: 10px;">📊 Industry Facts:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li>Most popular language for automation</li>
+                            <li>Used by Netflix, Google, Instagram</li>
+                            <li>Huge ecosystem of DevOps libraries</li>
+                            <li>Easy to learn and maintain</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #3776ab; margin-bottom: 10px;">💪 DevOps Superpowers:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li>API integrations made simple</li>
+                            <li>Powerful text processing</li>
+                            <li>Cross-platform compatibility</li>
+                            <li>Rich standard library</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Python vs Shell Comparison -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">⚖️ Python vs Shell: When to Use What?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #28a745;">
+                        <h4 style="color: #28a745; margin-bottom: 10px; text-align: center;">🐚 Use Shell When:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.3;">
+                            <li>Simple file operations</li>
+                            <li>Chaining Linux commands</li>
+                            <li>Quick one-liners</li>
+                            <li>System administration tasks</li>
+                            <li>Startup scripts</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #3776ab;">
+                        <h4 style="color: #3776ab; margin-bottom: 10px; text-align: center;">🐍 Use Python When:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.3;">
+                            <li>Complex data processing</li>
+                            <li>API interactions</li>
+                            <li>Error handling needed</li>
+                            <li>Cross-platform scripts</li>
+                            <li>Advanced automation</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Python Basics for DevOps -->
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 25px; border-radius: 15px;">
+                <h3 style="color: white; text-align: center; margin-bottom: 20px;">🎯 Python Basics You Need for DevOps</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);">
+                        <h4 style="color: white; margin-bottom: 10px; text-align: center;">📦 Data Types</h4>
+                        <div style="font-family: monospace; font-size: 0.85em;">
+                            <p style="margin: 3px 0;">strings = "text"</p>
+                            <p style="margin: 3px 0;">numbers = 42</p>
+                            <p style="margin: 3px 0;">lists = [1, 2, 3]</p>
+                            <p style="margin: 3px 0;">dicts = {"key": "value"}</p>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);">
+                        <h4 style="color: white; margin-bottom: 10px; text-align: center;">🔄 Control Flow</h4>
+                        <div style="font-family: monospace; font-size: 0.85em;">
+                            <p style="margin: 3px 0;">if condition:</p>
+                            <p style="margin: 3px 0;">&nbsp;&nbsp;do_something()</p>
+                            <p style="margin: 3px 0;">for item in list:</p>
+                            <p style="margin: 3px 0;">&nbsp;&nbsp;process(item)</p>
+                        </div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.1); padding: 15px; border-radius: 10px; backdrop-filter: blur(5px);">
+                        <h4 style="color: white; margin-bottom: 10px; text-align: center;">📚 Libraries</h4>
+                        <div style="font-family: monospace; font-size: 0.85em;">
+                            <p style="margin: 3px 0;">import os</p>
+                            <p style="margin: 3px 0;">import requests</p>
+                            <p style="margin: 3px 0;">import json</p>
+                            <p style="margin: 3px 0;">import subprocess</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 11: Python Variables & Fundamentals -->
+        <div class="slide">
+            <div class="slide-number">11</div>
+            <h1>🐍 Python Variables & Fundamentals</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #3776ab, #ffd43b); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        📊 Building Blocks of Python Programming
+                    </h2>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Variables Declaration -->
+                <div class="concept-box">
+                    <h3>🏷️ Variable Declaration</h3>
+                    <div class="code-block">
+                        <pre><code># Python variables are dynamically typed
+name = "DevOps Engineer"
+age = 25
+salary = 75000.50
+is_certified = True
+
+# Multiple assignment
+x, y, z = 1, 2, 3
+a = b = c = 100</code></pre>
+                    </div>
+                </div>
+
+                <!-- Data Types -->
+                <div class="concept-box">
+                    <h3>📋 Data Types</h3>
+                    <div class="code-block">
+                        <pre><code># Basic data types
+text = "Hello World"        # str
+number = 42                 # int
+decimal = 3.14             # float
+flag = True                # bool
+items = [1, 2, 3]          # list
+config = {"env": "prod"}   # dict
+coords = (10, 20)          # tuple</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                <!-- Input/Output -->
+                <div class="concept-box">
+                    <h3>💬 Input/Output</h3>
+                    <div class="code-block">
+                        <pre><code># Getting user input
+name = input("Enter your name: ")
+age = int(input("Enter age: "))
+
+# Output with formatting
+print(f"Hello {name}!")
+print(f"You are {age} years old")
+
+# Multiple outputs
+print("Server:", "nginx", "Status:", "running")</code></pre>
+                    </div>
+                </div>
+
+                <!-- Conditional Statements -->
+                <div class="concept-box">
+                    <h3>🔀 Conditional Statements</h3>
+                    <div class="code-block">
+                        <pre><code># Simple conditions
+server_status = "running"
+
+if server_status == "running":
+    print("✅ Server is healthy")
+elif server_status == "stopped":
+    print("⚠️ Server is down")
+else:
+    print("❓ Unknown status")</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                <!-- Loops -->
+                <div class="concept-box">
+                    <h3>🔄 Loops</h3>
+                    <div class="code-block">
+                        <pre><code># For loop
+servers = ["web1", "web2", "db1"]
+for server in servers:
+    print(f"Checking {server}...")
+
+# While loop
+count = 0
+while count < 3:
+    print(f"Attempt {count + 1}")
+    count += 1
+
+# Range loop
+for i in range(1, 6):
+    print(f"Port 808{i}")</code></pre>
+                    </div>
+                </div>
+
+                <!-- Functions & Code Reusability -->
+                <div class="concept-box">
+                    <h3>⚙️ Functions & Reusability</h3>
+                    <div class="code-block">
+                        <pre><code># Function definition
+def check_server_health(server_name, port=80):
+    """Check if server is responding"""
+    print(f"Checking {server_name}:{port}")
+    return "healthy"
+
+# Function usage
+status = check_server_health("web-server")
+result = check_server_health("api-server", 8080)
+
+# Lambda functions
+square = lambda x: x ** 2
+print(square(5))  # Output: 25</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 15px; border-radius: 10px; margin-top: 20px; text-align: center;">
+                <h3 style="color: white; margin: 0;">💡 Key Takeaway</h3>
+                <p style="margin: 10px 0 0 0; font-size: 1.1em;">Python's simplicity and readability make it perfect for DevOps automation tasks!</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Simple Python Program & Execution Flow -->
+        <div class="slide">
+            <div class="slide-number">12</div>
+            <h1>🔄 Python Program Execution Flow</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #3776ab, #ffd43b); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        📝 "Understanding how Python executes your code step by step"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Simple Python Program -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">📝 Simple Python Program Example</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">💻 server_health.py</h4>
+                    <div class="code-box">#!/usr/bin/env python3
+"""
+Simple Server Health Check Program
+Demonstrates basic Python concepts and execution flow
+"""
+
+# Step 1: Import required modules
+import datetime
+import random
+
+# Step 2: Define variables
+server_name = "web-server-01"
+max_cpu_threshold = 80
+max_memory_threshold = 75
+
+# Step 3: Define functions
+def get_current_time():
+    """Get current timestamp"""
+    return datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def simulate_server_metrics():
+    """Simulate server CPU and memory usage"""
+    cpu_usage = random.randint(20, 95)
+    memory_usage = random.randint(30, 90)
+    return cpu_usage, memory_usage
+
+def check_server_health(cpu, memory, cpu_limit, memory_limit):
+    """Check if server metrics are within acceptable limits"""
+    status = "HEALTHY"
+    alerts = []
+    
+    if cpu > cpu_limit:
+        status = "WARNING"
+        alerts.append(f"High CPU usage: {cpu}%")
+    
+    if memory > memory_limit:
+        status = "CRITICAL" if status == "WARNING" else "WARNING"
+        alerts.append(f"High memory usage: {memory}%")
+    
+    return status, alerts
+
+def display_results(server, timestamp, cpu, memory, status, alerts):
+    """Display the health check results"""
+    print("=" * 50)
+    print("🖥️  SERVER HEALTH REPORT")
+    print("=" * 50)
+    print(f"Server: {server}")
+    print(f"Timestamp: {timestamp}")
+    print(f"CPU Usage: {cpu}%")
+    print(f"Memory Usage: {memory}%")
+    print(f"Status: {status}")
+    
+    if alerts:
+        print("\n🚨 ALERTS:")
+        for alert in alerts:
+            print(f"  - {alert}")
+    else:
+        print("\n✅ All systems normal")
+
+# Step 4: Main program execution
+def main():
+    """Main function - program entry point"""
+    print("🚀 Starting server health check...")
+    
+    # Get current time
+    current_time = get_current_time()
+    
+    # Get server metrics
+    cpu_usage, memory_usage = simulate_server_metrics()
+    
+    # Check health status
+    health_status, alert_list = check_server_health(
+        cpu_usage, 
+        memory_usage, 
+        max_cpu_threshold, 
+        max_memory_threshold
+    )
+    
+    # Display results
+    display_results(
+        server_name, 
+        current_time, 
+        cpu_usage, 
+        memory_usage, 
+        health_status, 
+        alert_list
+    )
+    
+    print("\n🏁 Health check completed!")
+
+# Step 5: Program entry point
+if __name__ == "__main__":
+    main()</div>
+                </div>
+            </div>
+
+            <!-- Execution Flow Explanation -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">🔄 Step-by-Step Execution Flow</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">📋 Execution Order:</h4>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <div style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+                                <p style="margin: 5px 0;"><strong>1.</strong> Python reads the entire file</p>
+                                <p style="margin: 5px 0;"><strong>2.</strong> Imports modules (datetime, random)</p>
+                                <p style="margin: 5px 0;"><strong>3.</strong> Creates variables (server_name, thresholds)</p>
+                                <p style="margin: 5px 0;"><strong>4.</strong> Defines functions (stores in memory)</p>
+                                <p style="margin: 5px 0;"><strong>5.</strong> Checks if __name__ == "__main__"</p>
+                                <p style="margin: 5px 0;"><strong>6.</strong> Calls main() function</p>
+                                <p style="margin: 5px 0;"><strong>7.</strong> Executes main() step by step</p>
+                                <p style="margin: 5px 0;"><strong>8.</strong> Program ends</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🎯 What Happens in main():</h4>
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <div style="font-family: monospace; font-size: 0.9em; line-height: 1.6;">
+                                <p style="margin: 5px 0;"><strong>A.</strong> Print "Starting health check..."</p>
+                                <p style="margin: 5px 0;"><strong>B.</strong> Call get_current_time()</p>
+                                <p style="margin: 5px 0;"><strong>C.</strong> Call simulate_server_metrics()</p>
+                                <p style="margin: 5px 0;"><strong>D.</strong> Call check_server_health()</p>
+                                <p style="margin: 5px 0;"><strong>E.</strong> Call display_results()</p>
+                                <p style="margin: 5px 0;"><strong>F.</strong> Print "Health check completed!"</p>
+                                <p style="margin: 5px 0;"><strong>G.</strong> Return to Python (program ends)</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Visual Flow Diagram -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">📊 Visual Execution Flow</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; text-align: center;">
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 10px; border: 2px solid #28a745;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">📥</div>
+                            <h4 style="color: #28a745; margin-bottom: 5px; font-size: 0.9em;">START</h4>
+                            <p style="font-size: 0.8em; color: #666;">Python loads<br>the script</p>
+                        </div>
+                        <div style="background: #e3f2fd; padding: 15px; border-radius: 10px; border: 2px solid #2196f3;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">⚙️</div>
+                            <h4 style="color: #2196f3; margin-bottom: 5px; font-size: 0.9em;">SETUP</h4>
+                            <p style="font-size: 0.8em; color: #666;">Import modules<br>Define variables</p>
+                        </div>
+                        <div style="background: #f3e5f5; padding: 15px; border-radius: 10px; border: 2px solid #9c27b0;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">🔄</div>
+                            <h4 style="color: #9c27b0; margin-bottom: 5px; font-size: 0.9em;">EXECUTE</h4>
+                            <p style="font-size: 0.8em; color: #666;">Run main()<br>Call functions</p>
+                        </div>
+                        <div style="background: #fff3cd; padding: 15px; border-radius: 10px; border: 2px solid #ffc107;">
+                            <div style="font-size: 2em; margin-bottom: 8px;">🏁</div>
+                            <h4 style="color: #856404; margin-bottom: 5px; font-size: 0.9em;">END</h4>
+                            <p style="font-size: 0.8em; color: #666;">Display results<br>Program exits</p>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🎯 Key Execution Concepts:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4; margin: 0; padding-left: 20px;">
+                            <li><strong>Sequential execution:</strong> Python runs code line by line, top to bottom</li>
+                            <li><strong>Function definitions:</strong> Functions are stored in memory but not executed until called</li>
+                            <li><strong>Main guard:</strong> <code>if __name__ == "__main__":</code> ensures main() only runs when script is executed directly</li>
+                            <li><strong>Function calls:</strong> When a function is called, Python jumps to that function, executes it, then returns</li>
+                            <li><strong>Variable scope:</strong> Variables defined in functions are local, global variables are accessible everywhere</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 13: Python for AWS Lambda & Cloud Automation -->
+        <div class="slide">
+            <div class="slide-number">13</div>
+            <h1>☁️ Python for AWS Lambda & Cloud Automation</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #ff9900, #ff6600); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🚀 "Serverless automation with Python - the DevOps game changer"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- AWS Lambda Introduction -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">🤔 What is AWS Lambda?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📝 Simple Definition:</h4>
+                        <p style="color: #666; font-size: 1.05em; line-height: 1.5; margin-bottom: 15px;">
+                            AWS Lambda lets you run Python code in the cloud without managing servers. You just upload your code, and AWS runs it automatically when triggered.
+                        </p>
+                        <div style="background: #f0f8ff; padding: 12px; border-radius: 8px;">
+                            <strong style="color: #856404;">💡 Think of it as:</strong><br>
+                            <span style="font-size: 0.9em; color: #666;">
+                                A Python function that lives in the cloud and wakes up only when needed!
+                            </span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🎯 Key Benefits:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li><strong>No servers to manage</strong> - AWS handles everything</li>
+                            <li><strong>Pay per use</strong> - Only charged when code runs</li>
+                            <li><strong>Auto-scaling</strong> - Handles any amount of traffic</li>
+                            <li><strong>Event-driven</strong> - Responds to triggers automatically</li>
+                            <li><strong>Fast deployment</strong> - Upload code and it's live</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Real AWS Lambda Example -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🔧 Real AWS Lambda Example: Automated Backup</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 lambda_backup.py - Automatic EC2 Snapshot Creation</h4>
+                    <div class="code-box">import json
+import boto3
+from datetime import datetime, timedelta
+
+def lambda_handler(event, context):
+    """
+    AWS Lambda function to automatically create EC2 snapshots
+    Triggered daily by CloudWatch Events
+    """
+    
+    # Initialize AWS clients
+    ec2 = boto3.client('ec2')
+    
+    try:
+        # Get all EC2 instances with backup tag
+        response = ec2.describe_instances(
+            Filters=[
+                {
+                    'Name': 'tag:AutoBackup',
+                    'Values': ['true']
+                },
+                {
+                    'Name': 'instance-state-name',
+                    'Values': ['running', 'stopped']
+                }
+            ]
+        )
+        
+        snapshots_created = 0
+        
+        # Process each instance
+        for reservation in response['Reservations']:
+            for instance in reservation['Instances']:
+                instance_id = instance['InstanceId']
+                instance_name = 'Unknown'
+                
+                # Get instance name from tags
+                for tag in instance.get('Tags', []):
+                    if tag['Key'] == 'Name':
+                        instance_name = tag['Value']
+                        break
+                
+                # Create snapshots for each volume
+                for volume in instance.get('BlockDeviceMappings', []):
+                    volume_id = volume['Ebs']['VolumeId']
+                    
+                    # Create snapshot
+                    snapshot_description = f"Auto backup of {instance_name} ({instance_id}) - {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"
+                    
+                    snapshot = ec2.create_snapshot(
+                        VolumeId=volume_id,
+                        Description=snapshot_description
+                    )
+                    
+                    # Tag the snapshot
+                    ec2.create_tags(
+                        Resources=[snapshot['SnapshotId']],
+                        Tags=[
+                            {'Key': 'Name', 'Value': f"Auto-backup-{instance_name}"},
+                            {'Key': 'InstanceId', 'Value': instance_id},
+                            {'Key': 'CreatedBy', 'Value': 'Lambda-AutoBackup'},
+                            {'Key': 'DeleteAfter', 'Value': (datetime.now() + timedelta(days=7)).strftime('%Y-%m-%d')}
+                        ]
+                    )
+                    
+                    snapshots_created += 1
+                    print(f"Created snapshot {snapshot['SnapshotId']} for instance {instance_name}")
+        
+        # Clean up old snapshots (older than 7 days)
+        cleanup_old_snapshots(ec2)
+        
+        return {
+            'statusCode': 200,
+            'body': json.dumps({
+                'message': f'Successfully created {snapshots_created} snapshots',
+                'snapshots_created': snapshots_created,
+                'timestamp': datetime.now().isoformat()
+            })
+        }
+        
+    except Exception as e:
+        print(f"Error: {str(e)}")
+        return {
+            'statusCode': 500,
+            'body': json.dumps({
+                'error': str(e),
+                'timestamp': datetime.now().isoformat()
+            })
+        }
+
+def cleanup_old_snapshots(ec2_client):
+    """Remove snapshots older than retention period"""
+    try:
+        # Get snapshots created by this Lambda
+        snapshots = ec2_client.describe_snapshots(
+            OwnerIds=['self'],
+            Filters=[
+                {'Name': 'tag:CreatedBy', 'Values': ['Lambda-AutoBackup']}
+            ]
+        )
+        
+        deleted_count = 0
+        today = datetime.now().date()
+        
+        for snapshot in snapshots['Snapshots']:
+            # Check DeleteAfter tag
+            delete_after = None
+            for tag in snapshot.get('Tags', []):
+                if tag['Key'] == 'DeleteAfter':
+                    delete_after = datetime.strptime(tag['Value'], '%Y-%m-%d').date()
+                    break
+            
+            # Delete if past retention date
+            if delete_after and today > delete_after:
+                ec2_client.delete_snapshot(SnapshotId=snapshot['SnapshotId'])
+                print(f"Deleted old snapshot: {snapshot['SnapshotId']}")
+                deleted_count += 1
+        
+        print(f"Cleaned up {deleted_count} old snapshots")
+        
+    except Exception as e:
+        print(f"Cleanup error: {str(e)}")</div>
+                </div>
+            </div>
+
+            <!-- Python Automation Use Cases -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">🤖 Python Automation Use Cases in DevOps</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">☁️ Cloud Automation:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4;">
+                            <li><strong>Auto-scaling:</strong> Scale resources based on demand</li>
+                            <li><strong>Cost optimization:</strong> Stop unused instances</li>
+                            <li><strong>Security compliance:</strong> Audit and fix security groups</li>
+                            <li><strong>Backup automation:</strong> Scheduled snapshots and backups</li>
+                            <li><strong>Log processing:</strong> Analyze CloudWatch logs</li>
+                            <li><strong>Resource tagging:</strong> Automatically tag resources</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🔧 Infrastructure Automation:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4;">
+                            <li><strong>CI/CD pipelines:</strong> Automated deployments</li>
+                            <li><strong>Configuration management:</strong> Update server configs</li>
+                            <li><strong>Monitoring alerts:</strong> Custom alerting systems</li>
+                            <li><strong>Database maintenance:</strong> Automated DB tasks</li>
+                            <li><strong>File processing:</strong> Batch file operations</li>
+                            <li><strong>API integrations:</strong> Connect different services</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lambda Triggers and Integration -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">⚡ How Lambda Functions Get Triggered</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">⏰</div>
+                        <h4 style="color: #7b1fa2; margin-bottom: 8px; font-size: 0.95em;">Scheduled Events</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3;">
+                            CloudWatch Events trigger functions on schedule (daily backups, weekly reports)
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">📁</div>
+                        <h4 style="color: #7b1fa2; margin-bottom: 8px; font-size: 0.95em;">File Uploads</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3;">
+                            S3 bucket events trigger processing when files are uploaded
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🌐</div>
+                        <h4 style="color: #7b1fa2; margin-bottom: 8px; font-size: 0.95em;">API Calls</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3;">
+                            API Gateway triggers functions when HTTP requests are made
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">💾</div>
+                        <h4 style="color: #7b1fa2; margin-bottom: 8px; font-size: 0.95em;">Database Changes</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3;">
+                            DynamoDB streams trigger functions when data changes
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">📧</div>
+                        <h4 style="color: #7b1fa2; margin-bottom: 8px; font-size: 0.95em;">Messages</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3;">
+                            SQS/SNS messages trigger functions for event processing
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🚨</div>
+                        <h4 style="color: #7b1fa2; margin-bottom: 8px; font-size: 0.95em;">Alerts</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3;">
+                            CloudWatch alarms trigger functions for automated responses
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">🎯 Real-World Lambda Automation Examples:</h4>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4; margin: 0; padding-left: 15px;">
+                            <li><strong>Image processing:</strong> Resize uploaded images automatically</li>
+                            <li><strong>Log analysis:</strong> Process CloudWatch logs for security events</li>
+                            <li><strong>Data transformation:</strong> Convert CSV to JSON when files are uploaded</li>
+                            <li><strong>Notification system:</strong> Send Slack alerts for system events</li>
+                        </ul>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4; margin: 0; padding-left: 15px;">
+                            <li><strong>Auto-remediation:</strong> Fix security group violations automatically</li>
+                            <li><strong>Cost monitoring:</strong> Alert when AWS spending exceeds budget</li>
+                            <li><strong>Compliance checking:</strong> Ensure resources follow company policies</li>
+                            <li><strong>Data backup:</strong> Automated database and file backups</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 13: Python Practice Exercises -->
+        <div class="slide">
+            <div class="slide-number">14</div>
+            <h1>🎯 Python Practice Exercises</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #e67e22, #d35400); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        💪 "Practice makes perfect - Let's code!"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Exercise 1: Basic Python -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🚀 Exercise 1: Website Status Checker</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 Task: Check website accessibility and response times</h4>
+                    <div class="code-box">#!/usr/bin/env python3
+"""
+Exercise 1: Website Status Checker
+Cross-platform website monitoring tool
+"""
+
+import requests
+import time
+import platform
+from datetime import datetime
+
+# List of websites to monitor
+websites = [
+    {"name": "Google", "url": "https://www.google.com"},
+    {"name": "GitHub", "url": "https://github.com"},
+    {"name": "Stack Overflow", "url": "https://stackoverflow.com"},
+    {"name": "Python.org", "url": "https://www.python.org"},
+    {"name": "AWS", "url": "https://aws.amazon.com"}
+]
+
+def check_website(site_info, timeout=10):
+    """Check website accessibility and measure response time"""
+    try:
+        print(f"🔍 Checking {site_info['name']}...")
+        
+        start_time = time.time()
+        response = requests.get(site_info['url'], timeout=timeout)
+        response_time = round((time.time() - start_time) * 1000, 2)
+        
+        if response.status_code == 200:
+            print(f"✅ {site_info['name']} - OK ({response_time}ms)")
+            return {
+                'status': 'UP',
+                'response_time': response_time,
+                'status_code': response.status_code
+            }
+        else:
+            print(f"⚠️  {site_info['name']} - Status: {response.status_code}")
+            return {
+                'status': 'WARNING',
+                'response_time': response_time,
+                'status_code': response.status_code
+            }
+            
+    except requests.exceptions.Timeout:
+        print(f"⏰ {site_info['name']} - Request timeout")
+        return {'status': 'TIMEOUT', 'response_time': timeout * 1000}
+        
+    except requests.exceptions.ConnectionError:
+        print(f"🔌 {site_info['name']} - Connection failed")
+        return {'status': 'DOWN', 'response_time': 0}
+        
+    except Exception as e:
+        print(f"❌ {site_info['name']} - Error: {str(e)}")
+        return {'status': 'ERROR', 'response_time': 0}
+
+def main():
+    """Main monitoring function"""
+    print("🌐 WEBSITE STATUS CHECKER")
+    print("=" * 40)
+    print(f"🖥️  Platform: {platform.system()}")
+    print(f"⏰ Check time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    print()
+    
+    results = []
+    for site in websites:
+        result = check_website(site)
+        results.append({'name': site['name'], 'result': result})
+        print()
+        time.sleep(0.5)
+    
+    # Summary
+    up_sites = len([r for r in results if r['result']['status'] == 'UP'])
+    print(f"📊 Summary: {up_sites}/{len(results)} sites are UP")
+
+if __name__ == "__main__":
+    main()</div>
+                    
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">🎯 Setup Instructions:</h4>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                            <div>
+                                <strong style="color: #28a745;">Windows:</strong>
+                                <ol style="color: #666; font-size: 0.9em; line-height: 1.3; margin-top: 5px;">
+                                    <li>Install: <code>pip install requests</code></li>
+                                    <li>Save as <code>website_checker.py</code></li>
+                                    <li>Run: <code>python website_checker.py</code></li>
+                                </ol>
+                            </div>
+                            <div>
+                                <strong style="color: #28a745;">Mac:</strong>
+                                <ol style="color: #666; font-size: 0.9em; line-height: 1.3; margin-top: 5px;">
+                                    <li>Install: <code>pip3 install requests</code></li>
+                                    <li>Save as <code>website_checker.py</code></li>
+                                    <li>Run: <code>python3 website_checker.py</code></li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 2: File Processing -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">📁 Exercise 2: System Information Script</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #1976d2; margin-bottom: 10px;">📝 Task: Create a cross-platform system monitor</h4>
+                    <div class="code-box">#!/usr/bin/env python3
+"""
+Exercise 2: System Information Script
+Cross-platform system monitoring tool
+"""
+
+import os
+import platform
+import shutil
+from datetime import datetime
+from pathlib import Path
+
+def get_system_info():
+    """Get basic system information"""
+    system = platform.system()
+    if system == "Darwin":
+        os_name = "macOS"
+    elif system == "Windows":
+        os_name = "Windows"
+    elif system == "Linux":
+        os_name = "Linux"
+    else:
+        os_name = system
+    
+    return {
+        'os': os_name,
+        'version': platform.release(),
+        'architecture': platform.architecture()[0],
+        'hostname': platform.node(),
+        'python_version': platform.python_version()
+    }
+
+def get_disk_usage():
+    """Get disk usage information"""
+    try:
+        if platform.system() == "Windows":
+            # Windows - check C: drive
+            total, used, free = shutil.disk_usage("C:\\")
+        else:
+            # Unix-like systems - check root
+            total, used, free = shutil.disk_usage("/")
+        
+        # Convert to GB
+        total_gb = round(total / (1024**3), 2)
+        used_gb = round(used / (1024**3), 2)
+        free_gb = round(free / (1024**3), 2)
+        usage_percent = round((used / total) * 100, 1)
+        
+        return {
+            'total': total_gb,
+            'used': used_gb,
+            'free': free_gb,
+            'percentage': usage_percent
+        }
+    except Exception as e:
+        return {'error': str(e)}
+
+def main():
+    """Main function"""
+    print("🖥️  SYSTEM INFORMATION DASHBOARD")
+    print("=" * 50)
+    
+    # System info
+    sys_info = get_system_info()
+    print(f"🏷️  Hostname: {sys_info['hostname']}")
+    print(f"🖥️  Operating System: {sys_info['os']} {sys_info['version']}")
+    print(f"🏗️  Architecture: {sys_info['architecture']}")
+    print(f"🐍 Python Version: {sys_info['python_version']}")
+    print(f"⏰ Current Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    
+    # Disk usage
+    print(f"\n💿 DISK USAGE:")
+    disk_info = get_disk_usage()
+    if 'error' not in disk_info:
+        print(f"📊 Total Space: {disk_info['total']} GB")
+        print(f"💿 Used Space: {disk_info['used']} GB ({disk_info['percentage']}%)")
+        print(f"📀 Free Space: {disk_info['free']} GB")
+        
+        if disk_info['percentage'] > 80:
+            print("🚨 WARNING: Disk usage is high!")
+    else:
+        print(f"❌ Error getting disk info: {disk_info['error']}")
+    
+    print(f"\n✅ System check completed!")
+
+if __name__ == "__main__":
+    main()</div>
+                    
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🎯 Try This:</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.3; margin-top: 5px;">
+                            <li>Run the script on different operating systems</li>
+                            <li>Add more system information (CPU, memory)</li>
+                            <li>Save the report to a file</li>
+                            <li>Add error handling for different scenarios</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 14: YAML Essentials -->
+        <div class="slide">
+            <div class="slide-number">15</div>
+            <h1>📄 YAML Essentials: The Configuration Language</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        📝 "YAML Ain't Markup Language - Human-readable data serialization"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- What is YAML -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #6f42c1;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">🤔 What is YAML?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #6f42c1; margin-bottom: 10px;">📝 Simple Definition:</h4>
+                        <p style="color: #666; font-size: 1.05em; line-height: 1.5; margin-bottom: 15px;">
+                            YAML is a human-readable data format used for configuration files, data exchange, and storing structured information.
+                        </p>
+                        <div style="background: #f0f8ff; padding: 12px; border-radius: 8px;">
+                            <strong style="color: #6f42c1;">💡 Think of it as:</strong><br>
+                            <span style="font-size: 0.9em; color: #666;">
+                                A way to write configuration that both humans and computers can easily understand!
+                            </span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #6f42c1; margin-bottom: 10px;">🎯 Why Use YAML?</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li><strong>Human-readable:</strong> Easy to read and write</li>
+                            <li><strong>Widely supported:</strong> Used by many DevOps tools</li>
+                            <li><strong>No brackets:</strong> Uses indentation instead of { }</li>
+                            <li><strong>Comments allowed:</strong> Document your configuration</li>
+                            <li><strong>Data types:</strong> Strings, numbers, booleans, lists, objects</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YAML Syntax Basics -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">📚 YAML Syntax Basics</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">🔤 Basic Data Types:</h4>
+                        <div class="code-box"># Strings (quotes optional for simple strings)
+name: "John Doe"
+city: New York
+message: Hello World
+
+# Numbers
+age: 30
+price: 99.99
+count: 1000
+
+# Booleans
+is_active: true
+is_admin: false
+debug_mode: yes
+
+# Null values
+middle_name: null
+nickname: ~</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">📋 Lists and Objects:</h4>
+                        <div class="code-box"># Lists (Arrays)
+fruits:
+  - apple
+  - banana
+  - orange
+
+# Inline list
+colors: [red, green, blue]
+
+# Objects (Dictionaries)
+person:
+  name: Alice
+  age: 25
+  address:
+    street: 123 Main St
+    city: Boston
+    zip: 02101
+
+# Inline object
+coordinates: {x: 10, y: 20}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YAML Rules and Best Practices -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">⚠️ YAML Rules & Best Practices</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📏 Critical Rules:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li><strong>Indentation matters:</strong> Use spaces, not tabs</li>
+                            <li><strong>Consistent spacing:</strong> Same level = same indentation</li>
+                            <li><strong>Case sensitive:</strong> 'Name' ≠ 'name'</li>
+                            <li><strong>Colons need space:</strong> 'key: value' not 'key:value'</li>
+                            <li><strong>Comments start with #</strong></li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">✅ Best Practices:</h4>
+                        <ul style="color: #666; font-size: 0.95em; line-height: 1.4;">
+                            <li><strong>Use 2 spaces</strong> for indentation</li>
+                            <li><strong>Quote strings</strong> with special characters</li>
+                            <li><strong>Add comments</strong> to explain complex sections</li>
+                            <li><strong>Keep it simple</strong> - avoid deep nesting</li>
+                            <li><strong>Validate syntax</strong> before using</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common YAML Mistakes -->
+            <div style="background: #f8d7da; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #dc3545;">
+                <h3 style="color: #721c24; margin-bottom: 15px;">❌ Common YAML Mistakes to Avoid</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                        <div>
+                            <h4 style="color: #dc3545; margin-bottom: 10px;">🚫 Wrong:</h4>
+                            <div class="code-box"># Using tabs instead of spaces
+name:	John Doe
+
+# Inconsistent indentation
+person:
+  name: Alice
+    age: 25
+
+# Missing space after colon
+database:localhost
+
+# Unquoted special characters
+message: Hello: World!</div>
+                        </div>
+                        <div>
+                            <h4 style="color: #28a745; margin-bottom: 10px;">✅ Correct:</h4>
+                            <div class="code-box"># Using spaces for indentation
+name: John Doe
+
+# Consistent indentation
+person:
+  name: Alice
+  age: 25
+
+# Space after colon
+database: localhost
+
+# Quoted special characters
+message: "Hello: World!"</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 15: YAML Configuration Examples -->
+        <div class="slide">
+            <div class="slide-number">16</div>
+            <h1>⚙️ YAML Configuration Examples</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #17a2b8, #138496); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🔧 "Real-world YAML configurations you'll encounter"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Application Configuration -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">📱 Application Configuration File</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 config/app.yml - Web Application Settings</h4>
+                    <div class="code-box"># Application Configuration File
+app:
+  name: "My Web Application"
+  version: "1.2.0"
+  environment: production
+  debug: false
+
+# Server Configuration
+server:
+  host: "0.0.0.0"
+  port: 8080
+  timeout: 30
+  ssl:
+    enabled: true
+    certificate: "/etc/ssl/app.crt"
+    private_key: "/etc/ssl/app.key"
+
+# Database Settings
+database:
+  type: postgresql
+  host: localhost
+  port: 5432
+  name: myapp_db
+  username: app_user
+  password: "${DB_PASSWORD}"
+  pool_size: 10
+  timeout: 5000
+
+# Logging Configuration
+logging:
+  level: INFO
+  format: json
+  outputs:
+    - type: file
+      path: "/var/log/app.log"
+      max_size: "100MB"
+      max_files: 5
+    - type: console
+      enabled: true
+
+# Feature Flags
+features:
+  user_registration: true
+  email_verification: true
+  two_factor_auth: false
+  analytics: true
+  maintenance_mode: false
+
+# External Services
+services:
+  email:
+    provider: sendgrid
+    api_key: "${SENDGRID_API_KEY}"
+    from_address: "noreply@myapp.com"
+  
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
+    ttl: 3600
+
+# Environment Variables
+environment_variables:
+  - NODE_ENV
+  - DATABASE_URL
+  - API_SECRET_KEY
+  - REDIS_URL</div>
+                </div>
+            </div>
+
+            <!-- CI/CD Pipeline Configuration -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">🚀 CI/CD Pipeline Configuration</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">📝 .github/workflows/ci.yml - GitHub Actions</h4>
+                    <div class="code-box"># GitHub Actions CI/CD Pipeline
+name: Build and Test
+
+# When to run this workflow
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+# Environment variables for all jobs
+env:
+  NODE_VERSION: "18"
+  PYTHON_VERSION: "3.9"
+
+# Jobs to run
+jobs:
+  # Testing job
+  test:
+    name: Run Tests
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          
+      - name: Install dependencies
+        run: |
+          npm ci
+          npm audit fix
+          
+      - name: Run linting
+        run: npm run lint
+        
+      - name: Run tests
+        run: npm test -- --coverage
+        
+      - name: Upload test results
+        uses: actions/upload-artifact@v3
+        if: always()
+        with:
+          name: test-results
+          path: test-results/
+
+  # Build job
+  build:
+    name: Build Application
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        
+      - name: Build application
+        run: |
+          npm ci
+          npm run build
+          
+      - name: Save build artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-files
+          path: dist/
+          retention-days: 7</div>
+                </div>
+            </div>
+
+            <!-- Data Configuration -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">📊 Data & Inventory Configuration</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">👥 Team Directory:</h4>
+                        <div class="code-box"># team.yml - Team Information
+teams:
+  - name: Development
+    lead: John Smith
+    members:
+      - name: Alice Johnson
+        role: Senior Developer
+        skills: [Python, React, AWS]
+      - name: Bob Wilson
+        role: Junior Developer
+        skills: [JavaScript, HTML, CSS]
+    
+  - name: DevOps
+    lead: Sarah Davis
+    members:
+      - name: Mike Brown
+        role: DevOps Engineer
+        skills: [Docker, Kubernetes, Terraform]
+      - name: Lisa Chen
+        role: Site Reliability Engineer
+        skills: [Monitoring, Linux, Python]
+
+contact:
+  email: team@company.com
+  slack: "#dev-team"
+  meeting_schedule:
+    daily_standup: "09:00 AM"
+    sprint_planning: "Monday 2:00 PM"
+    retrospective: "Friday 4:00 PM"</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🖥️ Server Inventory:</h4>
+                        <div class="code-box"># inventory.yml - Server Configuration
+servers:
+  web_servers:
+    - hostname: web-01
+      ip: 192.168.1.10
+      os: Ubuntu 20.04
+      cpu: 4
+      memory: 8GB
+      disk: 100GB
+      services: [nginx, nodejs]
+      
+    - hostname: web-02
+      ip: 192.168.1.11
+      os: Ubuntu 20.04
+      cpu: 4
+      memory: 8GB
+      disk: 100GB
+      services: [nginx, nodejs]
+
+  database_servers:
+    - hostname: db-01
+      ip: 192.168.1.20
+      os: Ubuntu 20.04
+      cpu: 8
+      memory: 16GB
+      disk: 500GB
+      services: [postgresql]
+      backup_schedule: "daily at 2:00 AM"
+
+monitoring:
+  enabled: true
+  tools: [prometheus, grafana]
+  alerts:
+    cpu_threshold: 80
+    memory_threshold: 85
+    disk_threshold: 90</div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 16: YAML Validation & Practice -->
+        <div class="slide">
+            <div class="slide-number">17</div>
+            <h1>✅ YAML Validation & Hands-On Practice</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🔍 "Validate before you deploy - catch errors early!"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Online Validation Tools -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">🌐 YAML Validation Methods</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🔍</div>
+                        <h4 style="color: #1976d2; margin-bottom: 8px; font-size: 0.95em;">Online Validators</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3; margin-bottom: 8px;">
+                            yamllint.com<br>
+                            jsonformatter.org/yaml-validator
+                        </p>
+                        <div style="background: #e3f2fd; padding: 5px; border-radius: 5px; font-size: 0.75em;">
+                            ✅ Quick & Free
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🔧</div>
+                        <h4 style="color: #1976d2; margin-bottom: 8px; font-size: 0.95em;">Code Editors</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3; margin-bottom: 8px;">
+                            VS Code, Sublime Text<br>
+                            Real-time validation
+                        </p>
+                        <div style="background: #e3f2fd; padding: 5px; border-radius: 5px; font-size: 0.75em;">
+                            ✅ Live Feedback
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🐍</div>
+                        <h4 style="color: #1976d2; margin-bottom: 8px; font-size: 0.95em;">Python Scripts</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3; margin-bottom: 8px;">
+                            Custom validation<br>
+                            Automated checking
+                        </p>
+                        <div style="background: #e3f2fd; padding: 5px; border-radius: 5px; font-size: 0.75em;">
+                            ✅ Programmable
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Python YAML Validator -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🐍 Simple Python YAML Validator</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 yaml_checker.py - Basic YAML Validation</h4>
+                    <div class="code-box">#!/usr/bin/env python3
+"""
+Simple YAML Validation Script
+Checks YAML files for syntax errors and basic structure
+"""
+
+import yaml
+import sys
+from pathlib import Path
+
+def validate_yaml_file(file_path):
+    """Validate a single YAML file"""
+    try:
+        print(f"🔍 Checking: {file_path}")
+        
+        # Check if file exists
+        if not Path(file_path).exists():
+            print(f"❌ File not found: {file_path}")
+            return False
+        
+        # Read and parse YAML
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+        
+        # Basic validation checks
+        if data is None:
+            print(f"⚠️  {file_path}: File is empty or contains only comments")
+            return True
+        
+        # Check data type
+        if isinstance(data, dict):
+            print(f"✅ {file_path}: Valid YAML dictionary with {len(data)} keys")
+        elif isinstance(data, list):
+            print(f"✅ {file_path}: Valid YAML list with {len(data)} items")
+        else:
+            print(f"✅ {file_path}: Valid YAML with {type(data).__name__} data")
+        
+        return True
+        
+    except yaml.YAMLError as e:
+        print(f"❌ {file_path}: YAML syntax error")
+        print(f"   Error details: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ {file_path}: Unexpected error - {e}")
+        return False
+
+def main():
+    """Main validation function"""
+    if len(sys.argv) < 2:
+        print("Usage: python yaml_checker.py <yaml_file1> [yaml_file2] ...")
+        print("Example: python yaml_checker.py config.yml team.yml")
+        sys.exit(1)
+    
+    print("🔍 YAML VALIDATION REPORT")
+    print("=" * 40)
+    
+    all_valid = True
+    
+    # Validate each file
+    for file_path in sys.argv[1:]:
+        if not validate_yaml_file(file_path):
+            all_valid = False
+        print()  # Empty line between files
+    
+    # Final result
+    if all_valid:
+        print("🎉 All YAML files are valid!")
+    else:
+        print("⚠️  Some YAML files have errors - please fix them")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()</div>
+                </div>
+            </div>
+
+            <!-- Hands-On YAML Exercises -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">🎯 Hands-On YAML Practice Exercises</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📝 Exercise 1: Fix the Broken YAML</h4>
+                        <div class="code-box"># broken.yml - Find and fix 5+ errors
+name:John Doe
+age: 30
+address:
+street: 123 Main St
+  city: Boston
+    zip: 02101
+hobbies:
+- reading
+  - swimming
+- cooking
+is_student:yes
+grades: [A, B+, A-]
+contact:
+email:john@email.com
+  phone: 555-1234</div>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong style="color: #856404; font-size: 0.9em;">Tasks:</strong>
+                            <ul style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                                <li>Fix spacing after colons</li>
+                                <li>Correct indentation issues</li>
+                                <li>Align list items properly</li>
+                                <li>Validate with online tool</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">🏗️ Exercise 2: Build a Configuration</h4>
+                        <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">
+                            Create a YAML file for a simple web application with:
+                        </p>
+                        <ul style="color: #666; font-size: 0.85em; line-height: 1.3; margin-bottom: 10px;">
+                            <li>Application name and version</li>
+                            <li>Server settings (host, port)</li>
+                            <li>Database configuration</li>
+                            <li>List of enabled features</li>
+                            <li>Environment variables</li>
+                            <li>Logging settings</li>
+                        </ul>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px;">
+                            <strong style="color: #856404; font-size: 0.9em;">Validation Steps:</strong>
+                            <ol style="font-size: 0.8em; color: #666; margin-top: 5px;">
+                                <li>Save as <code>webapp.yml</code></li>
+                                <li>Use Python validator script</li>
+                                <li>Test with online validator</li>
+                                <li>Fix any errors found</li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">🚀 Exercise 3: Create a CI/CD Configuration</h4>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 15px;">
+                        Build a simple GitHub Actions workflow YAML that:
+                    </p>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <ul style="color: #666; font-size: 0.85em; line-height: 1.3;">
+                            <li>Triggers on push to main branch</li>
+                            <li>Runs on Ubuntu latest</li>
+                            <li>Has a job called "test"</li>
+                            <li>Checks out code</li>
+                            <li>Sets up Node.js version 18</li>
+                        </ul>
+                        <ul style="color: #666; font-size: 0.85em; line-height: 1.3;">
+                            <li>Installs dependencies</li>
+                            <li>Runs tests</li>
+                            <li>Uses environment variables</li>
+                            <li>Includes proper indentation</li>
+                            <li>Validates without errors</li>
+                        </ul>
+                    </div>
+                    <div style="background: #e8f5e8; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                        <strong style="color: #28a745; font-size: 0.9em;">💡 Bonus Challenge:</strong>
+                        <span style="font-size: 0.8em; color: #666;">
+                            Add comments explaining each section and create a second job for building the application!
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 17: YAML Linting vs Validation -->
+        <div class="slide">
+            <div class="slide-number">18</div>
+            <h1>🔍 YAML Linting vs Validation: Quality Control</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #fd7e14, #e55100); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🛡️ "Two layers of YAML quality assurance"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Linting vs Validation Comparison -->
+            <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #fd7e14;">
+                <h3 style="color: #2c3e50; margin-bottom: 15px;">🤔 Linting vs Validation: What's the Difference?</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #28a745;">
+                        <h4 style="color: #28a745; margin-bottom: 10px; text-align: center;">🔍 YAML Linting</h4>
+                        <div style="background: #e8f5e8; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong style="color: #28a745;">Purpose:</strong> Check style, formatting, and best practices
+                        </div>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4;">
+                            <li><strong>Indentation consistency</strong> - 2 vs 4 spaces</li>
+                            <li><strong>Line length limits</strong> - max 80/120 characters</li>
+                            <li><strong>Trailing whitespace</strong> - remove extra spaces</li>
+                            <li><strong>Empty lines</strong> - consistent spacing</li>
+                            <li><strong>Comments formatting</strong> - proper placement</li>
+                            <li><strong>Key ordering</strong> - alphabetical sorting</li>
+                            <li><strong>Quote consistency</strong> - single vs double quotes</li>
+                        </ul>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong style="color: #28a745; font-size: 0.9em;">💡 Think of it as:</strong><br>
+                            <span style="font-size: 0.8em; color: #666;">Grammar and style checker for YAML</span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px; border: 2px solid #dc3545;">
+                        <h4 style="color: #dc3545; margin-bottom: 10px; text-align: center;">✅ YAML Validation</h4>
+                        <div style="background: #f8d7da; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong style="color: #dc3545;">Purpose:</strong> Check syntax correctness and structure
+                        </div>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4;">
+                            <li><strong>Syntax errors</strong> - malformed YAML</li>
+                            <li><strong>Indentation errors</strong> - incorrect nesting</li>
+                            <li><strong>Data type issues</strong> - invalid values</li>
+                            <li><strong>Missing colons/spaces</strong> - structural problems</li>
+                            <li><strong>Unclosed quotes</strong> - string formatting</li>
+                            <li><strong>Invalid characters</strong> - encoding issues</li>
+                            <li><strong>Schema compliance</strong> - required fields</li>
+                        </ul>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong style="color: #dc3545; font-size: 0.9em;">💡 Think of it as:</strong><br>
+                            <span style="font-size: 0.8em; color: #666;">Spell checker and syntax verifier for YAML</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- YAML Linting Tools -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🛠️ Popular YAML Linting Tools</h3>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🐍</div>
+                        <h4 style="color: #28a745; margin-bottom: 8px; font-size: 0.95em;">yamllint</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3; margin-bottom: 8px;">
+                            Python-based linter<br>
+                            Highly configurable<br>
+                            CI/CD integration
+                        </p>
+                        <div style="background: #e8f5e8; padding: 5px; border-radius: 5px; font-size: 0.75em;">
+                            pip install yamllint
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🌐</div>
+                        <h4 style="color: #28a745; margin-bottom: 8px; font-size: 0.95em;">Online Linters</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3; margin-bottom: 8px;">
+                            yamllint.com<br>
+                            codebeautify.org<br>
+                            Quick validation
+                        </p>
+                        <div style="background: #e8f5e8; padding: 5px; border-radius: 5px; font-size: 0.75em;">
+                            No installation needed
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 10px; text-align: center;">
+                        <div style="font-size: 2em; margin-bottom: 8px;">🔧</div>
+                        <h4 style="color: #28a745; margin-bottom: 8px; font-size: 0.95em;">Editor Plugins</h4>
+                        <p style="color: #666; font-size: 0.8em; line-height: 1.3; margin-bottom: 8px;">
+                            VS Code YAML<br>
+                            Sublime Text<br>
+                            Real-time feedback
+                        </p>
+                        <div style="background: #e8f5e8; padding: 5px; border-radius: 5px; font-size: 0.75em;">
+                            Live error highlighting
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practical Examples -->
+            <div style="background: #e3f2fd; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #2196f3;">
+                <h3 style="color: #1976d2; margin-bottom: 15px;">💻 Practical Linting Examples</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">🚫 Before Linting (Issues):</h4>
+                        <div class="code-box"># Poor formatting and style issues
+name:John Doe    
+age:  30
+address:
+    street: 123 Main St   
+  city: Boston
+      zip: 02101
+
+# Inconsistent quotes and spacing
+hobbies: ['reading',"swimming", cooking]
+
+# Long line exceeding limits
+description: "This is a very long description that exceeds the recommended line length limit and should be broken into multiple lines for better readability"
+
+# Missing comments and poor structure
+database_config:
+host: localhost
+port: 5432
+username: admin</div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">✅ After Linting (Clean):</h4>
+                        <div class="code-box"># Personal information
+name: "John Doe"
+age: 30
+address:
+  street: "123 Main St"
+  city: "Boston"
+  zip: "02101"
+
+# Hobbies and interests
+hobbies:
+  - "reading"
+  - "swimming"
+  - "cooking"
+
+# Description with proper line breaks
+description: >
+  This is a very long description that has been
+  properly formatted with line breaks for better
+  readability and maintainability.
+
+# Database configuration
+database_config:
+  host: "localhost"
+  port: 5432
+  username: "admin"</div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #1976d2; margin-bottom: 10px;">🔧 Common yamllint Commands:</h4>
+                    <div class="code-box"># Basic linting
+yamllint myfile.yml
+
+# Lint multiple files
+yamllint *.yml
+
+# Lint with specific config
+yamllint -c .yamllint.yml myfile.yml
+
+# Output in different formats
+yamllint -f parsable myfile.yml
+yamllint -f github-actions myfile.yml
+
+# Lint entire directory
+yamllint /path/to/yaml/files/
+
+# Show only errors (ignore warnings)
+yamllint -d "{extends: default, rules: {line-length: disable}}" myfile.yml</div>
+                    
+                    <div style="background: #f0f8ff; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                        <h4 style="color: #1976d2; margin-bottom: 10px;">⚙️ Sample .yamllint.yml Configuration:</h4>
+                        <div class="code-box"># .yamllint.yml - Custom linting rules
+extends: default
+
+rules:
+  # Line length settings
+  line-length:
+    max: 120
+    level: warning
+  
+  # Indentation rules
+  indentation:
+    spaces: 2
+    indent-sequences: true
+  
+  # Comments formatting
+  comments:
+    min-spaces-from-content: 1
+  
+  # Disable some rules
+  truthy: disable
+  document-start: disable</div>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 18: YAML Linting Hands-On Workshop -->
+        <div class="slide">
+            <div class="slide-number">19</div>
+            <h1>🎯 YAML Linting Hands-On Workshop</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #6f42c1, #5a32a3); color: white; padding: 20px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.6em;">
+                        🛠️ "Practice makes perfect - Let's lint some YAML!"
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Setup Instructions -->
+            <div style="background: #fff3cd; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #ffc107;">
+                <h3 style="color: #856404; margin-bottom: 15px;">🚀 Workshop Setup</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📦 Install yamllint:</h4>
+                        <div class="code-box"># Install yamllint
+pip install yamllint
+
+# Verify installation
+yamllint --version
+
+# Get help
+yamllint --help</div>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong style="color: #856404; font-size: 0.9em;">💡 Alternative:</strong><br>
+                            <span style="font-size: 0.8em; color: #666;">Use online linters if you can't install yamllint</span>
+                        </div>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #856404; margin-bottom: 10px;">📁 Create Workshop Files:</h4>
+                        <div class="code-box"># Create workshop directory
+mkdir yaml-linting-workshop
+cd yaml-linting-workshop
+
+# Create sample files
+touch config.yml
+touch docker-compose.yml
+touch .yamllint.yml</div>
+                        <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong style="color: #856404; font-size: 0.9em;">📝 Note:</strong><br>
+                            <span style="font-size: 0.8em; color: #666;">We'll create content for these files in the exercises</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 1: Fix Linting Issues -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">🔧 Exercise 1: Fix Common Linting Issues</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 Create messy-config.yml with intentional issues:</h4>
+                    <div class="code-box"># messy-config.yml - Contains multiple linting issues
+---
+app_name:MyApp    
+version: 1.0.0
+
+# Server configuration
+server:
+host: 0.0.0.0
+  port:   8080
+    timeout: 30
+
+database:
+  type:postgresql
+  host:localhost
+  port: 5432
+  credentials:
+      username: admin
+    password: secret123
+
+# Features list with inconsistent formatting
+features: [user_auth,email_notifications, analytics,reporting]
+
+# Long description line that exceeds the recommended maximum line length and should be broken down into multiple lines for better readability
+description: "This is an extremely long description that violates the line length rule and should be reformatted to improve readability and maintainability of the YAML file and make it easier to work with"
+
+# Inconsistent boolean values
+debug_mode: yes
+production_ready:true
+maintenance: false
+
+# Trailing spaces and empty lines issues
+
+
+logging:
+  level: INFO  
+  file: /var/log/app.log	
+
+# Mixed quotes and escaping issues
+message: 'Don't use mixed quotes'
+path: "C:\Windows\System32"
+regex: "[a-zA-Z0-9]+"</div>
+                    
+                    <div style="margin-top: 15px;">
+                        <h4 style="color: #28a745; margin-bottom: 10px;">🔍 Run yamllint and fix issues:</h4>
+                        <div class="code-box"># Check for linting issues
+yamllint messy-config.yml
+
+# Expected issues to find and fix:
+# 1. Missing space after colons (:)
+# 2. Inconsistent indentation (2 vs 4 spaces)
+# 3. Line too long (>80 characters)
+# 4. Trailing whitespace
+# 5. Too many blank lines
+# 6. Inconsistent boolean values (yes/true/false)
+# 7. Inconsistent list formatting
+# 8. Mixed quote styles
+# 9. Tab characters instead of spaces</div>
+                    </div>
+                </div>
+                
+                <!-- Additional Challenge Examples -->
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">🎯 Challenge: Fix These Broken YAML Files</h4>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h5 style="color: #666; margin-bottom: 8px;">📄 broken-ci.yml (CI/CD Pipeline with errors):</h5>
+                        <div class="code-box"># broken-ci.yml - Fix this CI/CD configuration
+name:Build and Deploy
+on:
+push:
+branches:[main,develop]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+build:
+runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses:actions/setup-node@v3
+        with:
+node-version: '18'
+      - name:Install dependencies
+        run: |
+npm install
+          npm run build
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV:production
+          API_KEY: ${{ secrets.API_KEY }}
+
+deploy:
+    needs:build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to production
+        run: echo "Deploying..."</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h5 style="color: #666; margin-bottom: 8px;">📄 broken-k8s.yml (Kubernetes manifest with errors):</h5>
+                        <div class="code-box"># broken-k8s.yml - Fix this Kubernetes deployment
+apiVersion:apps/v1
+kind:Deployment
+metadata:
+name:web-app
+  namespace: default
+spec:
+replicas:3
+  selector:
+matchLabels:
+      app: web-app
+template:
+    metadata:
+      labels:
+app:web-app
+    spec:
+      containers:
+      - name:web-container
+        image:nginx:1.21
+        ports:
+        - containerPort:80
+        env:
+        - name: ENV
+value: production
+        - name:DEBUG
+          value: "false"
+        resources:
+          requests:
+memory:"128Mi"
+            cpu: "100m"
+          limits:
+            memory: "256Mi"
+cpu:"200m"
+---
+apiVersion: v1
+kind:Service
+metadata:
+  name: web-service
+spec:
+selector:
+    app:web-app
+  ports:
+  - port:80
+    targetPort: 80
+  type:LoadBalancer</div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <h5 style="color: #666; margin-bottom: 8px;">📄 broken-ansible.yml (Ansible playbook with errors):</h5>
+                        <div class="code-box"># broken-ansible.yml - Fix this Ansible playbook
+---
+- name:Deploy Web Application
+hosts:webservers
+  become:yes
+  vars:
+    app_name:myapp
+    app_version: 1.0.0
+    app_port:8080
+
+  tasks:
+  - name: Update package cache
+    apt:
+update_cache: yes
+      cache_valid_time:3600
+
+  - name:Install required packages
+    apt:
+      name: ['nginx', 'python3', 'python3-pip']
+state:present
+
+  - name: Create application directory
+    file:
+      path:/opt/{{ app_name }}
+      state: directory
+owner:www-data
+      group: www-data
+      mode:'0755'
+
+  - name:Copy application files
+    copy:
+      src: ./app/
+      dest: /opt/{{ app_name }}/
+      owner: www-data
+      group:www-data
+      mode: '0644'
+    notify:restart nginx
+
+  - name: Template nginx configuration
+    template:
+src:nginx.conf.j2
+      dest: /etc/nginx/sites-available/{{ app_name }}
+    notify:
+      - restart nginx
+
+  handlers:
+  - name:restart nginx
+    service:
+      name:nginx
+      state: restarted</div>
+                    </div>
+                    
+                    <div style="background: #fff3cd; padding: 15px; border-radius: 8px;">
+                        <h5 style="color: #856404; margin-bottom: 8px;">🎯 Workshop Instructions:</h5>
+                        <ol style="color: #666; font-size: 0.9em; margin: 0; padding-left: 20px;">
+                            <li>Copy each broken YAML file to your workshop directory</li>
+                            <li>Run <code>yamllint filename.yml</code> on each file</li>
+                            <li>Identify and fix all linting errors</li>
+                            <li>Re-run yamllint until you get zero errors</li>
+                            <li>Compare your fixes with teammates</li>
+                            <li><strong>Bonus:</strong> Create a custom .yamllint.yml config for each file type</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Exercise 2: Custom Linting Rules -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">⚙️ Exercise 2: Create Custom Linting Configuration</h3>
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">📝 Create .yamllint.yml with custom rules:</h4>
+                    <div class="code-box"># .yamllint.yml - Custom linting configuration
+extends: default
+
+rules:
+  # Line length - allow longer lines for URLs
+  line-length:
+    max: 120
+    level: warning
+    allow-non-breakable-words: true
+    allow-non-breakable-inline-mappings: true
+
+  # Indentation - enforce 2 spaces
+  indentation:
+    spaces: 2
+    indent-sequences: true
+    check-multi-line-strings: false
+
+  # Comments - require space after #
+  comments:
+    min-spaces-from-content: 1
+    require-starting-space: true
+
+  # Empty lines - control blank line usage
+  empty-lines:
+    max: 2
+    max-start: 0
+    max-end: 1
+
+  # Brackets - consistent spacing
+  brackets:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Braces - consistent spacing  
+  braces:
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+
+  # Disable some strict rules for flexibility
+  truthy:
+    allowed-values: ['true', 'false', 'yes', 'no']
+    check-keys: false
+  
+  document-start: disable
+  document-end: disable</div>
+                    
+                    <div style="margin-top: 15px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">🧪 Test your configuration:</h4>
+                        <div class="code-box"># Test with custom config
+yamllint -c .yamllint.yml messy-config.yml
+
+# Create a test file to verify rules
+cat > test-rules.yml << 'EOF'
+# Test file for custom rules
+name: "Test App"
+version: 1.0.0
+
+# This line is intentionally very long to test the line-length rule configuration and see how it behaves with our custom settings
+
+config:
+  enabled: yes  # Test truthy rule
+  debug: true   # Test truthy rule
+  items: [ 1, 2, 3 ]  # Test brackets rule
+  settings: { key: value }  # Test braces rule
+EOF
+
+# Test the rules
+yamllint -c .yamllint.yml test-rules.yml</div>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">🎯 Challenge Exercise: Docker Compose Linting</h4>
+                    <p style="color: #666; font-size: 0.9em; margin-bottom: 10px;">
+                        Create a docker-compose.yml file and apply linting rules:
+                    </p>
+                    <div class="code-box"># Create docker-compose.yml with intentional issues
+cat > docker-compose.yml << 'EOF'
+version:'3.8'
+services:
+web:
+image:nginx:latest
+  ports:
+- "80:80"
+    - "443:443"
+  environment:
+    - ENV=production
+      - DEBUG=false
+  volumes:
+      - ./html:/usr/share/nginx/html
+database:
+  image: postgres:13
+    environment:
+      POSTGRES_DB:myapp
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD:secret123
+    volumes:
+- postgres_data:/var/lib/postgresql/data
+volumes:
+postgres_data:
+EOF
+
+# Lint and fix the Docker Compose file
+yamllint -c .yamllint.yml docker-compose.yml</div>
+                    
+                    <div style="background: #f0f8ff; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                        <strong style="color: #7b1fa2; font-size: 0.9em;">🏆 Success Criteria:</strong><br>
+                        <span style="font-size: 0.8em; color: #666;">
+                            All files should pass yamllint with zero errors and minimal warnings using your custom configuration.
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+        <!-- Slide 20: YAML Linting Solutions & Best Practices -->
+        <div class="slide">
+            <div class="slide-number">20</div>
+            <h1>✅ YAML Linting Solutions & Best Practices</h1>
+            
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="background: linear-gradient(135deg, #28a745, #20c997); color: white; padding: 15px; border-radius: 15px; display: inline-block;">
+                    <h2 style="color: white; margin: 0; font-size: 1.4em;">
+                        🎯 Correct YAML Examples & Solutions
+                    </h2>
+                </div>
+            </div>
+
+            <!-- Corrected Examples -->
+            <div style="background: #e8f5e8; padding: 25px; border-radius: 15px; margin-bottom: 25px; border-left: 5px solid #28a745;">
+                <h3 style="color: #155724; margin-bottom: 15px;">✅ Corrected YAML Files</h3>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 clean-config.yml (Fixed version):</h4>
+                    <div class="code-box"># clean-config.yml - All linting issues fixed
+---
+app_name: MyApp
+version: 1.0.0
+
+# Server configuration
+server:
+  host: 0.0.0.0
+  port: 8080
+  timeout: 30
+
+database:
+  type: postgresql
+  host: localhost
+  port: 5432
+  credentials:
+    username: admin
+    password: secret123
+
+# Features list with consistent formatting
+features:
+  - user_auth
+  - email_notifications
+  - analytics
+  - reporting
+
+# Properly formatted long description
+description: >
+  This is a properly formatted long description that follows
+  YAML best practices for readability and maintainability.
+  It uses the folded scalar style for better line management.
+
+# Consistent boolean values
+debug_mode: true
+production_ready: true
+maintenance: false
+
+logging:
+  level: INFO
+  file: /var/log/app.log
+
+# Properly quoted strings
+message: "Don't use mixed quotes"
+path: "C:\\Windows\\System32"
+regex: "[a-zA-Z0-9]+"</div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 fixed-ci.yml (Corrected CI/CD Pipeline):</h4>
+                    <div class="code-box"># fixed-ci.yml - Clean CI/CD configuration
+name: Build and Deploy
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - name: Install dependencies
+        run: |
+          npm install
+          npm run build
+      - name: Run tests
+        run: npm test
+        env:
+          NODE_ENV: production
+          API_KEY: ${{ secrets.API_KEY }}
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    steps:
+      - name: Deploy to production
+        run: echo "Deploying..."</div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px;">
+                    <h4 style="color: #28a745; margin-bottom: 10px;">📝 fixed-k8s.yml (Corrected Kubernetes manifest):</h4>
+                    <div class="code-box"># fixed-k8s.yml - Clean Kubernetes deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-app
+  namespace: default
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: web-app
+  template:
+    metadata:
+      labels:
+        app: web-app
+    spec:
+      containers:
+        - name: web-container
+          image: nginx:1.21
+          ports:
+            - containerPort: 80
+          env:
+            - name: ENV
+              value: production
+            - name: DEBUG
+              value: "false"
+          resources:
+            requests:
+              memory: "128Mi"
+              cpu: "100m"
+            limits:
+              memory: "256Mi"
+              cpu: "200m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-service
+spec:
+  selector:
+    app: web-app
+  ports:
+    - port: 80
+      targetPort: 80
+  type: LoadBalancer</div>
+                </div>
+            </div>
+
+            <!-- Best Practices Summary -->
+            <div style="background: #f3e5f5; padding: 25px; border-radius: 15px; margin-bottom: 20px; border-left: 5px solid #9c27b0;">
+                <h3 style="color: #7b1fa2; margin-bottom: 15px;">🏆 YAML Linting Best Practices</h3>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #7b1fa2; margin-bottom: 10px;">✅ Do's</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4; margin: 0; padding-left: 20px;">
+                            <li>Use consistent indentation (2 or 4 spaces)</li>
+                            <li>Add space after colons (:)</li>
+                            <li>Use consistent boolean values</li>
+                            <li>Keep lines under 80-120 characters</li>
+                            <li>Use meaningful comments</li>
+                            <li>Quote strings when necessary</li>
+                            <li>Use block scalars for long text</li>
+                            <li>Validate syntax before committing</li>
+                        </ul>
+                    </div>
+                    <div style="background: white; padding: 20px; border-radius: 10px;">
+                        <h4 style="color: #dc3545; margin-bottom: 10px;">❌ Don'ts</h4>
+                        <ul style="color: #666; font-size: 0.9em; line-height: 1.4; margin: 0; padding-left: 20px;">
+                            <li>Mix tabs and spaces</li>
+                            <li>Leave trailing whitespace</li>
+                            <li>Use inconsistent indentation</li>
+                            <li>Mix quote styles unnecessarily</li>
+                            <li>Create overly long lines</li>
+                            <li>Use too many blank lines</li>
+                            <li>Ignore linting warnings</li>
+                            <li>Skip validation in CI/CD</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                    <h4 style="color: #7b1fa2; margin-bottom: 10px;">🛠️ Recommended Linting Workflow</h4>
+                    <div class="code-box"># 1. Install yamllint in your project
+pip install yamllint
+
+# 2. Create project-specific configuration
+cat > .yamllint.yml << 'EOF'
+extends: default
+rules:
+  line-length:
+    max: 120
+  indentation:
+    spaces: 2
+  truthy:
+    allowed-values: ['true', 'false']
+EOF
+
+# 3. Add to pre-commit hooks
+# .pre-commit-config.yaml
+repos:
+  - repo: https://github.com/adrienverge/yamllint
+    rev: v1.32.0
+    hooks:
+      - id: yamllint
+
+# 4. Integrate with CI/CD
+# In your CI pipeline:
+yamllint .
+# Or for specific files:
+yamllint config/ *.yml *.yaml</div>
+                </div>
+            </div>
+            <div class="author-credit">Prepared by: Rashi Rana<br>(Corporate Trainer)</div>
+        </div>
+
+    </div>
+</body>
+</html>
