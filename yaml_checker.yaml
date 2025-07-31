@@ -1,0 +1,74 @@
+#!/usr/bin/env python3
+"""
+Simple YAML Validation Script
+Checks YAML files for syntax errors and basic structure
+"""
+
+import yaml
+import sys
+from pathlib import Path
+
+def validate_yaml_file(file_path):
+    """Validate a single YAML file"""
+    try:
+        print(f"🔍 Checking: {file_path}")
+        
+        # Check if file exists
+        if not Path(file_path).exists():
+            print(f"❌ File not found: {file_path}")
+            return False
+        
+        # Read and parse YAML
+        with open(file_path, 'r') as file:
+            data = yaml.safe_load(file)
+        
+        # Basic validation checks
+        if data is None:
+            print(f"⚠️  {file_path}: File is empty or contains only comments")
+            return True
+        
+        # Check data type
+        if isinstance(data, dict):
+            print(f"✅ {file_path}: Valid YAML dictionary with {len(data)} keys")
+        elif isinstance(data, list):
+            print(f"✅ {file_path}: Valid YAML list with {len(data)} items")
+        else:
+            print(f"✅ {file_path}: Valid YAML with {type(data).__name__} data")
+        
+        return True
+        
+    except yaml.YAMLError as e:
+        print(f"❌ {file_path}: YAML syntax error")
+        print(f"   Error details: {e}")
+        return False
+    except Exception as e:
+        print(f"❌ {file_path}: Unexpected error - {e}")
+        return False
+
+def main():
+    """Main validation function"""
+    if len(sys.argv) < 2:
+        print("Usage: python yaml_checker.py  [yaml_file2] ...")
+        print("Example: python yaml_checker.py config.yml team.yml")
+        sys.exit(1)
+    
+    print("🔍 YAML VALIDATION REPORT")
+    print("=" * 40)
+    
+    all_valid = True
+    
+    # Validate each file
+    for file_path in sys.argv[1:]:
+        if not validate_yaml_file(file_path):
+            all_valid = False
+        print()  # Empty line between files
+    
+    # Final result
+    if all_valid:
+        print("🎉 All YAML files are valid!")
+    else:
+        print("⚠️  Some YAML files have errors - please fix them")
+        sys.exit(1)
+
+if __name__ == "__main__":
+    main()
