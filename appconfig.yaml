@@ -1,0 +1,67 @@
+# Application Configuration File
+app:
+  name: "My Web Application"
+  version: "1.2.0"
+  environment: production
+  debug: false
+
+# Server Configuration
+server:
+  host: "0.0.0.0"
+  port: 8080
+  timeout: 30
+  ssl:
+    enabled: true
+    certificate: "/etc/ssl/app.crt"
+    private_key: "/etc/ssl/app.key"
+
+# Database Settings
+database:
+  type: postgresql
+  host: localhost
+  port: 5432
+  name: myapp_db
+  username: app_user
+  password: "${DB_PASSWORD}"
+  pool_size: 10
+  timeout: 5000
+
+# Logging Configuration
+logging:
+  level: INFO
+  format: json
+  outputs:
+    - type: file
+      path: "/var/log/app.log"
+      max_size: "100MB"
+      max_files: 5
+    - type: console
+      enabled: true
+
+# Feature Flags
+features:
+  user_registration: true
+  email_verification: true
+  two_factor_auth: false
+  analytics: true
+  maintenance_mode: false
+
+# External Services
+services:
+  email:
+    provider: sendgrid
+    api_key: "${SENDGRID_API_KEY}"
+    from_address: "noreply@myapp.com"
+  
+  cache:
+    type: redis
+    host: localhost
+    port: 6379
+    ttl: 3600
+
+# Environment Variables
+environment_variables:
+  - NODE_ENV
+  - DATABASE_URL
+  - API_SECRET_KEY
+  - REDIS_URL
