@@ -15,14 +15,11 @@ Task: List only .txt files in the current directory.
 ## Q5: use the above concepts to complete the below task
 Task: Write a Python script that does the following:
 
-Checks if a directory called reports exists in the current working directory.
+1. Checks if a directory called reports exists in the current working directory.
+    If it doesn't, create it.
 
-If it doesn't, create it.
+2. List all .txt files in the current working directory (not subdirectories).
 
-List all .txt files in the current working directory (not subdirectories).
-
-For each .txt file found:
-
-Print the filename.
-
-Move it into the reports directory.
+3. For each .txt file found:
+A) Print the filename.
+B) Move it into the reports directory.
