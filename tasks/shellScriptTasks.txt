@@ -1,0 +1,26 @@
+
+Shell Script Task 1: system_health_check.sh
+
+1. Log Running Processes
+- List all currently running processes.
+- Save the output to a log file named process_log_<YYYY-MM-DD>.log.
+
+2. Check for High Memory Usage
+- Identify any processes using more than 30% memory.
+- If any such processes exist:
+  - Print a warning message to the screen.
+  - Append those process details to a file named high_mem_processes.log.
+
+3. Check Disk Space on Root Partition
+- Check disk usage on the / partition.
+- If usage exceeds 80%:
+  - Print a warning message to the screen.
+
+4. Display Summary
+- At the end of the script, display:
+  - Total number of running processes
+  - Number of processes using more than 30% memory
+  - Disk usage percentage on /
+
+
+Hint: Use https://www.geeksforgeeks.org/linux-unix/linux-commands-cheat-sheet/ to check commands
