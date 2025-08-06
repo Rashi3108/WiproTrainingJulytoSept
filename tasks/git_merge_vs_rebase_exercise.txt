@@ -80,12 +80,6 @@ Step 13: View the log
 git log --oneline --graph
 
 ===============================================
-Discussion Points:
-- What happens to the commit history with merge vs rebase?
-- When is it better to use rebase over merge?
-- What are the risks of using rebase on shared branches?
-
-===============================================
 Optional Cleanup:
 -----------------------------------------------
 cd ..
