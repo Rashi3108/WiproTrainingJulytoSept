@@ -1,0 +1,20 @@
+Asessment 1: Use EC2 User Data to Auto-Install & Configure Apache
+
+Goal:
+Launch an EC2 instance that automatically:
+Installs Apache
+Sets up a basic web page
+Starts the service
+
+What to do:
+Use Amazon Linux 2
+Pass the following User Data script during launch:
+#!/bin/bash
+yum update -y
+yum install httpd -y
+systemctl enable httpd
+systemctl start httpd
+echo "<h1>Welcome to EC2 - Deployed via User Data</h1>" > /var/www/html/index.html
+
+Validation:
+Access the EC2 public IP in a browser → see the page
