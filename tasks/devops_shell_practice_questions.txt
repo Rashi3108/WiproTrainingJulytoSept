@@ -1,0 +1,56 @@
+Shell Scripting Practice Questions
+=========================================================
+
+1. Check and Log Running Processes
+----------------------------------
+File Name: process_checker.sh
+
+Problem:
+- Search for processes related to a keyword like `nginx` or `java`.
+- Log how many such processes are currently running.
+- Append the output with a timestamp to a file called `process_log.txt`.
+
+Bonus:
+- Accept the process name as a command-line argument.
+
+
+2. Disk Usage Reporter
+----------------------
+File Name: disk_check.sh
+
+Problem:
+- Check the disk usage of the root partition `/`.
+- If the usage is more than 80%, show a **warning** on the screen.
+- Otherwise, print “Disk usage normal”.
+- Log the status with a timestamp into `disk_report.log`.
+
+
+3. Find Large Files in a Directory
+----------------------------------
+File Name: large_files.sh
+
+Problem:
+- Find all files larger than 100MB in a directory (default: current directory).
+- Sort them by size in descending order.
+- Save the result in `large_files_report.txt`.
+
+Bonus:
+- Accept the directory path as an argument.
+
+
+4. Simple Directory Backup Script
+---------------------------------
+File Name: backup_dir.sh
+
+Problem:
+- Take a directory name as input.
+- Create a `.tar.gz` archive with the current date in the filename,
+  e.g., `backup_etc_2025-08-08.tar.gz`.
+- Save it in a folder called `backups/` (create it if it doesn't exist).
+
+
+Covered Commands
+----------------
+- ps, grep, df, find, tar, du, sort, date, mkdir
+- Redirection: >, >>
+- if statements, variables, arguments, and basic scripting logic
