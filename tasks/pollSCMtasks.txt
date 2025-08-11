@@ -1,0 +1,29 @@
+Write a Cron expression in Jenkins to poll SCM every 5 minutes.
+
+Write a Cron expression in Jenkins to poll SCM every hour at the 15th minute.
+
+Write a Cron expression in Jenkins to poll SCM every day at midnight.
+
+Write a Cron expression in Jenkins to poll SCM every weekday at 9:30 AM.
+
+Write a Cron expression in Jenkins to poll SCM every Sunday at 8:00 PM.
+
+Write a Cron expression in Jenkins to poll SCM every 10 minutes during working hours (9 AM–5 PM) on weekdays.
+
+Write a Cron expression in Jenkins to poll SCM at 6:45 PM on the 1st and 15th of each month.
+
+Write a Cron expression in Jenkins to poll SCM every 2 hours.
+
+Write a Cron expression in Jenkins to poll SCM every 30 minutes, but only on Saturdays.
+
+Write a Cron expression in Jenkins to poll SCM every 5 minutes using hash (H) to distribute load.
+
+Write a Cron expression in Jenkins to poll SCM every day at 11:59 PM.
+
+Write a Cron expression in Jenkins to poll SCM every 20 minutes between 6 PM and midnight.
+
+Write a Cron expression in Jenkins to poll SCM only at 8:00 AM and 8:00 PM daily.
+
+Write a Cron expression in Jenkins to poll SCM every 5 minutes between Monday and Friday.
+
+Write a Cron expression in Jenkins to poll SCM every day at a random time in the 3 PM hour.
