@@ -1,0 +1,2463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SonarQube - Code Quality & Security Analysis</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #4a90e2 0%, #357abd 100%);
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        .slide {
+            margin-bottom: 60px;
+            padding: 40px;
+            background: #fff;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            page-break-after: always;
+        }
+
+        .slide h1 {
+            color: #4a90e2;
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            border-bottom: 3px solid #4a90e2;
+            padding-bottom: 15px;
+        }
+
+        .slide h2 {
+            color: #1f2937;
+            font-size: 2rem;
+            margin-bottom: 15px;
+            margin-top: 30px;
+        }
+
+        .slide h3 {
+            color: #374151;
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+            margin-top: 20px;
+        }
+
+        .slide p, .slide li {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: #4b5563;
+        }
+
+        .slide ul, .slide ol {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .code-block {
+            background: #1f2937;
+            color: #10b981;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+            font-size: 0.9rem;
+        }
+
+        .highlight {
+            background: #fef3c7;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-weight: 600;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: #f8fafc;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #4a90e2;
+        }
+
+        .feature-card h4 {
+            color: #1f2937;
+            margin-bottom: 10px;
+        }
+
+        .metrics-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        .metrics-table th,
+        .metrics-table td {
+            border: 1px solid #d1d5db;
+            padding: 12px;
+            text-align: left;
+        }
+
+        .metrics-table th {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .metrics-table tr:nth-child(even) {
+            background: #f9fafb;
+        }
+
+        .severity-critical {
+            background: #dc2626;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .severity-major {
+            background: #ea580c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .severity-minor {
+            background: #ca8a04;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .severity-info {
+            background: #2563eb;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .title-slide {
+            text-align: center;
+            background: linear-gradient(135deg, #4a90e2, #357abd);
+            color: white;
+        }
+
+        .title-slide h1 {
+            color: white;
+            border-bottom: 3px solid white;
+            font-size: 3rem;
+        }
+
+        .architecture-diagram {
+            text-align: center;
+            margin: 30px 0;
+            padding: 20px;
+            background: #f1f5f9;
+            border-radius: 10px;
+        }
+
+        .command-block {
+            background: #374151;
+            color: #f3f4f6;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            border-left: 4px solid #4a90e2;
+        }
+
+        .warning-box {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .success-box {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+            .presentation-container {
+                background: white;
+                box-shadow: none;
+                margin: 0;
+                padding: 0;
+            }
+            .slide {
+                page-break-after: always;
+                box-shadow: none;
+                margin-bottom: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        
+        <!-- Title Slide -->
+        <div class="slide title-slide">
+            <h1>🔍 SonarQube</h1>
+            <h2>Code Quality & Security Analysis Platform</h2>
+            <p style="font-size: 1.3rem; margin-top: 30px;">
+                Comprehensive guide to code quality management,<br>
+                static analysis, and continuous inspection
+            </p>
+            <div style="margin-top: 40px;">
+                <p><strong>Platform:</strong> SonarQube Community Edition</p>
+                <p><strong>Deployment:</strong> Docker & AWS EC2</p>
+                <p><strong>Analysis Target:</strong> Spring Boot Application</p>
+            </div>
+        </div>
+        <!-- Introduction to SonarQube -->
+        <div class="slide">
+            <h1>Introduction to SonarQube</h1>
+            
+            <h2>🎯 What is SonarQube?</h2>
+            <p>SonarQube is an <span class="highlight">open-source platform</span> for continuous inspection of code quality that performs automatic reviews with static analysis of code to detect:</p>
+            <ul>
+                <li>Bugs and potential runtime errors</li>
+                <li>Code smells and maintainability issues</li>
+                <li>Security vulnerabilities and hotspots</li>
+                <li>Code duplications and complexity</li>
+                <li>Test coverage and technical debt</li>
+            </ul>
+
+            <h2>🏢 Company & History</h2>
+            <ul>
+                <li><strong>Founded:</strong> 2008 by SonarSource</li>
+                <li><strong>Original Name:</strong> Sonar (renamed to SonarQube in 2013)</li>
+                <li><strong>Headquarters:</strong> Geneva, Switzerland</li>
+                <li><strong>Languages Supported:</strong> 25+ programming languages</li>
+                <li><strong>Users:</strong> 200,000+ organizations worldwide</li>
+            </ul>
+
+            <h2>🌟 Key Benefits</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔍 Continuous Inspection</h4>
+                    <p>Automated code analysis integrated into CI/CD pipelines</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Quality Gates</h4>
+                    <p>Define and enforce quality standards before code deployment</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🛡️ Security Focus</h4>
+                    <p>Identify security vulnerabilities and compliance issues</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📈 Technical Debt Management</h4>
+                    <p>Quantify and track technical debt over time</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- What is Code Quality? -->
+        <div class="slide">
+            <h1>What is Code Quality?</h1>
+
+            <h2>📋 Definition</h2>
+            <p>Code quality refers to how <span class="highlight">well-written, maintainable, and reliable</span> source code is. It encompasses multiple dimensions that affect the software's long-term success.</p>
+
+            <h2>🎯 Key Dimensions of Code Quality</h2>
+
+            <h3>1. 🐛 Reliability</h3>
+            <ul>
+                <li><strong>Bugs:</strong> Code that is likely to behave unexpectedly</li>
+                <li><strong>Error Handling:</strong> Proper exception management</li>
+                <li><strong>Edge Cases:</strong> Handling of boundary conditions</li>
+            </ul>
+
+            <h3>2. 🛡️ Security</h3>
+            <ul>
+                <li><strong>Vulnerabilities:</strong> Code that can be exploited by attackers</li>
+                <li><strong>Security Hotspots:</strong> Code that requires security review</li>
+                <li><strong>Data Protection:</strong> Secure handling of sensitive information</li>
+            </ul>
+
+            <h3>3. 🔧 Maintainability</h3>
+            <ul>
+                <li><strong>Code Smells:</strong> Code that is hard to understand or modify</li>
+                <li><strong>Complexity:</strong> Cyclomatic and cognitive complexity</li>
+                <li><strong>Duplications:</strong> Repeated code blocks</li>
+            </ul>
+
+            <h3>4. 🧪 Testability</h3>
+            <ul>
+                <li><strong>Test Coverage:</strong> Percentage of code covered by tests</li>
+                <li><strong>Unit Tests:</strong> Individual component testing</li>
+                <li><strong>Integration Tests:</strong> System interaction testing</li>
+            </ul>
+
+            <h2>💰 Impact of Poor Code Quality</h2>
+            <div class="warning-box">
+                <strong>⚠️ Consequences:</strong>
+                <ul>
+                    <li>Increased development time and costs</li>
+                    <li>Higher bug rates and production issues</li>
+                    <li>Security vulnerabilities and data breaches</li>
+                    <li>Difficulty in adding new features</li>
+                    <li>Developer frustration and turnover</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Why SonarQube? -->
+        <div class="slide">
+            <h1>Why SonarQube?</h1>
+
+            <h2>🚀 The Need for Automated Code Analysis</h2>
+            <p>Manual code reviews are <span class="highlight">time-consuming, inconsistent, and error-prone</span>. SonarQube provides automated, consistent, and comprehensive code analysis.</p>
+
+            <h2>🎯 SonarQube Advantages</h2>
+
+            <h3>1. 🔄 Continuous Integration</h3>
+            <ul>
+                <li>Integrates seamlessly with CI/CD pipelines</li>
+                <li>Provides immediate feedback on code changes</li>
+                <li>Prevents quality degradation over time</li>
+            </ul>
+
+            <h3>2. 📊 Comprehensive Metrics</h3>
+            <ul>
+                <li>Multi-dimensional quality assessment</li>
+                <li>Historical trend analysis</li>
+                <li>Actionable insights and recommendations</li>
+            </ul>
+
+            <h3>3. 🛠️ Developer-Friendly</h3>
+            <ul>
+                <li>IDE integration for real-time feedback</li>
+                <li>Clear issue descriptions and remediation guidance</li>
+                <li>Customizable rules and quality profiles</li>
+            </ul>
+
+            <h3>4. 🏢 Enterprise Ready</h3>
+            <ul>
+                <li>Scalable architecture for large organizations</li>
+                <li>Role-based access control</li>
+                <li>Portfolio and project management</li>
+            </ul>
+
+            <h2>🆚 SonarQube vs Alternatives</h2>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Feature</th>
+                        <th>SonarQube</th>
+                        <th>ESLint/PMD</th>
+                        <th>CodeClimate</th>
+                        <th>Veracode</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Multi-language Support</td>
+                        <td>✅ 25+ languages</td>
+                        <td>❌ Language-specific</td>
+                        <td>✅ Multiple</td>
+                        <td>✅ Multiple</td>
+                    </tr>
+                    <tr>
+                        <td>Security Analysis</td>
+                        <td>✅ Comprehensive</td>
+                        <td>❌ Limited</td>
+                        <td>✅ Basic</td>
+                        <td>✅ Advanced</td>
+                    </tr>
+                    <tr>
+                        <td>Technical Debt</td>
+                        <td>✅ Quantified</td>
+                        <td>❌ No</td>
+                        <td>✅ Yes</td>
+                        <td>❌ No</td>
+                    </tr>
+                    <tr>
+                        <td>Quality Gates</td>
+                        <td>✅ Configurable</td>
+                        <td>❌ No</td>
+                        <td>✅ Yes</td>
+                        <td>✅ Yes</td>
+                    </tr>
+                    <tr>
+                        <td>Cost</td>
+                        <td>✅ Free Community</td>
+                        <td>✅ Free</td>
+                        <td>💰 Paid</td>
+                        <td>💰 Expensive</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🎯 When to Use SonarQube</h2>
+            <div class="success-box">
+                <strong>✅ Ideal for:</strong>
+                <ul>
+                    <li>Teams wanting comprehensive code quality analysis</li>
+                    <li>Organizations with multiple programming languages</li>
+                    <li>Projects requiring security compliance</li>
+                    <li>CI/CD pipelines needing quality gates</li>
+                    <li>Long-term technical debt management</li>
+                </ul>
+            </div>
+        </div>
+        <!-- Key SonarQube Concepts -->
+        <div class="slide">
+            <h1>Key SonarQube Concepts</h1>
+
+            <h2>🐛 1. Bugs</h2>
+            <p><span class="highlight">Code that is wrong or will behave unexpectedly</span></p>
+            
+            <h3>Characteristics:</h3>
+            <ul>
+                <li>Likely to cause runtime errors or unexpected behavior</li>
+                <li>Should be fixed immediately</li>
+                <li>Examples: Null pointer dereferences, resource leaks, infinite loops</li>
+            </ul>
+
+            <h3>Example - Null Pointer Bug:</h3>
+            <div class="code-block">// Bug: Potential NullPointerException<br>
+public String getUserName(User user) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return user.getName().toUpperCase(); // user could be null<br>
+}<br><br>
+
+// Fixed version:<br>
+public String getUserName(User user) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (user != null && user.getName() != null) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return user.getName().toUpperCase();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return "Unknown";<br>
+}</div>
+
+            <h2>👃 2. Code Smells</h2>
+            <p><span class="highlight">Code that is confusing, hard to maintain, or violates coding standards</span></p>
+
+            <h3>Types of Code Smells:</h3>
+            <ul>
+                <li><strong>Maintainability:</strong> Long methods, large classes, complex conditions</li>
+                <li><strong>Reliability:</strong> Empty catch blocks, unused variables</li>
+                <li><strong>Readability:</strong> Poor naming, missing documentation</li>
+            </ul>
+
+            <h3>Example - Long Method Smell:</h3>
+            <div class="code-block">// Code Smell: Method too long (>20 lines)<br>
+public void processOrder(Order order) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// 50+ lines of code doing multiple things<br>
+&nbsp;&nbsp;&nbsp;&nbsp;validateOrder(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;calculateTax(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;applyDiscounts(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;updateInventory(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;sendNotification(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;logTransaction(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// ... more code<br>
+}<br><br>
+
+// Better: Extract methods<br>
+public void processOrder(Order order) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;validateOrder(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;calculateOrderTotal(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;fulfillOrder(order);<br>
+&nbsp;&nbsp;&nbsp;&nbsp;notifyCustomer(order);<br>
+}</div>
+
+            <h2>🛡️ 3. Security Vulnerabilities</h2>
+            <p><span class="highlight">Code that can be exploited by hackers</span></p>
+
+            <h3>Common Vulnerability Types:</h3>
+            <ul>
+                <li><strong>Injection:</strong> SQL injection, XSS, command injection</li>
+                <li><strong>Authentication:</strong> Weak passwords, session management</li>
+                <li><strong>Cryptography:</strong> Weak encryption, hardcoded secrets</li>
+                <li><strong>Input Validation:</strong> Unvalidated user input</li>
+            </ul>
+
+            <h3>Example - SQL Injection Vulnerability:</h3>
+            <div class="code-block">// Vulnerability: SQL Injection<br>
+String query = "SELECT * FROM users WHERE id = " + userId;<br>
+Statement stmt = connection.createStatement();<br>
+ResultSet rs = stmt.executeQuery(query);<br><br>
+
+// Secure version: Prepared Statement<br>
+String query = "SELECT * FROM users WHERE id = ?";<br>
+PreparedStatement pstmt = connection.prepareStatement(query);<br>
+pstmt.setInt(1, userId);<br>
+ResultSet rs = pstmt.executeQuery();</div>
+
+            <h2>📋 4. Code Duplications</h2>
+            <p><span class="highlight">Identical or similar code blocks repeated across the codebase</span></p>
+
+            <h3>Types of Duplication:</h3>
+            <ul>
+                <li><strong>Exact Duplication:</strong> Identical code blocks</li>
+                <li><strong>Structural Duplication:</strong> Same structure, different variables</li>
+                <li><strong>Functional Duplication:</strong> Different code achieving same result</li>
+            </ul>
+
+            <h3>Impact:</h3>
+            <ul>
+                <li>Increases maintenance effort</li>
+                <li>Higher risk of inconsistent bug fixes</li>
+                <li>Larger codebase and memory footprint</li>
+            </ul>
+
+            <h2>💰 5. Technical Debt</h2>
+            <p><span class="highlight">The cost of additional rework caused by choosing quick solutions over better approaches</span></p>
+
+            <h3>SonarQube Technical Debt Calculation:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📊 Debt Ratio</h4>
+                    <p>Ratio between cost to fix issues and cost to develop the application</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⏱️ Remediation Time</h4>
+                    <p>Estimated time needed to fix all maintainability issues</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 SQALE Rating</h4>
+                    <p>A-E rating based on technical debt ratio</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📈 Trend Analysis</h4>
+                    <p>Track debt evolution over time</p>
+                </div>
+            </div>
+
+            <h3>Technical Debt Ratings:</h3>
+            <ul>
+                <li><strong>A:</strong> ≤ 5% - Excellent</li>
+                <li><strong>B:</strong> 6-10% - Good</li>
+                <li><strong>C:</strong> 11-20% - Moderate</li>
+                <li><strong>D:</strong> 21-50% - Poor</li>
+                <li><strong>E:</strong> > 50% - Very Poor</li>
+            </ul>
+        </div>
+        <!-- Architecture -->
+        <div class="slide">
+            <h1>SonarQube Architecture</h1>
+
+            <h2>🏗️ Core Components</h2>
+
+            <div class="architecture-diagram">
+                <h3>SonarQube Architecture Overview</h3>
+                <div style="font-family: monospace; text-align: left; background: white; padding: 20px; border-radius: 8px;">
+<pre>
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   Developer     │    │   CI/CD         │    │   SonarQube     │
+│   Workstation   │    │   Pipeline      │    │   Server        │
+│                 │    │                 │    │                 │
+│ ┌─────────────┐ │    │ ┌─────────────┐ │    │ ┌─────────────┐ │
+│ │ SonarLint   │ │    │ │ SonarScanner│ │    │ │ Web Server  │ │
+│ │ (IDE Plugin)│ │    │ │             │ │    │ │             │ │
+│ └─────────────┘ │    │ └─────────────┘ │    │ └─────────────┘ │
+│                 │    │                 │    │                 │
+│                 │    │                 │    │ ┌─────────────┐ │
+│                 │    │                 │    │ │ Database    │ │
+│                 │    │                 │    │ │ (PostgreSQL)│ │
+│                 │    │                 │    │ └─────────────┘ │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                       │                       │
+         └───────────────────────┼───────────────────────┘
+                                 │
+                        ┌─────────────────┐
+                        │   Source Code   │
+                        │   Repository    │
+                        │   (Git/SVN)     │
+                        └─────────────────┘
+</pre>
+                </div>
+            </div>
+
+            <h2>🖥️ SonarQube Server</h2>
+            <h3>Components:</h3>
+            <ul>
+                <li><strong>Web Server:</strong> User interface and web services</li>
+                <li><strong>Search Server:</strong> Elasticsearch-based search engine</li>
+                <li><strong>Compute Engine:</strong> Processes analysis reports</li>
+                <li><strong>Database:</strong> Stores configuration, issues, and metrics</li>
+            </ul>
+
+            <h3>Responsibilities:</h3>
+            <ul>
+                <li>Store and display analysis results</li>
+                <li>Manage quality profiles and rules</li>
+                <li>Provide web interface for browsing issues</li>
+                <li>Generate reports and metrics</li>
+                <li>Manage user authentication and permissions</li>
+            </ul>
+
+            <h2>🔍 SonarQube Scanner</h2>
+            <h3>Types of Scanners:</h3>
+            <ul>
+                <li><strong>SonarScanner:</strong> Generic scanner for any project</li>
+                <li><strong>SonarScanner for Maven:</strong> Integrated with Maven builds</li>
+                <li><strong>SonarScanner for Gradle:</strong> Integrated with Gradle builds</li>
+                <li><strong>SonarScanner for Jenkins:</strong> Jenkins plugin</li>
+                <li><strong>SonarScanner for Azure DevOps:</strong> Azure Pipelines integration</li>
+            </ul>
+
+            <h3>Scanner Workflow:</h3>
+            <ol>
+                <li>Analyze source code locally</li>
+                <li>Generate analysis report</li>
+                <li>Send report to SonarQube Server</li>
+                <li>Server processes and stores results</li>
+            </ol>
+
+            <h2>🔌 Integration Points</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🏗️ Build Tools</h4>
+                    <p>Maven, Gradle, Ant, MSBuild</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔄 CI/CD</h4>
+                    <p>Jenkins, GitLab CI, Azure DevOps, GitHub Actions</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💻 IDEs</h4>
+                    <p>IntelliJ IDEA, Eclipse, Visual Studio Code</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 ALM Tools</h4>
+                    <p>Jira, Azure DevOps, GitLab</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- SonarQube Dependencies -->
+        <div class="slide">
+            <h1>SonarQube Dependencies & Requirements</h1>
+
+            <h2>🔧 Core Dependencies</h2>
+            <p>SonarQube requires several key components to function properly. Understanding these dependencies is crucial for successful installation and operation.</p>
+
+            <h3>☕ 1. Java Runtime Environment (JRE/JDK)</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📋 Requirements</h4>
+                    <p><strong>Version:</strong> Java 11 or Java 17<br>
+                    <strong>Type:</strong> OpenJDK or Oracle JDK<br>
+                    <strong>Memory:</strong> Minimum 2GB heap</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Why Java?</h4>
+                    <p>SonarQube is built entirely in Java. The server, web interface, and analysis engine all run on the JVM.</p>
+                </div>
+            </div>
+
+            <h4>Java Usage in SonarQube:</h4>
+            <ul>
+                <li><strong>Web Server:</strong> Runs the SonarQube web application</li>
+                <li><strong>Compute Engine:</strong> Processes analysis reports</li>
+                <li><strong>Background Tasks:</strong> Handles project indexing and cleanup</li>
+                <li><strong>Plugin System:</strong> Loads and executes language analyzers</li>
+            </ul>
+
+            <h3>🔍 2. Elasticsearch (Embedded)</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📋 Details</h4>
+                    <p><strong>Version:</strong> Embedded in SonarQube<br>
+                    <strong>Purpose:</strong> Search and indexing engine<br>
+                    <strong>Memory:</strong> 512MB minimum</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Why Elasticsearch?</h4>
+                    <p>Provides fast search capabilities for issues, rules, and project data across large codebases.</p>
+                </div>
+            </div>
+
+            <h4>Elasticsearch Usage:</h4>
+            <ul>
+                <li><strong>Issue Search:</strong> Fast searching through millions of code issues</li>
+                <li><strong>Rule Indexing:</strong> Quick access to quality rules and profiles</li>
+                <li><strong>Project Navigation:</strong> Efficient browsing of large projects</li>
+                <li><strong>Dashboard Queries:</strong> Real-time data aggregation for metrics</li>
+            </ul>
+
+            <h3>🗄️ 3. Database (Optional but Recommended)</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📋 Supported Databases</h4>
+                    <p><strong>Production:</strong> PostgreSQL, Oracle, SQL Server<br>
+                    <strong>Development:</strong> H2 (embedded)<br>
+                    <strong>Recommended:</strong> PostgreSQL</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Why Database?</h4>
+                    <p>Stores all persistent data including issues, metrics, user settings, and historical analysis data.</p>
+                </div>
+            </div>
+
+            <h4>Database Usage:</h4>
+            <ul>
+                <li><strong>Issue Storage:</strong> All detected bugs, vulnerabilities, and code smells</li>
+                <li><strong>Metrics History:</strong> Historical trends and quality gate results</li>
+                <li><strong>User Management:</strong> Authentication, permissions, and preferences</li>
+                <li><strong>Configuration:</strong> Quality profiles, rules, and project settings</li>
+            </ul>
+
+            <h2>⚙️ System Requirements</h2>
+
+            <h3>💾 Memory Requirements</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Component</th>
+                        <th>Minimum RAM</th>
+                        <th>Recommended RAM</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SonarQube Server</td>
+                        <td>2GB</td>
+                        <td>4GB+</td>
+                        <td>Web server and compute engine</td>
+                    </tr>
+                    <tr>
+                        <td>Elasticsearch</td>
+                        <td>512MB</td>
+                        <td>1GB+</td>
+                        <td>Search indexing and queries</td>
+                    </tr>
+                    <tr>
+                        <td>Database</td>
+                        <td>512MB</td>
+                        <td>2GB+</td>
+                        <td>Data storage and retrieval</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Total System</strong></td>
+                        <td><strong>4GB</strong></td>
+                        <td><strong>8GB+</strong></td>
+                        <td><strong>Complete SonarQube stack</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>🖥️ CPU Requirements</h3>
+            <ul>
+                <li><strong>Minimum:</strong> 2 CPU cores</li>
+                <li><strong>Recommended:</strong> 4+ CPU cores</li>
+                <li><strong>Analysis Impact:</strong> More cores = faster project analysis</li>
+                <li><strong>Concurrent Users:</strong> Additional cores needed for multiple users</li>
+            </ul>
+
+            <h3>💿 Storage Requirements</h3>
+            <ul>
+                <li><strong>Application:</strong> 1GB for SonarQube installation</li>
+                <li><strong>Database:</strong> Varies by project size (100MB - 10GB+)</li>
+                <li><strong>Logs:</strong> 1-5GB for log files</li>
+                <li><strong>Temp Space:</strong> 2GB for analysis processing</li>
+            </ul>
+
+            <h2>🌐 Network Dependencies</h2>
+
+            <h3>Port Requirements:</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Port</th>
+                        <th>Service</th>
+                        <th>Direction</th>
+                        <th>Purpose</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>9000</td>
+                        <td>SonarQube Web</td>
+                        <td>Inbound</td>
+                        <td>Web interface and API access</td>
+                    </tr>
+                    <tr>
+                        <td>9001</td>
+                        <td>Elasticsearch</td>
+                        <td>Internal</td>
+                        <td>Search engine communication</td>
+                    </tr>
+                    <tr>
+                        <td>5432</td>
+                        <td>PostgreSQL</td>
+                        <td>Outbound</td>
+                        <td>Database connection (if external)</td>
+                    </tr>
+                    <tr>
+                        <td>443/80</td>
+                        <td>Internet</td>
+                        <td>Outbound</td>
+                        <td>Plugin downloads and updates</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>🔒 Security Dependencies</h2>
+
+            <h3>Operating System Requirements:</h3>
+            <ul>
+                <li><strong>File Permissions:</strong> Dedicated user account (sonarqube)</li>
+                <li><strong>System Limits:</strong> Increased file descriptors and processes</li>
+                <li><strong>Kernel Parameters:</strong> Memory mapping limits for Elasticsearch</li>
+                <li><strong>Firewall:</strong> Proper port configuration</li>
+            </ul>
+
+            <h3>Critical System Settings:</h3>
+            <div class="command-block">
+# File descriptor limits<br>
+echo "sonarqube soft nofile 65536" >> /etc/security/limits.conf<br>
+echo "sonarqube hard nofile 65536" >> /etc/security/limits.conf<br><br>
+
+# Process limits<br>
+echo "sonarqube soft nproc 4096" >> /etc/security/limits.conf<br>
+echo "sonarqube hard nproc 4096" >> /etc/security/limits.conf<br><br>
+
+# Kernel parameters for Elasticsearch<br>
+echo "vm.max_map_count=262144" >> /etc/sysctl.conf<br>
+echo "fs.file-max=65536" >> /etc/sysctl.conf
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Important:</strong> These system-level configurations are required because:
+                <ul>
+                    <li><strong>Elasticsearch</strong> needs high file descriptor limits for indexing</li>
+                    <li><strong>Java applications</strong> require sufficient process limits</li>
+                    <li><strong>Memory mapping</strong> is essential for search performance</li>
+                </ul>
+            </div>
+
+            <h2>🔄 Dependency Interaction Flow</h2>
+            <div class="architecture-diagram">
+                <h3>How Dependencies Work Together</h3>
+                <div style="font-family: monospace; text-align: left; background: white; padding: 20px; border-radius: 8px;">
+<pre>
+┌─────────────────────────────────────────────────────────────┐
+│                    SonarQube Server (Java)                 │
+├─────────────────────────────────────────────────────────────┤
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────────────┐  │
+│  │ Web Server  │  │   Compute   │  │   Background Tasks  │  │
+│  │   (Tomcat)  │  │   Engine    │  │    (Schedulers)     │  │
+│  └─────────────┘  └─────────────┘  └─────────────────────┘  │
+└─────────────────────────────────────────────────────────────┘
+           │                    │                    │
+           ▼                    ▼                    ▼
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Elasticsearch  │    │    Database     │    │   File System   │
+│   (Indexing)    │    │  (PostgreSQL)   │    │    (Logs)       │
+│                 │    │                 │    │                 │
+│ • Search Issues │    │ • Store Issues  │    │ • Application   │
+│ • Index Rules   │    │ • User Data     │    │   Logs          │
+│ • Project Data  │    │ • Metrics       │    │ • Analysis      │
+│                 │    │ • History       │    │   Reports       │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+</pre>
+                </div>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Key Takeaway:</strong> Each dependency serves a specific purpose:
+                <ul>
+                    <li><strong>Java:</strong> Runtime environment for the entire application</li>
+                    <li><strong>Elasticsearch:</strong> Fast search and data retrieval</li>
+                    <li><strong>Database:</strong> Persistent storage of all analysis data</li>
+                    <li><strong>System Resources:</strong> Adequate performance and stability</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Installation -->
+        <div class="slide">
+            <h1>SonarQube Installation</h1>
+
+            <h2>🐳 Option 1: Docker Installation</h2>
+            
+            <div class="success-box">
+                <strong>🎯 Why Docker Simplifies Dependencies:</strong>
+                <ul>
+                    <li><strong>Pre-configured Environment:</strong> Java, Elasticsearch, and system settings included</li>
+                    <li><strong>Isolated Runtime:</strong> No conflicts with host system Java versions</li>
+                    <li><strong>Consistent Setup:</strong> Same environment across different operating systems</li>
+                    <li><strong>Easy Scaling:</strong> Simple to add database containers</li>
+                </ul>
+            </div>
+            
+            <h3>Prerequisites:</h3>
+            <ul>
+                <li><strong>Docker Engine:</strong> 17.05+ (handles Java and Elasticsearch internally)</li>
+                <li><strong>Host RAM:</strong> 4GB minimum (Docker manages memory allocation)</li>
+                <li><strong>Host CPU:</strong> 2 cores minimum</li>
+                <li><strong>Disk Space:</strong> 10GB for images and data</li>
+            </ul>
+
+            <h3>What Docker Provides Automatically:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>☕ Java Runtime</h4>
+                    <p>OpenJDK 11 pre-installed and configured in the container</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔍 Elasticsearch</h4>
+                    <p>Embedded search engine with optimal settings</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚙️ System Configuration</h4>
+                    <p>All kernel parameters and limits pre-configured</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🗄️ H2 Database</h4>
+                    <p>Embedded database for quick start (can be replaced)</p>
+                </div>
+            </div>
+
+            <h3>Quick Start with Docker:</h3>
+            <div class="command-block">
+# Pull SonarQube Community Edition<br>
+docker pull sonarqube:community<br><br>
+
+# Run SonarQube container<br>
+docker run -d --name sonarqube \<br>
+&nbsp;&nbsp;-p 9000:9000 \<br>
+&nbsp;&nbsp;-e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \<br>
+&nbsp;&nbsp;sonarqube:community<br><br>
+
+# Check container status<br>
+docker ps<br><br>
+
+# View logs<br>
+docker logs sonarqube
+            </div>
+
+            <h3>Docker Compose Setup:</h3>
+            <div class="code-block">
+# docker-compose.yml<br>
+version: "3.8"<br><br>
+
+services:<br>
+&nbsp;&nbsp;sonarqube:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: sonarqube:community<br>
+&nbsp;&nbsp;&nbsp;&nbsp;container_name: sonarqube<br>
+&nbsp;&nbsp;&nbsp;&nbsp;depends_on:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- db<br>
+&nbsp;&nbsp;&nbsp;&nbsp;environment:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SONAR_JDBC_URL: jdbc:postgresql://db:5432/sonar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SONAR_JDBC_USERNAME: sonar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SONAR_JDBC_PASSWORD: sonar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;ports:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- "9000:9000"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- sonarqube_data:/opt/sonarqube/data<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- sonarqube_extensions:/opt/sonarqube/extensions<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- sonarqube_logs:/opt/sonarqube/logs<br><br>
+
+&nbsp;&nbsp;db:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: postgres:13<br>
+&nbsp;&nbsp;&nbsp;&nbsp;container_name: sonarqube-db<br>
+&nbsp;&nbsp;&nbsp;&nbsp;environment:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POSTGRES_USER: sonar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POSTGRES_PASSWORD: sonar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;POSTGRES_DB: sonar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- postgresql_data:/var/lib/postgresql/data<br><br>
+
+volumes:<br>
+&nbsp;&nbsp;sonarqube_data:<br>
+&nbsp;&nbsp;sonarqube_extensions:<br>
+&nbsp;&nbsp;sonarqube_logs:<br>
+&nbsp;&nbsp;postgresql_data:
+            </div>
+
+            <div class="command-block">
+# Start with Docker Compose<br>
+docker-compose up -d<br><br>
+
+# Stop services<br>
+docker-compose down
+            </div>
+
+            <h2>☁️ Option 2: AWS EC2 Installation</h2>
+
+            <div class="warning-box">
+                <strong>⚠️ Manual Dependency Management:</strong>
+                <p>Unlike Docker, EC2 installation requires manual setup of all dependencies. This gives you more control but requires understanding of each component.</p>
+            </div>
+
+            <h3>EC2 Instance Requirements:</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Resource</th>
+                        <th>Minimum</th>
+                        <th>Recommended</th>
+                        <th>Reason</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Instance Type</strong></td>
+                        <td>t3.medium</td>
+                        <td>t3.large+</td>
+                        <td>Java + Elasticsearch memory needs</td>
+                    </tr>
+                    <tr>
+                        <td><strong>vCPU</strong></td>
+                        <td>2 cores</td>
+                        <td>4+ cores</td>
+                        <td>Concurrent analysis processing</td>
+                    </tr>
+                    <tr>
+                        <td><strong>RAM</strong></td>
+                        <td>4GB</td>
+                        <td>8GB+</td>
+                        <td>JVM heap + Elasticsearch + OS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Storage</strong></td>
+                        <td>20GB EBS</td>
+                        <td>50GB+ EBS</td>
+                        <td>Application + database + logs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Why These Dependencies Matter on EC2:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>☕ Java Installation</h4>
+                    <p><strong>Required:</strong> Amazon Corretto 11<br>
+                    <strong>Why:</strong> SonarQube is a Java application<br>
+                    <strong>Impact:</strong> Wrong version = startup failure</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔧 System Limits</h4>
+                    <p><strong>Required:</strong> File descriptors, processes<br>
+                    <strong>Why:</strong> Elasticsearch needs high limits<br>
+                    <strong>Impact:</strong> Low limits = search failures</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🧠 Memory Settings</h4>
+                    <p><strong>Required:</strong> vm.max_map_count<br>
+                    <strong>Why:</strong> Elasticsearch memory mapping<br>
+                    <strong>Impact:</strong> Wrong setting = won't start</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔒 Security Groups</h4>
+                    <p><strong>Required:</strong> Port 9000 open<br>
+                    <strong>Why:</strong> Web interface access<br>
+                    <strong>Impact:</strong> Closed port = no access</p>
+                </div>
+            </div>
+
+            <h3>OS Requirements:</h3>
+            <ul>
+                <li><strong>Amazon Linux 2:</strong> Recommended for AWS integration</li>
+                <li><strong>User Account:</strong> Dedicated 'sonarqube' user for security</li>
+                <li><strong>Package Manager:</strong> yum for installing dependencies</li>
+                <li><strong>Network Access:</strong> Internet connectivity for downloads</li>
+            </ul>
+
+            <h3>Installation Steps:</h3>
+            <div class="command-block">
+# Update system<br>
+sudo yum update -y<br><br>
+
+# Install Java 11<br>
+sudo yum install -y java-11-amazon-corretto<br><br>
+
+# Verify Java installation<br>
+java -version<br><br>
+
+# Create sonarqube user<br>
+sudo useradd sonarqube<br><br>
+
+# Download SonarQube<br>
+cd /opt<br>
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip<br><br>
+
+# Extract and setup<br>
+sudo unzip sonarqube-9.9.0.65466.zip<br>
+sudo mv sonarqube-9.9.0.65466 sonarqube<br>
+sudo chown -R sonarqube:sonarqube /opt/sonarqube<br><br>
+
+# Configure system limits<br>
+echo "sonarqube   -   nofile   65536" | sudo tee -a /etc/security/limits.conf<br>
+echo "sonarqube   -   nproc    4096" | sudo tee -a /etc/security/limits.conf<br><br>
+
+# Configure kernel parameters<br>
+echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf<br>
+echo "fs.file-max=65536" | sudo tee -a /etc/sysctl.conf<br>
+sudo sysctl -p
+            </div>
+
+            <h3>Start SonarQube:</h3>
+            <div class="command-block">
+# Switch to sonarqube user<br>
+sudo su - sonarqube<br><br>
+
+# Start SonarQube<br>
+/opt/sonarqube/bin/linux-x86-64/sonar.sh start<br><br>
+
+# Check status<br>
+/opt/sonarqube/bin/linux-x86-64/sonar.sh status<br><br>
+
+# View logs<br>
+tail -f /opt/sonarqube/logs/sonar.log
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Access SonarQube:</strong><br>
+                Open browser: <code>http://your-ec2-public-ip:9000</code><br>
+                Default credentials: <code>admin/admin</code>
+            </div>
+        </div>
+        <!-- Dependency Troubleshooting -->
+        <div class="slide">
+            <h1>Dependency Troubleshooting</h1>
+
+            <h2>🚨 Common Dependency Issues</h2>
+
+            <h3>☕ Java-Related Problems</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Cause</th>
+                        <th>Solution</th>
+                        <th>Verification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Java not found"</td>
+                        <td>Java not installed or not in PATH</td>
+                        <td>Install Java 11/17 and set JAVA_HOME</td>
+                        <td><code>java -version</code></td>
+                    </tr>
+                    <tr>
+                        <td>"Unsupported Java version"</td>
+                        <td>Using Java 8 or older</td>
+                        <td>Upgrade to Java 11 or 17</td>
+                        <td>Check version output</td>
+                    </tr>
+                    <tr>
+                        <td>"OutOfMemoryError"</td>
+                        <td>Insufficient heap memory</td>
+                        <td>Increase JVM heap size</td>
+                        <td>Monitor memory usage</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Java Memory Configuration:</h4>
+            <div class="command-block">
+# Check current Java memory settings<br>
+ps aux | grep java<br><br>
+
+# Set custom memory for SonarQube<br>
+export SONAR_JAVA_OPTS="-Xmx2g -Xms1g"<br><br>
+
+# Verify Java installation<br>
+java -version<br>
+echo $JAVA_HOME
+            </div>
+
+            <h3>🔍 Elasticsearch Issues</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Cause</th>
+                        <th>Solution</th>
+                        <th>Prevention</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"max virtual memory areas vm.max_map_count [65530] is too low"</td>
+                        <td>Kernel parameter too low</td>
+                        <td>Set vm.max_map_count=262144</td>
+                        <td>Include in system setup</td>
+                    </tr>
+                    <tr>
+                        <td>"max file descriptors [4096] for elasticsearch process is too low"</td>
+                        <td>File descriptor limit too low</td>
+                        <td>Increase nofile limit to 65536</td>
+                        <td>Configure in limits.conf</td>
+                    </tr>
+                    <tr>
+                        <td>"Elasticsearch failed to start"</td>
+                        <td>Port conflict or memory issue</td>
+                        <td>Check port 9001 and memory</td>
+                        <td>Monitor system resources</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Elasticsearch Diagnostic Commands:</h4>
+            <div class="command-block">
+# Check Elasticsearch status<br>
+curl -X GET "localhost:9001/_cluster/health?pretty"<br><br>
+
+# Verify system limits<br>
+ulimit -n  # File descriptors<br>
+ulimit -u  # Max processes<br>
+sysctl vm.max_map_count  # Memory mapping<br><br>
+
+# Check Elasticsearch logs<br>
+tail -f /opt/sonarqube/logs/es.log
+            </div>
+
+            <h3>🗄️ Database Connection Issues</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Cause</th>
+                        <th>Solution</th>
+                        <th>Check</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"Database connection failed"</td>
+                        <td>Wrong connection string</td>
+                        <td>Verify JDBC URL in sonar.properties</td>
+                        <td>Test connection manually</td>
+                    </tr>
+                    <tr>
+                        <td>"Access denied for user"</td>
+                        <td>Wrong credentials</td>
+                        <td>Check username/password</td>
+                        <td>Login to database directly</td>
+                    </tr>
+                    <tr>
+                        <td>"Database schema outdated"</td>
+                        <td>Version mismatch</td>
+                        <td>Run database migration</td>
+                        <td>Check SonarQube logs</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h4>Database Connection Test:</h4>
+            <div class="command-block">
+# Test PostgreSQL connection<br>
+psql -h localhost -U sonar -d sonar -c "SELECT version();"<br><br>
+
+# Check database configuration<br>
+grep -E "sonar.jdbc" /opt/sonarqube/conf/sonar.properties<br><br>
+
+# Monitor database connections<br>
+netstat -an | grep 5432
+            </div>
+
+            <h2>🔧 System Resource Monitoring</h2>
+
+            <h3>Memory Usage Monitoring:</h3>
+            <div class="command-block">
+# Check overall memory usage<br>
+free -h<br><br>
+
+# Monitor Java processes<br>
+jps -v  # List Java processes<br>
+jstat -gc [PID]  # Garbage collection stats<br><br>
+
+# Check SonarQube memory usage<br>
+ps aux | grep sonar | grep -v grep
+            </div>
+
+            <h3>CPU and Disk Monitoring:</h3>
+            <div class="command-block">
+# Monitor CPU usage<br>
+top -p $(pgrep -f sonar)<br><br>
+
+# Check disk usage<br>
+df -h /opt/sonarqube<br>
+du -sh /opt/sonarqube/data<br><br>
+
+# Monitor I/O<br>
+iostat -x 1 5
+            </div>
+
+            <h2>🐳 Docker-Specific Issues</h2>
+
+            <h3>Container Resource Problems:</h3>
+            <div class="command-block">
+# Check container resource usage<br>
+docker stats sonarqube<br><br>
+
+# Inspect container configuration<br>
+docker inspect sonarqube<br><br>
+
+# Check container logs<br>
+docker logs sonarqube --tail 100<br><br>
+
+# Access container shell<br>
+docker exec -it sonarqube bash
+            </div>
+
+            <h3>Docker Memory Limits:</h3>
+            <div class="command-block">
+# Run with increased memory<br>
+docker run -d --name sonarqube \<br>
+&nbsp;&nbsp;-p 9000:9000 \<br>
+&nbsp;&nbsp;-m 4g \<br>
+&nbsp;&nbsp;-e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \<br>
+&nbsp;&nbsp;sonarqube:community<br><br>
+
+# Check Docker daemon limits<br>
+docker system info | grep -i memory
+            </div>
+
+            <h2>📊 Health Check Commands</h2>
+
+            <h3>Complete System Verification:</h3>
+            <div class="command-block">
+#!/bin/bash<br>
+echo "=== SonarQube Dependency Health Check ==="<br><br>
+
+# Java check<br>
+echo "Java Version:"<br>
+java -version<br><br>
+
+# Memory check<br>
+echo "Available Memory:"<br>
+free -h<br><br>
+
+# System limits check<br>
+echo "System Limits:"<br>
+ulimit -n<br>
+sysctl vm.max_map_count<br><br>
+
+# Port check<br>
+echo "Port Status:"<br>
+netstat -tlnp | grep -E "(9000|9001)"<br><br>
+
+# SonarQube process check<br>
+echo "SonarQube Processes:"<br>
+ps aux | grep -E "(sonar|elasticsearch)" | grep -v grep<br><br>
+
+# Web interface check<br>
+echo "Web Interface:"<br>
+curl -s -o /dev/null -w "%{http_code}" http://localhost:9000
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Pro Tip:</strong> Save this health check script as <code>sonar-health.sh</code> and run it whenever you encounter issues. It will quickly identify which dependency is causing problems.
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Remember:</strong> Most SonarQube startup issues are related to:
+                <ol>
+                    <li><strong>Insufficient memory</strong> (most common)</li>
+                    <li><strong>Wrong Java version</strong> (second most common)</li>
+                    <li><strong>System limits too low</strong> (Elasticsearch requirement)</li>
+                    <li><strong>Port conflicts</strong> (9000 already in use)</li>
+                </ol>
+            </div>
+        </div>
+
+        <!-- Hands-on: Install and Explore -->
+        <div class="slide">
+            <h1>Hands-on: Install SonarQube & Explore Dashboard</h1>
+
+            <h2>🚀 Step 1: Quick Docker Setup</h2>
+            <div class="command-block">
+# Pull and run SonarQube<br>
+docker run -d --name sonarqube \<br>
+&nbsp;&nbsp;-p 9000:9000 \<br>
+&nbsp;&nbsp;-e SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true \<br>
+&nbsp;&nbsp;sonarqube:community<br><br>
+
+# Wait for startup (2-3 minutes)<br>
+docker logs -f sonarqube
+            </div>
+
+            <h2>🌐 Step 2: Access Dashboard</h2>
+            <ol>
+                <li>Open browser: <code>http://localhost:9000</code></li>
+                <li>Login with default credentials: <code>admin/admin</code></li>
+                <li>Change password when prompted</li>
+                <li>Explore the main dashboard</li>
+            </ol>
+
+            <h2>🔍 Step 3: Dashboard Overview</h2>
+
+            <h3>Main Dashboard Components:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>📊 Projects Overview</h4>
+                    <p>List of analyzed projects with key metrics</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🎯 Quality Gates</h4>
+                    <p>Pass/fail status for quality criteria</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📈 Activity Timeline</h4>
+                    <p>Recent analysis and project activities</p>
+                </div>
+                <div class="feature-card">
+                    <h4>⚙️ Administration</h4>
+                    <p>System configuration and user management</p>
+                </div>
+            </div>
+
+            <h3>Key Metrics Displayed:</h3>
+            <ul>
+                <li><strong>Reliability:</strong> Bug count and rating (A-E)</li>
+                <li><strong>Security:</strong> Vulnerability count and rating</li>
+                <li><strong>Maintainability:</strong> Code smell count and technical debt</li>
+                <li><strong>Coverage:</strong> Test coverage percentage</li>
+                <li><strong>Duplications:</strong> Duplicate code percentage</li>
+            </ul>
+
+            <h2>🛠️ Step 4: Initial Configuration</h2>
+
+            <h3>Create Quality Gate:</h3>
+            <ol>
+                <li>Navigate to <strong>Quality Gates</strong></li>
+                <li>Click <strong>Create</strong></li>
+                <li>Name: "My Quality Gate"</li>
+                <li>Add conditions:
+                    <ul>
+                        <li>Coverage > 80%</li>
+                        <li>Duplicated Lines < 3%</li>
+                        <li>Maintainability Rating = A</li>
+                        <li>Reliability Rating = A</li>
+                        <li>Security Rating = A</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <h3>Configure Quality Profile:</h3>
+            <ol>
+                <li>Navigate to <strong>Quality Profiles</strong></li>
+                <li>Select <strong>Java</strong> (for Spring Boot project)</li>
+                <li>Copy built-in "Sonar way" profile</li>
+                <li>Customize rules as needed</li>
+                <li>Set as default for Java projects</li>
+            </ol>
+
+            <div class="warning-box">
+                <strong>⚠️ Note:</strong> SonarQube may take 2-3 minutes to fully start up. Check logs if the web interface is not accessible immediately.
+            </div>
+        </div>
+
+        <!-- Lab: EC2 Setup -->
+        <div class="slide">
+            <h1>Lab: Set up SonarQube on Amazon Linux EC2</h1>
+
+            <h2>🏗️ Step 1: Launch EC2 Instance</h2>
+
+            <h3>Instance Configuration:</h3>
+            <div class="command-block">
+# AWS CLI command to launch instance<br>
+aws ec2 run-instances \<br>
+&nbsp;&nbsp;--image-id ami-0abcdef1234567890 \<br>
+&nbsp;&nbsp;--instance-type t3.medium \<br>
+&nbsp;&nbsp;--key-name your-key-pair \<br>
+&nbsp;&nbsp;--security-group-ids sg-12345678 \<br>
+&nbsp;&nbsp;--subnet-id subnet-12345678 \<br>
+&nbsp;&nbsp;--tag-specifications 'ResourceType=instance,Tags=[{Key=Name,Value=SonarQube-Server}]'
+            </div>
+
+            <h3>Security Group Rules:</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Type</th>
+                        <th>Protocol</th>
+                        <th>Port</th>
+                        <th>Source</th>
+                        <th>Description</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>SSH</td>
+                        <td>TCP</td>
+                        <td>22</td>
+                        <td>Your IP</td>
+                        <td>SSH access</td>
+                    </tr>
+                    <tr>
+                        <td>Custom TCP</td>
+                        <td>TCP</td>
+                        <td>9000</td>
+                        <td>0.0.0.0/0</td>
+                        <td>SonarQube web interface</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2>⚙️ Step 2: Install Prerequisites</h2>
+            <div class="command-block">
+# Connect to EC2 instance<br>
+ssh -i your-key.pem ec2-user@your-ec2-public-ip<br><br>
+
+# Update system<br>
+sudo yum update -y<br><br>
+
+# Install Java 11<br>
+sudo yum install -y java-11-amazon-corretto-headless<br><br>
+
+# Verify Java installation<br>
+java -version<br><br>
+
+# Install wget and unzip<br>
+sudo yum install -y wget unzip<br><br>
+
+# Configure system limits for Elasticsearch<br>
+echo "* soft nofile 65536" | sudo tee -a /etc/security/limits.conf<br>
+echo "* hard nofile 65536" | sudo tee -a /etc/security/limits.conf<br>
+echo "* soft nproc 4096" | sudo tee -a /etc/security/limits.conf<br>
+echo "* hard nproc 4096" | sudo tee -a /etc/security/limits.conf<br><br>
+
+# Configure kernel parameters<br>
+echo "vm.max_map_count=262144" | sudo tee -a /etc/sysctl.conf<br>
+echo "fs.file-max=65536" | sudo tee -a /etc/sysctl.conf<br>
+sudo sysctl -p
+            </div>
+
+            <h2>📦 Step 3: Install SonarQube</h2>
+            <div class="command-block">
+# Create sonarqube user<br>
+sudo useradd sonarqube<br>
+sudo passwd sonarqube<br><br>
+
+# Download SonarQube Community Edition<br>
+cd /opt<br>
+sudo wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-9.9.0.65466.zip<br><br>
+
+# Extract and setup<br>
+sudo unzip sonarqube-9.9.0.65466.zip<br>
+sudo mv sonarqube-9.9.0.65466 sonarqube<br>
+sudo chown -R sonarqube:sonarqube /opt/sonarqube<br><br>
+
+# Configure SonarQube<br>
+sudo nano /opt/sonarqube/conf/sonar.properties
+            </div>
+
+            <h3>SonarQube Configuration (sonar.properties):</h3>
+            <div class="code-block">
+# Database configuration (using embedded H2 for demo)<br>
+# sonar.jdbc.username=sonar<br>
+# sonar.jdbc.password=sonar<br>
+# sonar.jdbc.url=jdbc:h2:tcp://localhost:9092/sonar<br><br>
+
+# Web server configuration<br>
+sonar.web.host=0.0.0.0<br>
+sonar.web.port=9000<br><br>
+
+# Elasticsearch configuration<br>
+sonar.search.javaOpts=-Xmx512m -Xms512m -XX:MaxDirectMemorySize=256m
+            </div>
+
+            <h2>🚀 Step 4: Start SonarQube</h2>
+            <div class="command-block">
+# Switch to sonarqube user<br>
+sudo su - sonarqube<br><br>
+
+# Start SonarQube<br>
+/opt/sonarqube/bin/linux-x86-64/sonar.sh start<br><br>
+
+# Check status<br>
+/opt/sonarqube/bin/linux-x86-64/sonar.sh status<br><br>
+
+# Monitor startup logs<br>
+tail -f /opt/sonarqube/logs/sonar.log
+            </div>
+
+            <h2>✅ Step 5: Verify Installation</h2>
+            <ol>
+                <li>Wait 2-3 minutes for complete startup</li>
+                <li>Open browser: <code>http://your-ec2-public-ip:9000</code></li>
+                <li>Login with: <code>admin/admin</code></li>
+                <li>Change default password</li>
+                <li>Verify dashboard loads correctly</li>
+            </ol>
+
+            <div class="success-box">
+                <strong>🎉 Success!</strong> SonarQube is now running on your EC2 instance and ready for project analysis.
+            </div>
+        </div>
+        <!-- Analyze Spring Boot Project -->
+        <div class="slide">
+            <h1>Analyze Spring Boot Hello World Project</h1>
+
+            <h2>📁 Project Setup</h2>
+            <p>We'll analyze the <span class="highlight">springboot-hello-world</span> project located in the same directory.</p>
+
+            <h3>Project Structure:</h3>
+            <div class="code-block">
+springboot-hello-world/<br>
+├── src/main/java/com/example/helloworld/<br>
+│&nbsp;&nbsp;&nbsp;├── HelloWorldApplication.java<br>
+│&nbsp;&nbsp;&nbsp;└── controller/HelloWorldController.java<br>
+├── src/test/java/com/example/helloworld/<br>
+│&nbsp;&nbsp;&nbsp;├── HelloWorldApplicationTests.java<br>
+│&nbsp;&nbsp;&nbsp;└── controller/HelloWorldControllerTest.java<br>
+├── pom.xml<br>
+└── README.md
+            </div>
+
+            <h2>🔧 Step 1: Install SonarScanner</h2>
+
+            <h3>Option A: Download SonarScanner CLI</h3>
+            <div class="command-block">
+# Download SonarScanner<br>
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip<br><br>
+
+# Extract<br>
+unzip sonar-scanner-cli-4.8.0.2856-linux.zip<br>
+sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner<br><br>
+
+# Add to PATH<br>
+echo 'export PATH="/opt/sonar-scanner/bin:$PATH"' >> ~/.bashrc<br>
+source ~/.bashrc<br><br>
+
+# Verify installation<br>
+sonar-scanner --version
+            </div>
+
+            <h3>Option B: Use Maven Plugin (Recommended)</h3>
+            <p>Add SonarQube plugin to <code>pom.xml</code>:</p>
+            <div class="code-block">
+&lt;properties&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;sonar.host.url&gt;http://localhost:9000&lt;/sonar.host.url&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;sonar.login&gt;your-token&lt;/sonar.login&gt;<br>
+&lt;/properties&gt;<br><br>
+
+&lt;build&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugins&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;plugin&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;groupId&gt;org.sonarsource.scanner.maven&lt;/groupId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;artifactId&gt;sonar-maven-plugin&lt;/artifactId&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;3.9.1.2184&lt;/version&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugin&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;/plugins&gt;<br>
+&lt;/build&gt;
+            </div>
+
+            <h2>🔑 Step 2: Generate Authentication Token</h2>
+            <ol>
+                <li>Login to SonarQube dashboard</li>
+                <li>Go to <strong>My Account → Security</strong></li>
+                <li>Generate new token: "SpringBoot-Analysis"</li>
+                <li>Copy the token (you won't see it again)</li>
+            </ol>
+
+            <h2>📊 Step 3: Run Analysis</h2>
+
+            <h3>Using Maven Plugin:</h3>
+            <div class="command-block">
+# Navigate to project directory<br>
+cd springboot-hello-world<br><br>
+
+# Run SonarQube analysis<br>
+mvn clean verify sonar:sonar \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=springboot-hello-world \<br>
+&nbsp;&nbsp;-Dsonar.host.url=http://localhost:9000 \<br>
+&nbsp;&nbsp;-Dsonar.login=your-generated-token<br><br>
+
+# For EC2 instance, replace localhost with EC2 public IP<br>
+mvn clean verify sonar:sonar \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=springboot-hello-world \<br>
+&nbsp;&nbsp;-Dsonar.host.url=http://your-ec2-ip:9000 \<br>
+&nbsp;&nbsp;-Dsonar.login=your-generated-token
+            </div>
+
+            <h3>Using SonarScanner CLI:</h3>
+            <div class="command-block">
+# Create sonar-project.properties file<br>
+cat > sonar-project.properties << EOF<br>
+sonar.projectKey=springboot-hello-world<br>
+sonar.projectName=Spring Boot Hello World<br>
+sonar.projectVersion=1.0<br>
+sonar.sources=src/main/java<br>
+sonar.tests=src/test/java<br>
+sonar.java.binaries=target/classes<br>
+sonar.java.test.binaries=target/test-classes<br>
+sonar.host.url=http://localhost:9000<br>
+sonar.login=your-generated-token<br>
+EOF<br><br>
+
+# Run analysis<br>
+sonar-scanner
+            </div>
+
+            <h2>✅ Step 4: View Results</h2>
+            <ol>
+                <li>Wait for analysis to complete (1-2 minutes)</li>
+                <li>Refresh SonarQube dashboard</li>
+                <li>Click on "springboot-hello-world" project</li>
+                <li>Explore the detailed analysis results</li>
+            </ol>
+
+            <div class="success-box">
+                <strong>🎯 Expected Results:</strong> The Spring Boot Hello World project should show minimal issues due to its simple structure, making it perfect for understanding SonarQube metrics.
+            </div>
+        </div>
+
+        <!-- SonarQube Metrics Explained -->
+        <div class="slide">
+            <h1>SonarQube Metrics Explained</h1>
+
+            <h2>🐛 1. Bugs</h2>
+            
+            <h3>What SonarQube Considers as Bugs:</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Severity</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                        <th>Impact</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="severity-critical">CRITICAL</span></td>
+                        <td>Will likely cause runtime errors</td>
+                        <td>Null pointer dereference</td>
+                        <td>Application crash</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-major">MAJOR</span></td>
+                        <td>May cause unexpected behavior</td>
+                        <td>Resource not closed</td>
+                        <td>Memory leaks</td>
+                    </tr>
+                    <tr>
+                        <td><span class="severity-minor">MINOR</span></td>
+                        <td>Could lead to issues</td>
+                        <td>Unused variables</td>
+                        <td>Code confusion</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3>Spring Boot Project - Typical Bug Examples:</h3>
+            <div class="code-block">
+// Potential bug: Resource leak<br>
+@GetMapping("/file")<br>
+public String readFile() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;FileInputStream fis = new FileInputStream("file.txt");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Bug: Stream not closed - SonarQube will flag this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return fis.toString();<br>
+}<br><br>
+
+// Fixed version:<br>
+@GetMapping("/file")<br>
+public String readFile() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;try (FileInputStream fis = new FileInputStream("file.txt")) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return fis.toString();<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} catch (IOException e) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return "Error reading file";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+
+            <h2>👃 2. Code Smells</h2>
+
+            <h3>Maintainability Issues in Spring Boot:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔧 Method Complexity</h4>
+                    <p>Methods with high cyclomatic complexity (>10)</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📏 Method Length</h4>
+                    <p>Methods longer than 20 lines</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🏗️ Class Size</h4>
+                    <p>Classes with too many methods or lines</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📝 Documentation</h4>
+                    <p>Missing JavaDoc for public methods</p>
+                </div>
+            </div>
+
+            <h3>Example Code Smell:</h3>
+            <div class="code-block">
+// Code Smell: Method too complex<br>
+@GetMapping("/process")<br>
+public ResponseEntity&lt;String&gt; processRequest(@RequestParam String type) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (type.equals("A")) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (condition1) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;if (condition2) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// Deep nesting - SonarQube will flag this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.ok("Result A");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;} else if (type.equals("B")) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;// More complex logic...<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest().body("Invalid type");<br>
+}
+            </div>
+
+            <h2>🛡️ 3. Security Vulnerabilities</h2>
+
+            <h3>Common Spring Boot Security Issues:</h3>
+            <ul>
+                <li><strong>SQL Injection:</strong> Unsafe database queries</li>
+                <li><strong>XSS:</strong> Unescaped user input in responses</li>
+                <li><strong>Path Traversal:</strong> Unsafe file operations</li>
+                <li><strong>Weak Cryptography:</strong> Insecure random number generation</li>
+            </ul>
+
+            <h3>Example Security Vulnerability:</h3>
+            <div class="code-block">
+// Security Vulnerability: SQL Injection<br>
+@GetMapping("/user/{id}")<br>
+public User getUser(@PathVariable String id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String sql = "SELECT * FROM users WHERE id = " + id;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Vulnerable to SQL injection - SonarQube will flag this<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return jdbcTemplate.queryForObject(sql, User.class);<br>
+}<br><br>
+
+// Secure version:<br>
+@GetMapping("/user/{id}")<br>
+public User getUser(@PathVariable String id) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;String sql = "SELECT * FROM users WHERE id = ?";<br>
+&nbsp;&nbsp;&nbsp;&nbsp;return jdbcTemplate.queryForObject(sql, User.class, id);<br>
+}
+            </div>
+
+            <h2>📋 4. Code Duplications</h2>
+
+            <h3>Duplication Metrics:</h3>
+            <ul>
+                <li><strong>Duplicated Lines:</strong> Number of duplicated lines</li>
+                <li><strong>Duplicated Blocks:</strong> Number of duplicated code blocks</li>
+                <li><strong>Duplicated Files:</strong> Number of files with duplications</li>
+                <li><strong>Duplication Density:</strong> Percentage of duplicated lines</li>
+            </ul>
+
+            <h3>Example Duplication:</h3>
+            <div class="code-block">
+// Duplication: Similar validation logic<br>
+@PostMapping("/user")<br>
+public ResponseEntity&lt;String&gt; createUser(@RequestBody User user) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (user.getName() == null || user.getName().isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest().body("Name is required");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (user.getEmail() == null || user.getEmail().isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest().body("Email is required");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Save user logic...<br>
+}<br><br>
+
+@PostMapping("/admin")<br>
+public ResponseEntity&lt;String&gt; createAdmin(@RequestBody Admin admin) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (admin.getName() == null || admin.getName().isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest().body("Name is required");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;if (admin.getEmail() == null || admin.getEmail().isEmpty()) {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return ResponseEntity.badRequest().body("Email is required");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Save admin logic...<br>
+}
+            </div>
+
+            <h2>📊 5. Test Coverage</h2>
+
+            <h3>Coverage Metrics:</h3>
+            <ul>
+                <li><strong>Line Coverage:</strong> Percentage of lines executed by tests</li>
+                <li><strong>Branch Coverage:</strong> Percentage of branches executed</li>
+                <li><strong>Condition Coverage:</strong> Percentage of conditions tested</li>
+            </ul>
+
+            <h3>Coverage Goals:</h3>
+            <ul>
+                <li><strong>Excellent:</strong> > 90% line coverage</li>
+                <li><strong>Good:</strong> 80-90% line coverage</li>
+                <li><strong>Acceptable:</strong> 70-80% line coverage</li>
+                <li><strong>Poor:</strong> < 70% line coverage</li>
+            </ul>
+
+            <div class="warning-box">
+                <strong>⚠️ Note:</strong> For the simple Spring Boot Hello World project, you might see limited metrics due to its minimal code. In real projects, these metrics provide valuable insights into code quality.
+            </div>
+        </div>
+
+        <!-- SonarLint VS Code Extension -->
+        <div class="slide">
+            <h1>SonarLint VS Code Extension</h1>
+
+            <h2>🔌 What is SonarLint?</h2>
+            <p>SonarLint is a <span class="highlight">free IDE extension</span> that provides real-time code quality feedback as you write code. It's like having a personal code reviewer built into your editor.</p>
+
+            <h3>Key Benefits:</h3>
+            <ul>
+                <li><strong>Real-time Analysis:</strong> Issues detected as you type</li>
+                <li><strong>Instant Feedback:</strong> No need to wait for CI/CD pipeline</li>
+                <li><strong>Learning Tool:</strong> Helps developers understand quality issues</li>
+                <li><strong>Offline Capability:</strong> Works without SonarQube server connection</li>
+                <li><strong>Multi-language Support:</strong> 25+ programming languages</li>
+            </ul>
+
+            <h2>📥 Installation Steps</h2>
+
+            <h3>Method 1: VS Code Marketplace</h3>
+            <ol>
+                <li>Open VS Code</li>
+                <li>Go to <strong>Extensions</strong> (Ctrl+Shift+X)</li>
+                <li>Search for "SonarLint"</li>
+                <li>Click <strong>Install</strong> on the official SonarSource extension</li>
+                <li>Reload VS Code when prompted</li>
+            </ol>
+
+            <h3>Method 2: Command Line Installation</h3>
+            <div class="command-block">
+# Install SonarLint extension via CLI<br>
+code --install-extension SonarSource.sonarlint-vscode<br><br>
+
+# Verify installation<br>
+code --list-extensions | grep sonarlint
+            </div>
+
+            <h3>Method 3: Manual Installation</h3>
+            <ol>
+                <li>Download .vsix file from VS Code Marketplace</li>
+                <li>Open VS Code</li>
+                <li>Press <code>Ctrl+Shift+P</code></li>
+                <li>Type "Extensions: Install from VSIX"</li>
+                <li>Select the downloaded .vsix file</li>
+            </ol>
+
+            <h2>⚙️ Configuration</h2>
+
+            <h3>Basic Configuration:</h3>
+            <div class="code-block">
+// VS Code settings.json<br>
+{<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"sonarlint.rules": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"java:S1192": "off",  // Disable string literal duplication<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"java:S106": "warn"   // System.out.println usage<br>
+&nbsp;&nbsp;&nbsp;&nbsp;},<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"sonarlint.testFilePattern": "**/*{Test,Tests,Spec}.java",<br>
+&nbsp;&nbsp;&nbsp;&nbsp;"sonarlint.analyzerProperties": {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"sonar.java.source": "11"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+
+            <h3>Connect to SonarQube Server:</h3>
+            <ol>
+                <li>Open Command Palette (<code>Ctrl+Shift+P</code>)</li>
+                <li>Type "SonarLint: Add SonarQube Connection"</li>
+                <li>Enter SonarQube server URL: <code>http://localhost:9000</code></li>
+                <li>Provide authentication token</li>
+                <li>Select organization and projects to bind</li>
+            </ol>
+
+            <h2>🎯 Using SonarLint</h2>
+
+            <h3>Real-time Analysis:</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🔍 Issue Detection</h4>
+                    <p>Red squiggly lines under problematic code</p>
+                </div>
+                <div class="feature-card">
+                    <h4>💡 Quick Fixes</h4>
+                    <p>Hover over issues for suggested solutions</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📋 Problems Panel</h4>
+                    <p>View all issues in the Problems tab</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📖 Rule Description</h4>
+                    <p>Detailed explanations and examples</p>
+                </div>
+            </div>
+
+            <h3>Example: Java Code Analysis</h3>
+            <div class="code-block">
+// SonarLint will highlight issues in real-time<br>
+public class HelloController {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;// Issue: Unused private method<br>
+&nbsp;&nbsp;&nbsp;&nbsp;private void unusedMethod() {  // ← Red squiggly line<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;System.out.println("Never called");<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br><br>
+
+&nbsp;&nbsp;&nbsp;&nbsp;@GetMapping("/hello")<br>
+&nbsp;&nbsp;&nbsp;&nbsp;public String hello() {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;String name = null;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return name.toUpperCase();  // ← Potential NullPointerException<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+
+            <h3>SonarLint Interface Elements:</h3>
+            <ul>
+                <li><strong>Status Bar:</strong> Shows analysis status and issue count</li>
+                <li><strong>Problems Panel:</strong> Lists all detected issues</li>
+                <li><strong>Hover Tooltips:</strong> Detailed issue descriptions</li>
+                <li><strong>Code Actions:</strong> Quick fix suggestions (💡 icon)</li>
+            </ul>
+
+            <h2>🔗 Connected Mode Benefits</h2>
+
+            <h3>When Connected to SonarQube Server:</h3>
+            <ul>
+                <li><strong>Synchronized Rules:</strong> Same rules as server quality profiles</li>
+                <li><strong>Project Binding:</strong> Inherit project-specific configurations</li>
+                <li><strong>Quality Gate Status:</strong> See if your changes pass quality gates</li>
+                <li><strong>Issue Tracking:</strong> Mark issues as resolved or false positive</li>
+            </ul>
+
+            <h3>Setup Connected Mode:</h3>
+            <div class="command-block">
+# Open Command Palette<br>
+Ctrl+Shift+P<br><br>
+
+# Commands to try:<br>
+> SonarLint: Add SonarQube Connection<br>
+> SonarLint: Bind to SonarQube or SonarCloud<br>
+> SonarLint: Update all project bindings<br>
+> SonarLint: Show SonarLint Output
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Pro Tip:</strong> Use SonarLint in standalone mode for immediate feedback, then connect to SonarQube server to ensure consistency with your team's quality standards.
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Note:</strong> SonarLint analyzes only open files in your editor. For complete project analysis, you still need to run SonarQube scanner on the entire codebase.
+            </div>
+        </div>
+
+        <!-- SonarQube CLI Usage -->
+        <div class="slide">
+            <h1>SonarQube CLI Usage</h1>
+
+            <h2>🛠️ SonarScanner CLI Overview</h2>
+            <p>The SonarScanner CLI is a <span class="highlight">command-line tool</span> that analyzes source code and sends results to SonarQube server. It's the most flexible way to integrate SonarQube analysis into any build process.</p>
+
+            <h3>When to Use CLI:</h3>
+            <ul>
+                <li><strong>Non-Maven/Gradle Projects:</strong> Python, JavaScript, PHP, etc.</li>
+                <li><strong>Custom Build Systems:</strong> Makefiles, shell scripts</li>
+                <li><strong>CI/CD Integration:</strong> Jenkins, GitLab CI, GitHub Actions</li>
+                <li><strong>Ad-hoc Analysis:</strong> One-time project scans</li>
+                <li><strong>Multi-language Projects:</strong> Mixed technology stacks</li>
+            </ul>
+
+            <h2>📦 Installation</h2>
+
+            <h3>Linux/macOS Installation:</h3>
+            <div class="command-block">
+# Download SonarScanner CLI<br>
+wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip<br><br>
+
+# Extract<br>
+unzip sonar-scanner-cli-4.8.0.2856-linux.zip<br><br>
+
+# Move to system directory<br>
+sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner<br><br>
+
+# Add to PATH<br>
+echo 'export PATH="/opt/sonar-scanner/bin:$PATH"' >> ~/.bashrc<br>
+source ~/.bashrc<br><br>
+
+# Verify installation<br>
+sonar-scanner --version
+            </div>
+
+            <h3>Windows Installation:</h3>
+            <div class="command-block">
+# Download from: https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/<br>
+# Extract to C:\sonar-scanner<br>
+# Add C:\sonar-scanner\bin to PATH environment variable<br><br>
+
+# Verify in Command Prompt<br>
+sonar-scanner.bat --version
+            </div>
+
+            <h3>Docker Installation:</h3>
+            <div class="command-block">
+# Pull SonarScanner Docker image<br>
+docker pull sonarsource/sonar-scanner-cli<br><br>
+
+# Run analysis with Docker<br>
+docker run --rm \<br>
+&nbsp;&nbsp;-v "$(pwd):/usr/src" \<br>
+&nbsp;&nbsp;-e SONAR_HOST_URL="http://host.docker.internal:9000" \<br>
+&nbsp;&nbsp;-e SONAR_LOGIN="your-token" \<br>
+&nbsp;&nbsp;sonarsource/sonar-scanner-cli
+            </div>
+
+            <h2>⚙️ Configuration</h2>
+
+            <h3>Method 1: sonar-project.properties File</h3>
+            <div class="code-block">
+# sonar-project.properties<br>
+sonar.projectKey=my-project<br>
+sonar.projectName=My Project<br>
+sonar.projectVersion=1.0<br><br>
+
+# Source code location<br>
+sonar.sources=src<br>
+sonar.tests=tests<br><br>
+
+# Language-specific settings<br>
+sonar.java.binaries=target/classes<br>
+sonar.java.test.binaries=target/test-classes<br>
+sonar.java.libraries=lib/*.jar<br><br>
+
+# SonarQube server configuration<br>
+sonar.host.url=http://localhost:9000<br>
+sonar.login=your-authentication-token<br><br>
+
+# Analysis parameters<br>
+sonar.sourceEncoding=UTF-8<br>
+sonar.exclusions=**/*.min.js,**/vendor/**<br>
+sonar.test.exclusions=**/*Test.java,**/*Tests.java
+            </div>
+
+            <h3>Method 2: Command Line Parameters</h3>
+            <div class="command-block">
+# Run with command line parameters<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=my-project \<br>
+&nbsp;&nbsp;-Dsonar.sources=src \<br>
+&nbsp;&nbsp;-Dsonar.host.url=http://localhost:9000 \<br>
+&nbsp;&nbsp;-Dsonar.login=your-token
+            </div>
+
+            <h3>Method 3: Environment Variables</h3>
+            <div class="command-block">
+# Set environment variables<br>
+export SONAR_HOST_URL="http://localhost:9000"<br>
+export SONAR_LOGIN="your-token"<br>
+export SONAR_PROJECT_KEY="my-project"<br><br>
+
+# Run scanner<br>
+sonar-scanner
+            </div>
+
+            <h2>🎯 Common Use Cases</h2>
+
+            <h3>1. Java Project Analysis:</h3>
+            <div class="command-block">
+# Java project with Maven structure<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=java-app \<br>
+&nbsp;&nbsp;-Dsonar.sources=src/main/java \<br>
+&nbsp;&nbsp;-Dsonar.tests=src/test/java \<br>
+&nbsp;&nbsp;-Dsonar.java.binaries=target/classes \<br>
+&nbsp;&nbsp;-Dsonar.java.test.binaries=target/test-classes \<br>
+&nbsp;&nbsp;-Dsonar.java.libraries=target/dependency/*.jar
+            </div>
+
+            <h3>2. JavaScript/Node.js Project:</h3>
+            <div class="command-block">
+# Node.js project analysis<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=nodejs-app \<br>
+&nbsp;&nbsp;-Dsonar.sources=src \<br>
+&nbsp;&nbsp;-Dsonar.tests=test \<br>
+&nbsp;&nbsp;-Dsonar.javascript.lcov.reportPaths=coverage/lcov.info \<br>
+&nbsp;&nbsp;-Dsonar.exclusions=node_modules/**,dist/**
+            </div>
+
+            <h3>3. Python Project Analysis:</h3>
+            <div class="command-block">
+# Python project analysis<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=python-app \<br>
+&nbsp;&nbsp;-Dsonar.sources=src \<br>
+&nbsp;&nbsp;-Dsonar.tests=tests \<br>
+&nbsp;&nbsp;-Dsonar.python.coverage.reportPaths=coverage.xml \<br>
+&nbsp;&nbsp;-Dsonar.exclusions=**/__pycache__/**,**/venv/**
+            </div>
+
+            <h3>4. Multi-language Project:</h3>
+            <div class="command-block">
+# Mixed technology project<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.projectKey=fullstack-app \<br>
+&nbsp;&nbsp;-Dsonar.sources=backend/src,frontend/src \<br>
+&nbsp;&nbsp;-Dsonar.tests=backend/test,frontend/test \<br>
+&nbsp;&nbsp;-Dsonar.java.binaries=backend/target/classes \<br>
+&nbsp;&nbsp;-Dsonar.javascript.lcov.reportPaths=frontend/coverage/lcov.info
+            </div>
+
+            <h2>🔧 Advanced CLI Options</h2>
+
+            <h3>Debug and Verbose Output:</h3>
+            <div class="command-block">
+# Enable debug mode<br>
+sonar-scanner -Dsonar.verbose=true<br><br>
+
+# Show all properties<br>
+sonar-scanner -Dsonar.showProfiling=true<br><br>
+
+# Dry run (validate configuration without analysis)<br>
+sonar-scanner -Dsonar.scanner.dumpToFile=output.txt
+            </div>
+
+            <h3>Performance Tuning:</h3>
+            <div class="command-block">
+# Increase memory for large projects<br>
+export SONAR_SCANNER_OPTS="-Xmx2048m"<br><br>
+
+# Skip certain analysis<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.scm.disabled=true \<br>
+&nbsp;&nbsp;-Dsonar.cpd.exclusions=**/*.min.js
+            </div>
+
+            <h3>Branch and Pull Request Analysis:</h3>
+            <div class="command-block">
+# Analyze specific branch<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.branch.name=feature/new-feature<br><br>
+
+# Pull request analysis (requires Developer Edition)<br>
+sonar-scanner \<br>
+&nbsp;&nbsp;-Dsonar.pullrequest.key=123 \<br>
+&nbsp;&nbsp;-Dsonar.pullrequest.branch=feature/new-feature \<br>
+&nbsp;&nbsp;-Dsonar.pullrequest.base=main
+            </div>
+
+            <h2>🚀 CI/CD Integration Examples</h2>
+
+            <h3>Jenkins Pipeline:</h3>
+            <div class="code-block">
+pipeline {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;agent any<br>
+&nbsp;&nbsp;&nbsp;&nbsp;stages {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;stage('SonarQube Analysis') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;steps {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;script {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def scannerHome = tool 'SonarScanner'<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;withSonarQubeEnv('SonarQube') {<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;sh "${scannerHome}/bin/sonar-scanner"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+}
+            </div>
+
+            <h3>GitHub Actions:</h3>
+            <div class="code-block">
+name: SonarQube Analysis<br>
+on: [push, pull_request]<br>
+jobs:<br>
+&nbsp;&nbsp;sonarqube:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;runs-on: ubuntu-latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;steps:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- uses: actions/checkout@v2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: SonarQube Scan<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;uses: sonarsource/sonarqube-scan-action@master<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+            </div>
+
+            <h3>GitLab CI:</h3>
+            <div class="code-block">
+sonarqube-check:<br>
+&nbsp;&nbsp;image: sonarsource/sonar-scanner-cli:latest<br>
+&nbsp;&nbsp;variables:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;SONAR_USER_HOME: "${CI_PROJECT_DIR}/.sonar"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;GIT_DEPTH: "0"<br>
+&nbsp;&nbsp;cache:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;key: "${CI_JOB_NAME}"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;paths:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- .sonar/cache<br>
+&nbsp;&nbsp;script:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- sonar-scanner<br>
+&nbsp;&nbsp;only:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- main
+            </div>
+
+            <h2>🔍 Troubleshooting CLI Issues</h2>
+
+            <h3>Common Problems:</h3>
+            <table class="metrics-table">
+                <thead>
+                    <tr>
+                        <th>Error</th>
+                        <th>Cause</th>
+                        <th>Solution</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>"sonar-scanner: command not found"</td>
+                        <td>Not in PATH</td>
+                        <td>Add scanner bin directory to PATH</td>
+                    </tr>
+                    <tr>
+                        <td>"Project key is missing"</td>
+                        <td>No project key specified</td>
+                        <td>Add -Dsonar.projectKey parameter</td>
+                    </tr>
+                    <tr>
+                        <td>"Unable to connect to SonarQube"</td>
+                        <td>Wrong URL or server down</td>
+                        <td>Verify sonar.host.url and server status</td>
+                    </tr>
+                    <tr>
+                        <td>"Authentication failed"</td>
+                        <td>Invalid token</td>
+                        <td>Generate new token in SonarQube</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="success-box">
+                <strong>✅ Best Practice:</strong> Create a <code>sonar-project.properties</code> file in your project root for consistent configuration across team members and CI/CD systems.
+            </div>
+
+            <div class="warning-box">
+                <strong>⚠️ Security Note:</strong> Never commit authentication tokens to version control. Use environment variables or CI/CD secrets management instead.
+            </div>
+        </div>
+
+        <!-- Summary and Best Practices -->
+        <div class="slide">
+            <h1>Summary & Best Practices</h1>
+
+            <h2>🎯 Key Takeaways</h2>
+
+            <h3>SonarQube Benefits:</h3>
+            <ul>
+                <li>✅ <strong>Automated Quality Assurance:</strong> Consistent code analysis</li>
+                <li>✅ <strong>Early Issue Detection:</strong> Find problems before production</li>
+                <li>✅ <strong>Technical Debt Management:</strong> Quantify and track code health</li>
+                <li>✅ <strong>Security Enhancement:</strong> Identify vulnerabilities early</li>
+                <li>✅ <strong>Team Collaboration:</strong> Shared quality standards</li>
+            </ul>
+
+            <h2>🏆 Best Practices</h2>
+
+            <h3>1. Integration Strategy</h3>
+            <ul>
+                <li>Integrate SonarQube into CI/CD pipelines</li>
+                <li>Use quality gates to prevent poor code deployment</li>
+                <li>Configure branch analysis for pull requests</li>
+                <li>Set up SonarLint in IDEs for real-time feedback</li>
+            </ul>
+
+            <h3>2. Quality Gate Configuration</h3>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <h4>🎯 Realistic Targets</h4>
+                    <p>Set achievable quality thresholds based on project maturity</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📈 Gradual Improvement</h4>
+                    <p>Tighten quality gates progressively over time</p>
+                </div>
+                <div class="feature-card">
+                    <h4>🔍 Focus Areas</h4>
+                    <p>Prioritize security and reliability over maintainability initially</p>
+                </div>
+                <div class="feature-card">
+                    <h4>📊 Monitor Trends</h4>
+                    <p>Track quality metrics over time, not just absolute values</p>
+                </div>
+            </div>
+
+            <h3>3. Team Adoption</h3>
+            <ul>
+                <li><strong>Training:</strong> Educate team on SonarQube concepts and usage</li>
+                <li><strong>Ownership:</strong> Assign quality champions in each team</li>
+                <li><strong>Regular Reviews:</strong> Include quality metrics in code reviews</li>
+                <li><strong>Continuous Improvement:</strong> Regular retrospectives on quality practices</li>
+            </ul>
+
+            <h2>🚀 Next Steps</h2>
+
+            <h3>Immediate Actions:</h3>
+            <ol>
+                <li>Set up SonarQube in your development environment</li>
+                <li>Analyze your current projects to establish baseline</li>
+                <li>Configure appropriate quality gates</li>
+                <li>Integrate with your CI/CD pipeline</li>
+                <li>Install SonarLint in team IDEs</li>
+            </ol>
+
+            <h3>Advanced Topics to Explore:</h3>
+            <ul>
+                <li><strong>Custom Rules:</strong> Create organization-specific quality rules</li>
+                <li><strong>Multi-branch Analysis:</strong> Analyze feature branches and PRs</li>
+                <li><strong>Portfolio Management:</strong> Manage multiple projects and applications</li>
+                <li><strong>Security Hotspots:</strong> Advanced security analysis and remediation</li>
+                <li><strong>DevOps Integration:</strong> Advanced CI/CD pipeline integration</li>
+            </ul>
+
+            <h2>📚 Additional Resources</h2>
+            <ul>
+                <li><strong>Official Documentation:</strong> docs.sonarqube.org</li>
+                <li><strong>Community Forum:</strong> community.sonarsource.com</li>
+                <li><strong>SonarLint:</strong> IDE plugins for real-time analysis</li>
+                <li><strong>SonarCloud:</strong> Cloud-based SonarQube service</li>
+            </ul>
+
+            <div class="success-box">
+                <strong>🎉 Congratulations!</strong><br>
+                You now have a comprehensive understanding of SonarQube and can implement code quality analysis in your development workflow.
+            </div>
+        </div>
+
+    </div>
+</body>
+</html>
