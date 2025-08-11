@@ -1,0 +1,2727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DevOps Training Days 12-14: Git & Version Control Mastery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .presentation-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 0 30px rgba(0,0,0,0.3);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .header .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .days-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-weight: 600;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-menu {
+            background: #34495e;
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-menu ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .nav-menu li {
+            margin: 0 1rem;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+            display: block;
+            font-weight: 500;
+        }
+
+        .nav-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            transform: translateY(-2px);
+        }
+
+        .content {
+            padding: 2rem;
+        }
+
+        .day-section {
+            margin-bottom: 3rem;
+            border-left: 4px solid #3498db;
+            padding-left: 2rem;
+        }
+
+        .day-header {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 1.5rem;
+            margin: 0 -2rem 2rem -2rem;
+            border-radius: 0 10px 10px 0;
+            position: relative;
+        }
+
+        .day-header::after {
+            content: '';
+            position: absolute;
+            left: -4px;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #2980b9;
+        }
+
+        .day-header h2 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .day-header .day-subtitle {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .section {
+            margin-bottom: 2.5rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .section h3 {
+            color: #2c3e50;
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid #3498db;
+            display: flex;
+            align-items: center;
+        }
+
+        .section h3::before {
+            content: '▶';
+            color: #3498db;
+            margin-right: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .section h4 {
+            color: #34495e;
+            font-size: 1.2rem;
+            margin: 1.5rem 0 1rem 0;
+            padding-left: 1rem;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'Courier New', monospace;
+            line-height: 1.4;
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 0.5rem;
+            right: 1rem;
+            background: rgba(255,255,255,0.1);
+            padding: 0.2rem 0.5rem;
+            border-radius: 3px;
+            font-size: 0.8rem;
+            opacity: 0.7;
+        }
+
+        .command {
+            color: #f39c12;
+        }
+
+        .comment {
+            color: #95a5a6;
+            font-style: italic;
+        }
+
+        .string {
+            color: #2ecc71;
+        }
+
+        .keyword {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, #f39c12, #e67e22);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .highlight-box::before {
+            content: '💡';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #3498db, #2980b9);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .info-box::before {
+            content: 'ℹ️';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #e74c3c, #c0392b);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .warning-box::before {
+            content: '⚠️';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .success-box {
+            background: linear-gradient(135deg, #27ae60, #229954);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .success-box::before {
+            content: '✅';
+            position: absolute;
+            top: -10px;
+            left: 20px;
+            background: white;
+            padding: 5px;
+            border-radius: 50%;
+            font-size: 1.2rem;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin: 1.5rem 0;
+        }
+
+        .three-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 4px solid #3498db;
+            transition: transform 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card h5 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #ecf0f1;
+        }
+
+        th {
+            background: linear-gradient(135deg, #34495e, #2c3e50);
+            color: white;
+            font-weight: 600;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .footer {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 1rem;
+            color: #3498db;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: #ecf0f1;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .footer-section ul li a:hover {
+            color: #3498db;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 1rem;
+            margin-top: 1rem;
+            opacity: 0.8;
+        }
+
+        .progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(90deg, #3498db, #2ecc71);
+            z-index: 1000;
+            transition: width 0.3s ease;
+        }
+
+        .toc {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 2rem 0;
+            border-left: 4px solid #3498db;
+        }
+
+        .toc h3 {
+            color: #2c3e50;
+            margin-bottom: 1rem;
+        }
+
+        .toc ul {
+            list-style: none;
+            padding-left: 1rem;
+        }
+
+        .toc ul li {
+            margin-bottom: 0.5rem;
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .toc ul li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #3498db;
+        }
+
+        .toc ul li a {
+            color: #34495e;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .toc ul li a:hover {
+            color: #3498db;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .nav-menu ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-menu li {
+                margin: 0.25rem 0;
+            }
+            
+            .two-column,
+            .three-column {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .content {
+                padding: 1rem;
+            }
+        }
+
+        .lab-exercise {
+            background: linear-gradient(135deg, #8e44ad, #9b59b6);
+            color: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 2rem 0;
+            position: relative;
+        }
+
+        .lab-exercise::before {
+            content: '🧪';
+            position: absolute;
+            top: -15px;
+            left: 20px;
+            background: white;
+            padding: 8px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+        }
+
+        .lab-exercise h4 {
+            margin-bottom: 1rem;
+            border: none;
+            padding: 0;
+            color: white;
+        }
+
+        .git-flow-diagram {
+            background: white;
+            padding: 2rem;
+            border-radius: 10px;
+            margin: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        .branch-line {
+            display: inline-block;
+            width: 100px;
+            height: 4px;
+            background: #3498db;
+            margin: 0 10px;
+            position: relative;
+        }
+
+        .commit-dot {
+            width: 12px;
+            height: 12px;
+            background: #e74c3c;
+            border-radius: 50%;
+            position: absolute;
+            top: -4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="progress-bar" id="progressBar"></div>
+    
+    <div class="presentation-container">
+        <header class="header">
+            <div class="header-content">
+                <h1>Git & Version Control Mastery</h1>
+                <p class="subtitle">Complete DevOps Training Series</p>
+                <div class="days-badge">Days 12 • 13 • 14</div>
+            </div>
+        </header>
+
+        <nav class="nav-menu">
+            <ul>
+                <li><a href="#day12">Day 12: Git Fundamentals</a></li>
+                <li><a href="#day13">Day 13: Advanced Git</a></li>
+                <li><a href="#day14">Day 14: Git Workflows</a></li>
+                <li><a href="#resources">Resources</a></li>
+                <li><a href="#labs">Hands-on Labs</a></li>
+            </ul>
+        </nav>
+
+        <div class="content">
+            <!-- Table of Contents -->
+            <div class="toc">
+                <h3>📋 Complete Training Overview</h3>
+                <ul>
+                    <li><a href="#day12">Day 12: Git Fundamentals & Core Commands</a></li>
+                    <li><a href="#day13">Day 13: Advanced Git Operations & Collaboration</a></li>
+                    <li><a href="#day14">Day 14: Git Workflows & CI/CD Integration</a></li>
+                    <li><a href="#hands-on">Comprehensive Hands-on Labs</a></li>
+                    <li><a href="#best-practices">Industry Best Practices</a></li>
+                </ul>
+            </div>
+
+            <!-- DAY 12: GIT FUNDAMENTALS -->
+            <section id="day12" class="day-section">
+                <div class="day-header">
+                    <h2>Day 12: Git Fundamentals</h2>
+                    <p class="day-subtitle">Understanding Version Control & Essential Git Commands</p>
+                </div>
+
+                <div class="section">
+                    <h3>🎯 Learning Objectives</h3>
+                    <div class="success-box">
+                        <strong>By the end of Day 12, you will:</strong>
+                        <ul>
+                            <li>Understand what Version Control is and why it's essential</li>
+                            <li>Know why Git is the industry standard</li>
+                            <li>Install and configure Git on your system</li>
+                            <li>Master essential Git commands</li>
+                            <li>Understand basic branching strategies</li>
+                            <li>Practice hands-on Git operations</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>📚 What is Version Control?</h3>
+                    
+                    <h4>Definition</h4>
+                    <p><strong>Version Control System (VCS)</strong> is a tool that helps manage changes to source code over time. It keeps track of every modification to the code in a special kind of database.</p>
+
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Key Concepts</h5>
+                            <ul>
+                                <li><strong>Repository (Repo):</strong> Storage location for your project</li>
+                                <li><strong>Commit:</strong> Snapshot of your project at a specific time</li>
+                                <li><strong>Branch:</strong> Parallel version of your repository</li>
+                                <li><strong>Merge:</strong> Combining changes from different branches</li>
+                                <li><strong>Clone:</strong> Creating a local copy of a remote repository</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>Types of VCS</h5>
+                            <ul>
+                                <li><strong>Local:</strong> Simple database (RCS)</li>
+                                <li><strong>Centralized:</strong> Single server (SVN, CVS)</li>
+                                <li><strong>Distributed:</strong> Full backup everywhere (Git, Mercurial)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h4>Why Do We Need SCM?</h4>
+                    <div class="warning-box">
+                        <strong>Without Version Control:</strong>
+                        <ul>
+                            <li>Manual backup nightmare (project-v1.0, project-v1.1-final, project-v1.2-really-final)</li>
+                            <li>Email code files back and forth</li>
+                            <li>"Who has the latest version?" confusion</li>
+                            <li>Overwriting each other's work</li>
+                            <li>No way to merge changes safely</li>
+                        </ul>
+                    </div>
+
+                    <div class="success-box">
+                        <strong>With Version Control:</strong>
+                        <ul>
+                            <li>Everyone works on same codebase</li>
+                            <li>Automatic conflict detection</li>
+                            <li>Safe merging of changes</li>
+                            <li>Complete change history</li>
+                            <li>Backup & recovery capabilities</li>
+                            <li>Branching & experimentation</li>
+                            <li>Accountability & documentation</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🚀 Why Git?</h3>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Git</th>
+                                <th>SVN</th>
+                                <th>CVS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Distributed</strong></td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Offline Work</strong></td>
+                                <td>✅</td>
+                                <td>❌</td>
+                                <td>❌</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Branching</strong></td>
+                                <td>Fast & Easy</td>
+                                <td>Slow</td>
+                                <td>Limited</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Merging</strong></td>
+                                <td>Intelligent</td>
+                                <td>Basic</td>
+                                <td>Basic</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Performance</strong></td>
+                                <td>Fast</td>
+                                <td>Slower</td>
+                                <td>Slowest</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Data Integrity</strong></td>
+                                <td>SHA-1 checksums</td>
+                                <td>Limited</td>
+                                <td>None</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <div class="highlight-box">
+                        <strong>Git Advantages:</strong>
+                        <ul>
+                            <li><strong>Speed:</strong> All operations are lightning fast</li>
+                            <li><strong>Distributed Architecture:</strong> Every clone is a full backup</li>
+                            <li><strong>Data Integrity:</strong> SHA-1 checksums ensure data integrity</li>
+                            <li><strong>Branching Model:</strong> Cheap and fast branching</li>
+                            <li><strong>Industry Standard:</strong> Used by 90%+ of developers</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>💻 Installing Git</h3>
+                    
+                    <div class="three-column">
+                        <div class="card">
+                            <h5>🐧 Linux Installation</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Ubuntu/Debian</span>
+<span class="command">sudo apt update</span>
+<span class="command">sudo apt install git</span>
+
+<span class="comment"># CentOS/RHEL</span>
+<span class="command">sudo yum install git</span>
+
+<span class="comment"># Fedora</span>
+<span class="command">sudo dnf install git</span>
+
+<span class="comment"># Verify installation</span>
+<span class="command">git --version</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h5>🪟 Windows Installation</h5>
+                            <div class="code-block" data-lang="powershell">
+<span class="comment"># Using Chocolatey</span>
+<span class="command">choco install git</span>
+
+<span class="comment"># Using Scoop</span>
+<span class="command">scoop install git</span>
+
+<span class="comment"># Using Winget</span>
+<span class="command">winget install Git.Git</span>
+
+<span class="comment"># Or download from:</span>
+<span class="string"># https://git-scm.com/download/win</span>
+                            </div>
+                        </div>
+                        
+                        <div class="card">
+                            <h5>🍎 macOS Installation</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Using Homebrew</span>
+<span class="command">brew install git</span>
+
+<span class="comment"># Using Xcode Command Line Tools</span>
+<span class="command">git --version</span>
+<span class="comment"># (will prompt to install if not present)</span>
+
+<span class="comment"># Verify installation</span>
+<span class="command">git --version</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>⚙️ Git Configuration</h3>
+                    
+                    <h4>Initial Setup (Required)</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Set your identity (required)</span>
+<span class="command">git config --global user.name <span class="string">"Your Name"</span></span>
+<span class="command">git config --global user.email <span class="string">"your.email@example.com"</span></span>
+
+<span class="comment"># Set default branch name</span>
+<span class="command">git config --global init.defaultBranch main</span>
+
+<span class="comment"># Set default editor</span>
+<span class="command">git config --global core.editor <span class="string">"code --wait"</span></span>  <span class="comment"># VS Code</span>
+<span class="command">git config --global core.editor <span class="string">"vim"</span></span>          <span class="comment"># Vim</span>
+
+<span class="comment"># Enable colored output</span>
+<span class="command">git config --global color.ui auto</span>
+                    </div>
+
+                    <h4>Configuration Levels</h4>
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Configuration Scope</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># System level (all users)</span>
+<span class="command">git config --system</span>
+
+<span class="comment"># Global level (current user)</span>
+<span class="command">git config --global</span>
+
+<span class="comment"># Local level (current repository)</span>
+<span class="command">git config --local</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>View Configuration</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># View all configurations</span>
+<span class="command">git config --list</span>
+
+<span class="comment"># View specific configuration</span>
+<span class="command">git config user.name</span>
+<span class="command">git config user.email</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Useful Aliases</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Create shortcuts for common commands</span>
+<span class="command">git config --global alias.st status</span>
+<span class="command">git config --global alias.co checkout</span>
+<span class="command">git config --global alias.br branch</span>
+<span class="command">git config --global alias.ci commit</span>
+<span class="command">git config --global alias.unstage <span class="string">'reset HEAD --'</span></span>
+
+<span class="comment"># Advanced aliases</span>
+<span class="command">git config --global alias.lg <span class="string">"log --oneline --decorate --all --graph"</span></span>
+<span class="command">git config --global alias.s <span class="string">"status -s"</span></span>
+<span class="command">git config --global alias.ac <span class="string">"!git add -A && git commit"</span></span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🔧 Essential Git Commands</h3>
+                    
+                    <h4>1. git init</h4>
+                    <p><strong>Purpose:</strong> Initialize a new Git repository</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Create a new directory and initialize Git</span>
+<span class="command">mkdir my-project</span>
+<span class="command">cd my-project</span>
+<span class="command">git init</span>
+
+<span class="comment"># Initialize Git in existing directory</span>
+<span class="command">cd existing-project</span>
+<span class="command">git init</span>
+
+<span class="comment"># Create bare repository (for servers)</span>
+<span class="command">git init --bare my-repo.git</span>
+                    </div>
+                    <div class="info-box">
+                        <strong>What happens:</strong>
+                        <ul>
+                            <li>Creates <code>.git</code> directory</li>
+                            <li>Sets up repository structure</li>
+                            <li>Creates initial branch (main/master)</li>
+                        </ul>
+                    </div>
+
+                    <h4>2. git clone</h4>
+                    <p><strong>Purpose:</strong> Create a local copy of a remote repository</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Clone a repository</span>
+<span class="command">git clone https://github.com/user/repo.git</span>
+
+<span class="comment"># Clone to specific directory</span>
+<span class="command">git clone https://github.com/user/repo.git my-local-name</span>
+
+<span class="comment"># Clone specific branch</span>
+<span class="command">git clone -b develop https://github.com/user/repo.git</span>
+
+<span class="comment"># Shallow clone (recent history only)</span>
+<span class="command">git clone --depth 1 https://github.com/user/repo.git</span>
+
+<span class="comment"># Clone with SSH</span>
+<span class="command">git clone git@github.com:user/repo.git</span>
+                    </div>
+
+                    <h4>3. git status</h4>
+                    <p><strong>Purpose:</strong> Show the working tree status</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Basic status</span>
+<span class="command">git status</span>
+
+<span class="comment"># Short format</span>
+<span class="command">git status -s</span>
+<span class="command">git status --short</span>
+
+<span class="comment"># Show ignored files</span>
+<span class="command">git status --ignored</span>
+                    </div>
+                    
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Status Indicators</h5>
+                            <ul>
+                                <li><code>??</code> - Untracked files</li>
+                                <li><code>A</code> - Added to staging area</li>
+                                <li><code>M</code> - Modified</li>
+                                <li><code>D</code> - Deleted</li>
+                                <li><code>R</code> - Renamed</li>
+                                <li><code>C</code> - Copied</li>
+                                <li><code>U</code> - Updated but unmerged</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>Git Workflow Areas</h5>
+                            <div class="git-flow-diagram">
+                                <div>Working Directory</div>
+                                <div>↓ git add</div>
+                                <div>Staging Area</div>
+                                <div>↓ git commit</div>
+                                <div>Repository</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>4. git add</h4>
+                    <p><strong>Purpose:</strong> Add file contents to the staging area</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Add specific file</span>
+<span class="command">git add filename.txt</span>
+
+<span class="comment"># Add multiple files</span>
+<span class="command">git add file1.txt file2.txt</span>
+
+<span class="comment"># Add all files in directory</span>
+<span class="command">git add .</span>
+
+<span class="comment"># Add all files in repository</span>
+<span class="command">git add -A</span>
+<span class="command">git add --all</span>
+
+<span class="comment"># Add by pattern</span>
+<span class="command">git add *.txt</span>
+<span class="command">git add src/</span>
+
+<span class="comment"># Interactive adding</span>
+<span class="command">git add -i</span>
+
+<span class="comment"># Add patches interactively</span>
+<span class="command">git add -p</span>
+                    </div>
+
+                    <h4>5. git commit</h4>
+                    <p><strong>Purpose:</strong> Record changes to the repository</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Commit with message</span>
+<span class="command">git commit -m <span class="string">"Add user authentication feature"</span></span>
+
+<span class="comment"># Commit with detailed message</span>
+<span class="command">git commit -m <span class="string">"Add user authentication"</span> -m <span class="string">"- Implement login/logout functionality
+- Add password hashing
+- Create user session management"</span></span>
+
+<span class="comment"># Add and commit in one step</span>
+<span class="command">git commit -am <span class="string">"Fix bug in user validation"</span></span>
+
+<span class="comment"># Commit with editor for long message</span>
+<span class="command">git commit</span>
+
+<span class="comment"># Amend last commit</span>
+<span class="command">git commit --amend</span>
+
+<span class="comment"># Amend without changing message</span>
+<span class="command">git commit --amend --no-edit</span>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="success-box">
+                            <strong>✅ Good Commit Messages:</strong>
+                            <ul>
+                                <li>"Fix user login validation bug"</li>
+                                <li>"Add Docker configuration for development"</li>
+                                <li>"Update README with installation instructions"</li>
+                            </ul>
+                        </div>
+                        <div class="warning-box">
+                            <strong>❌ Bad Commit Messages:</strong>
+                            <ul>
+                                <li>"fix"</li>
+                                <li>"changes"</li>
+                                <li>"stuff"</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h4>6. git log</h4>
+                    <p><strong>Purpose:</strong> Show commit logs</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Basic log</span>
+<span class="command">git log</span>
+
+<span class="comment"># One line per commit</span>
+<span class="command">git log --oneline</span>
+
+<span class="comment"># Show last n commits</span>
+<span class="command">git log -5</span>
+
+<span class="comment"># Show commits with diff</span>
+<span class="command">git log -p</span>
+
+<span class="comment"># Show commits for specific file</span>
+<span class="command">git log filename.txt</span>
+
+<span class="comment"># Show commits by author</span>
+<span class="command">git log --author=<span class="string">"John Doe"</span></span>
+
+<span class="comment"># Show commits in date range</span>
+<span class="command">git log --since=<span class="string">"2023-01-01"</span> --until=<span class="string">"2023-12-31"</span></span>
+
+<span class="comment"># Graphical representation</span>
+<span class="command">git log --graph --oneline --decorate --all</span>
+
+<span class="comment"># Custom format</span>
+<span class="command">git log --pretty=format:<span class="string">"%h - %an, %ar : %s"</span></span>
+                    </div>
+
+                    <h4>7. git diff</h4>
+                    <p><strong>Purpose:</strong> Show changes between commits, working tree, etc.</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Show unstaged changes</span>
+<span class="command">git diff</span>
+
+<span class="comment"># Show staged changes</span>
+<span class="command">git diff --staged</span>
+<span class="command">git diff --cached</span>
+
+<span class="comment"># Compare specific files</span>
+<span class="command">git diff filename.txt</span>
+
+<span class="comment"># Compare branches</span>
+<span class="command">git diff main..feature-branch</span>
+
+<span class="comment"># Compare commits</span>
+<span class="command">git diff HEAD~1 HEAD</span>
+
+<span class="comment"># Show word-level differences</span>
+<span class="command">git diff --word-diff</span>
+
+<span class="comment"># Show statistics</span>
+<span class="command">git diff --stat</span>
+
+<span class="comment"># Compare with remote</span>
+<span class="command">git diff origin/main</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🌿 Branching Strategies</h3>
+                    
+                    <div class="highlight-box">
+                        <strong>Understanding Branches:</strong>
+                        <p>Branches allow you to work on features independently, experiment without affecting main code, collaborate without conflicts, and maintain different versions.</p>
+                    </div>
+
+                    <div class="git-flow-diagram">
+                        <div style="font-family: monospace; text-align: left; padding: 1rem;">
+                            <div>main     ●─────●─────●─────●</div>
+                            <div>              ↗       ↙</div>
+                            <div>feature      ●───●───●</div>
+                        </div>
+                    </div>
+
+                    <h4>git branch</h4>
+                    <p><strong>Purpose:</strong> List, create, or delete branches</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># List all branches</span>
+<span class="command">git branch</span>
+
+<span class="comment"># List all branches (including remote)</span>
+<span class="command">git branch -a</span>
+
+<span class="comment"># Create new branch</span>
+<span class="command">git branch feature-login</span>
+
+<span class="comment"># Create branch from specific commit</span>
+<span class="command">git branch hotfix-123 abc1234</span>
+
+<span class="comment"># Delete branch</span>
+<span class="command">git branch -d feature-login</span>
+
+<span class="comment"># Force delete branch</span>
+<span class="command">git branch -D feature-login</span>
+
+<span class="comment"># Rename current branch</span>
+<span class="command">git branch -m new-branch-name</span>
+
+<span class="comment"># Show last commit on each branch</span>
+<span class="command">git branch -v</span>
+                    </div>
+
+                    <h4>git checkout</h4>
+                    <p><strong>Purpose:</strong> Switch branches or restore working tree files</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Switch to existing branch</span>
+<span class="command">git checkout feature-login</span>
+
+<span class="comment"># Create and switch to new branch</span>
+<span class="command">git checkout -b feature-signup</span>
+
+<span class="comment"># Switch to previous branch</span>
+<span class="command">git checkout -</span>
+
+<span class="comment"># Checkout specific commit (detached HEAD)</span>
+<span class="command">git checkout abc1234</span>
+
+<span class="comment"># Checkout specific file from another branch</span>
+<span class="command">git checkout main -- filename.txt</span>
+
+<span class="comment"># Discard changes in working directory</span>
+<span class="command">git checkout -- filename.txt</span>
+<span class="command">git checkout .</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Modern Alternative (Git 2.23+):</strong>
+                        <div class="code-block" data-lang="bash">
+<span class="comment"># Switch branches</span>
+<span class="command">git switch feature-login</span>
+<span class="command">git switch -c feature-signup</span>  <span class="comment"># create and switch</span>
+
+<span class="comment"># Restore files</span>
+<span class="command">git restore filename.txt</span>      <span class="comment"># discard changes</span>
+<span class="command">git restore --staged file.txt</span> <span class="comment"># unstage file</span>
+                        </div>
+                    </div>
+
+                    <h4>git merge</h4>
+                    <p><strong>Purpose:</strong> Join two or more development histories together</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Merge feature branch into current branch</span>
+<span class="command">git merge feature-login</span>
+
+<span class="comment"># Merge with commit message</span>
+<span class="command">git merge feature-login -m <span class="string">"Merge login feature"</span></span>
+
+<span class="comment"># No fast-forward merge (always create merge commit)</span>
+<span class="command">git merge --no-ff feature-login</span>
+
+<span class="comment"># Abort merge in case of conflicts</span>
+<span class="command">git merge --abort</span>
+
+<span class="comment"># Continue merge after resolving conflicts</span>
+<span class="command">git merge --continue</span>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Fast-Forward Merge</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div><strong>Before:</strong></div>
+                                <div>main     ●─────●</div>
+                                <div>              ↘</div>
+                                <div>feature        ●───●</div>
+                                <br>
+                                <div><strong>After:</strong></div>
+                                <div>main     ●─────●───●───●</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Three-Way Merge</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div><strong>Before:</strong></div>
+                                <div>main     ●─────●─────●</div>
+                                <div>              ↗       ↘</div>
+                                <div>feature      ●───●───● ●</div>
+                                <br>
+                                <div><strong>After:</strong></div>
+                                <div>main     ●─────●─────●───●</div>
+                                <div>              ↗           ↙</div>
+                                <div>feature      ●───●───●───●</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>git rebase</h4>
+                    <p><strong>Purpose:</strong> Reapply commits on top of another base tip</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Rebase current branch onto main</span>
+<span class="command">git rebase main</span>
+
+<span class="comment"># Interactive rebase (last 3 commits)</span>
+<span class="command">git rebase -i HEAD~3</span>
+
+<span class="comment"># Rebase specific range</span>
+<span class="command">git rebase -i abc1234..def5678</span>
+
+<span class="comment"># Continue rebase after resolving conflicts</span>
+<span class="command">git rebase --continue</span>
+
+<span class="comment"># Skip current commit during rebase</span>
+<span class="command">git rebase --skip</span>
+
+<span class="comment"># Abort rebase</span>
+<span class="command">git rebase --abort</span>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Merge Result</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div>main     ●─────●─────●───●</div>
+                                <div>              ↗           ↙</div>
+                                <div>feature      ●───●───●───●</div>
+                                <div><em>Preserves branch history</em></div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Rebase Result</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div>main     ●─────●─────●───●───●───●</div>
+                                <div><em>Linear, clean history</em></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lab-exercise">
+                    <h4>🧪 Lab 1: Basic Git Workflow</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># 1. Create and initialize repository</span>
+<span class="command">mkdir git-lab-1</span>
+<span class="command">cd git-lab-1</span>
+<span class="command">git init</span>
+
+<span class="comment"># 2. Create initial file</span>
+<span class="command">echo <span class="string">"# My First Git Project"</span> > README.md</span>
+<span class="command">echo <span class="string">"This is a sample project for learning Git."</span> >> README.md</span>
+
+<span class="comment"># 3. Check status and add file</span>
+<span class="command">git status</span>
+<span class="command">git add README.md</span>
+<span class="command">git status</span>
+
+<span class="comment"># 4. Make first commit</span>
+<span class="command">git commit -m <span class="string">"Initial commit: Add README"</span></span>
+
+<span class="comment"># 5. Make changes</span>
+<span class="command">echo <span class="string">""</span> >> README.md</span>
+<span class="command">echo <span class="string">"## Features"</span> >> README.md</span>
+<span class="command">echo <span class="string">"- Version control with Git"</span> >> README.md</span>
+
+<span class="comment"># 6. View differences</span>
+<span class="command">git diff</span>
+<span class="command">git add README.md</span>
+<span class="command">git diff --staged</span>
+
+<span class="comment"># 7. Commit changes</span>
+<span class="command">git commit -m <span class="string">"Add features section to README"</span></span>
+
+<span class="comment"># 8. View history</span>
+<span class="command">git log --oneline</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DAY 13: ADVANCED GIT OPERATIONS -->
+            <section id="day13" class="day-section">
+                <div class="day-header">
+                    <h2>Day 13: Advanced Git Operations</h2>
+                    <p class="day-subtitle">Collaboration, Remote Repositories & Advanced Workflows</p>
+                </div>
+
+                <div class="section">
+                    <h3>🎯 Learning Objectives</h3>
+                    <div class="success-box">
+                        <strong>By the end of Day 13, you will:</strong>
+                        <ul>
+                            <li>Master remote repository operations</li>
+                            <li>Understand collaborative Git workflows</li>
+                            <li>Handle merge conflicts effectively</li>
+                            <li>Use advanced Git features (stashing, cherry-picking, etc.)</li>
+                            <li>Implement Git hooks for automation</li>
+                            <li>Practice advanced branching strategies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🌐 Remote Repositories</h3>
+                    
+                    <h4>Understanding Remotes</h4>
+                    <p>Remote repositories are versions of your project hosted on the internet or network. They enable collaboration and backup.</p>
+                    
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Add remote repository</span>
+<span class="command">git remote add origin https://github.com/user/repo.git</span>
+
+<span class="comment"># List remotes</span>
+<span class="command">git remote -v</span>
+
+<span class="comment"># Show remote information</span>
+<span class="command">git remote show origin</span>
+
+<span class="comment"># Rename remote</span>
+<span class="command">git remote rename origin upstream</span>
+
+<span class="comment"># Remove remote</span>
+<span class="command">git remote remove origin</span>
+
+<span class="comment"># Change remote URL</span>
+<span class="command">git remote set-url origin https://github.com/user/new-repo.git</span>
+                    </div>
+
+                    <h4>Fetching and Pulling</h4>
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>git fetch</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Fetch from all remotes</span>
+<span class="command">git fetch</span>
+
+<span class="comment"># Fetch from specific remote</span>
+<span class="command">git fetch origin</span>
+
+<span class="comment"># Fetch specific branch</span>
+<span class="command">git fetch origin main</span>
+
+<span class="comment"># Fetch with prune (remove deleted branches)</span>
+<span class="command">git fetch --prune</span>
+                            </div>
+                            <p><em>Downloads objects and refs from remote but doesn't merge</em></p>
+                        </div>
+                        <div class="card">
+                            <h5>git pull</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Pull from current branch's upstream</span>
+<span class="command">git pull</span>
+
+<span class="comment"># Pull from specific remote and branch</span>
+<span class="command">git pull origin main</span>
+
+<span class="comment"># Pull with rebase</span>
+<span class="command">git pull --rebase</span>
+
+<span class="comment"># Pull and fast-forward only</span>
+<span class="command">git pull --ff-only</span>
+                            </div>
+                            <p><em>Equivalent to git fetch + git merge</em></p>
+                        </div>
+                    </div>
+
+                    <h4>Pushing Changes</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Push to remote repository</span>
+<span class="command">git push origin main</span>
+
+<span class="comment"># Push and set upstream</span>
+<span class="command">git push -u origin feature-branch</span>
+
+<span class="comment"># Push all branches</span>
+<span class="command">git push --all origin</span>
+
+<span class="comment"># Push tags</span>
+<span class="command">git push --tags</span>
+
+<span class="comment"># Force push (dangerous!)</span>
+<span class="command">git push --force-with-lease origin main</span>
+
+<span class="comment"># Delete remote branch</span>
+<span class="command">git push origin --delete feature-branch</span>
+                    </div>
+
+                    <div class="warning-box">
+                        <strong>⚠️ Force Push Warning:</strong>
+                        <p>Never use <code>git push --force</code> on shared branches. Use <code>--force-with-lease</code> instead, which is safer as it checks if the remote branch has been updated by someone else.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🤝 Collaborative Workflows</h3>
+                    
+                    <h4>Fork and Pull Request Workflow</h4>
+                    <div class="three-column">
+                        <div class="card">
+                            <h5>1. Fork Repository</h5>
+                            <p>Create a personal copy of the repository on GitHub/GitLab</p>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Clone your fork</span>
+<span class="command">git clone https://github.com/yourusername/repo.git</span>
+
+<span class="comment"># Add upstream remote</span>
+<span class="command">git remote add upstream https://github.com/original/repo.git</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>2. Create Feature Branch</h5>
+                            <p>Work on features in separate branches</p>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Sync with upstream</span>
+<span class="command">git fetch upstream</span>
+<span class="command">git checkout main</span>
+<span class="command">git merge upstream/main</span>
+
+<span class="comment"># Create feature branch</span>
+<span class="command">git checkout -b feature/awesome-feature</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>3. Submit Pull Request</h5>
+                            <p>Push changes and create PR</p>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Push feature branch</span>
+<span class="command">git push origin feature/awesome-feature</span>
+
+<span class="comment"># Create PR via web interface</span>
+<span class="comment"># or use GitHub CLI</span>
+<span class="command">gh pr create --title "Add awesome feature"</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Centralized Workflow</h4>
+                    <div class="git-flow-diagram">
+                        <div style="font-family: monospace; text-align: left; padding: 1rem;">
+                            <div><strong>Central Repository</strong></div>
+                            <div>        ↕ push/pull</div>
+                            <div><strong>Developer A</strong>    <strong>Developer B</strong></div>
+                            <div>Local Repo      Local Repo</div>
+                        </div>
+                    </div>
+
+                    <h4>Feature Branch Workflow</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Start new feature</span>
+<span class="command">git checkout main</span>
+<span class="command">git pull origin main</span>
+<span class="command">git checkout -b feature/user-authentication</span>
+
+<span class="comment"># Work on feature</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "Implement user login"</span>
+
+<span class="comment"># Push feature branch</span>
+<span class="command">git push -u origin feature/user-authentication</span>
+
+<span class="comment"># After code review and approval</span>
+<span class="command">git checkout main</span>
+<span class="command">git pull origin main</span>
+<span class="command">git merge feature/user-authentication</span>
+<span class="command">git push origin main</span>
+
+<span class="comment"># Clean up</span>
+<span class="command">git branch -d feature/user-authentication</span>
+<span class="command">git push origin --delete feature/user-authentication</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>⚔️ Handling Merge Conflicts</h3>
+                    
+                    <h4>Understanding Conflicts</h4>
+                    <p>Merge conflicts occur when Git cannot automatically resolve differences between two commits.</p>
+                    
+                    <div class="warning-box">
+                        <strong>Conflict Markers:</strong>
+                        <div class="code-block" data-lang="text">
+<<<<<<< HEAD
+Your changes (current branch)
+=======
+Their changes (merging branch)
+>>>>>>> branch-name
+                        </div>
+                    </div>
+
+                    <h4>Resolving Conflicts</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># When merge conflict occurs</span>
+<span class="command">git status</span>  <span class="comment"># Shows conflicted files</span>
+
+<span class="comment"># Edit conflicted files manually or use merge tool</span>
+<span class="command">git mergetool</span>
+
+<span class="comment"># After resolving conflicts</span>
+<span class="command">git add conflicted-file.txt</span>
+<span class="command">git commit</span>  <span class="comment"># Complete the merge</span>
+
+<span class="comment"># Or abort the merge</span>
+<span class="command">git merge --abort</span>
+                    </div>
+
+                    <h4>Merge Tools</h4>
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Configure Merge Tool</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Set VS Code as merge tool</span>
+<span class="command">git config --global merge.tool vscode</span>
+<span class="command">git config --global mergetool.vscode.cmd 'code --wait $MERGED'</span>
+
+<span class="comment"># Set Vim as merge tool</span>
+<span class="command">git config --global merge.tool vimdiff</span>
+
+<span class="comment"># Use merge tool</span>
+<span class="command">git mergetool</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Popular Merge Tools</h5>
+                            <ul>
+                                <li><strong>VS Code:</strong> Built-in merge conflict resolution</li>
+                                <li><strong>Vim/Neovim:</strong> vimdiff for terminal users</li>
+                                <li><strong>Meld:</strong> Visual diff and merge tool</li>
+                                <li><strong>KDiff3:</strong> Cross-platform merge tool</li>
+                                <li><strong>P4Merge:</strong> Perforce visual merge tool</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="lab-exercise">
+                        <h4>🧪 Lab 2: Handling Merge Conflicts</h4>
+                        <div class="code-block" data-lang="bash">
+<span class="comment"># 1. Create conflicting branches</span>
+<span class="command">git checkout -b branch-a</span>
+<span class="command">echo <span class="string">"Hello from Branch A"</span> > conflict.txt</span>
+<span class="command">git add conflict.txt</span>
+<span class="command">git commit -m <span class="string">"Add greeting from branch A"</span></span>
+
+<span class="command">git checkout main</span>
+<span class="command">git checkout -b branch-b</span>
+<span class="command">echo <span class="string">"Hello from Branch B"</span> > conflict.txt</span>
+<span class="command">git add conflict.txt</span>
+<span class="command">git commit -m <span class="string">"Add greeting from branch B"</span></span>
+
+<span class="comment"># 2. Try to merge (will cause conflict)</span>
+<span class="command">git checkout main</span>
+<span class="command">git merge branch-a</span>  <span class="comment"># This will work</span>
+<span class="command">git merge branch-b</span>  <span class="comment"># This will cause conflict</span>
+
+<span class="comment"># 3. Resolve conflict</span>
+<span class="comment"># Edit conflict.txt to resolve</span>
+<span class="command">echo <span class="string">"Hello from both branches!"</span> > conflict.txt</span>
+<span class="command">git add conflict.txt</span>
+<span class="command">git commit -m <span class="string">"Resolve merge conflict"</span></span>
+
+<span class="comment"># 4. Clean up</span>
+<span class="command">git branch -d branch-a branch-b</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🔧 Advanced Git Features</h3>
+                    
+                    <h4>Git Stash</h4>
+                    <p>Temporarily save changes without committing them</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Stash current changes</span>
+<span class="command">git stash</span>
+
+<span class="comment"># Stash with message</span>
+<span class="command">git stash save <span class="string">"Work in progress on feature X"</span></span>
+
+<span class="comment"># List stashes</span>
+<span class="command">git stash list</span>
+
+<span class="comment"># Apply latest stash</span>
+<span class="command">git stash apply</span>
+
+<span class="comment"># Apply and remove stash</span>
+<span class="command">git stash pop</span>
+
+<span class="comment"># Apply specific stash</span>
+<span class="command">git stash apply stash@{2}</span>
+
+<span class="comment"># Drop stash</span>
+<span class="command">git stash drop stash@{1}</span>
+
+<span class="comment"># Clear all stashes</span>
+<span class="command">git stash clear</span>
+
+<span class="comment"># Stash including untracked files</span>
+<span class="command">git stash -u</span>
+                    </div>
+
+                    <h4>Cherry Picking</h4>
+                    <p>Apply specific commits from one branch to another</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Cherry pick a specific commit</span>
+<span class="command">git cherry-pick abc1234</span>
+
+<span class="comment"># Cherry pick multiple commits</span>
+<span class="command">git cherry-pick abc1234 def5678</span>
+
+<span class="comment"># Cherry pick a range of commits</span>
+<span class="command">git cherry-pick abc1234..def5678</span>
+
+<span class="comment"># Cherry pick without committing</span>
+<span class="command">git cherry-pick --no-commit abc1234</span>
+
+<span class="comment"># Continue cherry pick after resolving conflicts</span>
+<span class="command">git cherry-pick --continue</span>
+
+<span class="comment"># Abort cherry pick</span>
+<span class="command">git cherry-pick --abort</span>
+                    </div>
+
+                    <h4>Git Reset and Revert</h4>
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>git reset</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Soft reset (keep changes staged)</span>
+<span class="command">git reset --soft HEAD~1</span>
+
+<span class="comment"># Mixed reset (unstage changes)</span>
+<span class="command">git reset HEAD~1</span>
+<span class="command">git reset --mixed HEAD~1</span>
+
+<span class="comment"># Hard reset (discard changes)</span>
+<span class="command">git reset --hard HEAD~1</span>
+
+<span class="comment"># Reset to specific commit</span>
+<span class="command">git reset --hard abc1234</span>
+                            </div>
+                            <p><em>Changes history (dangerous on shared branches)</em></p>
+                        </div>
+                        <div class="card">
+                            <h5>git revert</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Revert specific commit</span>
+<span class="command">git revert abc1234</span>
+
+<span class="comment"># Revert multiple commits</span>
+<span class="command">git revert abc1234 def5678</span>
+
+<span class="comment"># Revert without committing</span>
+<span class="command">git revert --no-commit abc1234</span>
+
+<span class="comment"># Revert merge commit</span>
+<span class="command">git revert -m 1 abc1234</span>
+                            </div>
+                            <p><em>Creates new commits (safe for shared branches)</em></p>
+                        </div>
+                    </div>
+
+                    <h4>Git Reflog</h4>
+                    <p>Reference log shows where your HEAD and branch references have been</p>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Show reflog</span>
+<span class="command">git reflog</span>
+
+<span class="comment"># Show reflog for specific branch</span>
+<span class="command">git reflog show main</span>
+
+<span class="comment"># Recover lost commits</span>
+<span class="command">git checkout abc1234</span>  <span class="comment"># from reflog</span>
+<span class="command">git checkout -b recovery-branch</span>
+
+<span class="comment"># Reset to previous state</span>
+<span class="command">git reset --hard HEAD@{2}</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🪝 Git Hooks</h3>
+                    
+                    <h4>Understanding Git Hooks</h4>
+                    <p>Git hooks are scripts that run automatically at certain points in the Git workflow.</p>
+                    
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Client-Side Hooks</h5>
+                            <ul>
+                                <li><strong>pre-commit:</strong> Before commit is created</li>
+                                <li><strong>prepare-commit-msg:</strong> Before commit message editor</li>
+                                <li><strong>commit-msg:</strong> Validate commit message</li>
+                                <li><strong>post-commit:</strong> After commit is created</li>
+                                <li><strong>pre-push:</strong> Before push to remote</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>Server-Side Hooks</h5>
+                            <ul>
+                                <li><strong>pre-receive:</strong> Before any refs are updated</li>
+                                <li><strong>update:</strong> Before each ref is updated</li>
+                                <li><strong>post-receive:</strong> After all refs are updated</li>
+                                <li><strong>post-update:</strong> After refs are updated</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <h4>Creating Git Hooks</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Navigate to hooks directory</span>
+<span class="command">cd .git/hooks</span>
+
+<span class="comment"># Create pre-commit hook</span>
+<span class="command">cat > pre-commit << 'EOF'</span>
+#!/bin/sh
+# Run tests before commit
+npm test
+if [ $? -ne 0 ]; then
+    echo "Tests failed. Commit aborted."
+    exit 1
+fi
+EOF
+
+<span class="comment"># Make hook executable</span>
+<span class="command">chmod +x pre-commit</span>
+                    </div>
+
+                    <h4>Example: Commit Message Hook</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Create commit-msg hook</span>
+<span class="command">cat > .git/hooks/commit-msg << 'EOF'</span>
+#!/bin/sh
+# Ensure commit message follows conventional commits format
+
+commit_regex='^(feat|fix|docs|style|refactor|test|chore)(\(.+\))?: .{1,50}'
+
+if ! grep -qE "$commit_regex" "$1"; then
+    echo "Invalid commit message format!"
+    echo "Format: type(scope): description"
+    echo "Example: feat(auth): add user login functionality"
+    exit 1
+fi
+EOF
+
+<span class="command">chmod +x .git/hooks/commit-msg</span>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Popular Hook Tools:</strong>
+                        <ul>
+                            <li><strong>Husky:</strong> Git hooks for Node.js projects</li>
+                            <li><strong>pre-commit:</strong> Python-based hook framework</li>
+                            <li><strong>lefthook:</strong> Fast and powerful Git hooks manager</li>
+                            <li><strong>lint-staged:</strong> Run linters on staged files</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="lab-exercise">
+                    <h4>🧪 Lab 3: Advanced Git Operations</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># 1. Practice stashing</span>
+<span class="command">echo <span class="string">"Work in progress"</span> > wip.txt</span>
+<span class="command">git add wip.txt</span>
+<span class="command">git stash save <span class="string">"WIP: new feature"</span></span>
+
+<span class="comment"># 2. Work on something else</span>
+<span class="command">echo <span class="string">"Hotfix content"</span> > hotfix.txt</span>
+<span class="command">git add hotfix.txt</span>
+<span class="command">git commit -m <span class="string">"Hotfix: critical bug"</span></span>
+
+<span class="comment"># 3. Return to stashed work</span>
+<span class="command">git stash pop</span>
+<span class="command">git commit -m <span class="string">"Complete new feature"</span></span>
+
+<span class="comment"># 4. Practice cherry-picking</span>
+<span class="command">git checkout -b feature-branch</span>
+<span class="command">echo <span class="string">"Feature A"</span> > feature-a.txt</span>
+<span class="command">git add feature-a.txt</span>
+<span class="command">git commit -m <span class="string">"Add feature A"</span></span>
+
+<span class="command">echo <span class="string">"Feature B"</span> > feature-b.txt</span>
+<span class="command">git add feature-b.txt</span>
+<span class="command">git commit -m <span class="string">"Add feature B"</span></span>
+
+<span class="comment"># 5. Cherry-pick only feature A to main</span>
+<span class="command">git checkout main</span>
+<span class="command">git cherry-pick HEAD~1</span>  <span class="comment"># Pick feature A commit</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DAY 14: GIT WORKFLOWS & CI/CD INTEGRATION -->
+            <section id="day14" class="day-section">
+                <div class="day-header">
+                    <h2>Day 14: Git Workflows & CI/CD Integration</h2>
+                    <p class="day-subtitle">Production-Ready Git Strategies & DevOps Integration</p>
+                </div>
+
+                <div class="section">
+                    <h3>🎯 Learning Objectives</h3>
+                    <div class="success-box">
+                        <strong>By the end of Day 14, you will:</strong>
+                        <ul>
+                            <li>Master industry-standard Git workflows</li>
+                            <li>Integrate Git with CI/CD pipelines</li>
+                            <li>Implement semantic versioning and tagging</li>
+                            <li>Set up automated testing and deployment</li>
+                            <li>Understand Git security best practices</li>
+                            <li>Configure advanced Git workflows for teams</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🔄 Git Workflow Strategies</h3>
+                    
+                    <h4>1. Git Flow</h4>
+                    <p>A branching model designed around project releases with specific branch purposes.</p>
+                    
+                    <div class="git-flow-diagram">
+                        <div style="font-family: monospace; text-align: left; padding: 1rem; background: #f8f9fa;">
+                            <div><strong style="color: #2c3e50;">main</strong>        ●─────●─────●─────●─────●</div>
+                            <div>            ↑     ↑     ↑     ↑     ↑</div>
+                            <div><strong style="color: #3498db;">develop</strong>     ●─●─●─●─●─●─●─●─●─●─●─●─●</div>
+                            <div>            ↗ ↘ ↗ ↘ ↗ ↘ ↗ ↘</div>
+                            <div><strong style="color: #27ae60;">feature</strong>       ●─●   ●─●   ●─●</div>
+                            <div><strong style="color: #e74c3c;">hotfix</strong>          ●─●</div>
+                            <div><strong style="color: #f39c12;">release</strong>           ●─●─●</div>
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Branch Types</h5>
+                            <ul>
+                                <li><strong>main:</strong> Production-ready code</li>
+                                <li><strong>develop:</strong> Integration branch</li>
+                                <li><strong>feature/*:</strong> New features</li>
+                                <li><strong>release/*:</strong> Release preparation</li>
+                                <li><strong>hotfix/*:</strong> Critical fixes</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>Git Flow Commands</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="comment"># Initialize git flow</span>
+<span class="command">git flow init</span>
+
+<span class="comment"># Start feature</span>
+<span class="command">git flow feature start new-feature</span>
+
+<span class="comment"># Finish feature</span>
+<span class="command">git flow feature finish new-feature</span>
+
+<span class="comment"># Start release</span>
+<span class="command">git flow release start 1.0.0</span>
+
+<span class="comment"># Start hotfix</span>
+<span class="command">git flow hotfix start critical-fix</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>2. GitHub Flow</h4>
+                    <p>A simpler workflow focused on continuous deployment.</p>
+                    
+                    <div class="git-flow-diagram">
+                        <div style="font-family: monospace; text-align: left; padding: 1rem; background: #f8f9fa;">
+                            <div><strong style="color: #2c3e50;">main</strong>     ●─────●─────●─────●─────●</div>
+                            <div>              ↗ ↘   ↗ ↘   ↗ ↘</div>
+                            <div><strong style="color: #27ae60;">feature</strong>      ●───● ●───● ●───●</div>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>GitHub Flow Steps:</strong>
+                        <ol>
+                            <li>Create feature branch from main</li>
+                            <li>Make changes and commit</li>
+                            <li>Open Pull Request</li>
+                            <li>Code review and discussion</li>
+                            <li>Deploy for testing</li>
+                            <li>Merge to main</li>
+                        </ol>
+                    </div>
+
+                    <h4>3. GitLab Flow</h4>
+                    <p>Combines feature-driven development with issue tracking.</p>
+                    
+                    <div class="three-column">
+                        <div class="card">
+                            <h5>Environment Branches</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div>main → staging → production</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Release Branches</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div>main → 2-3-stable → 2-4-stable</div>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Issue Branches</h5>
+                            <div style="font-family: monospace; font-size: 0.9rem;">
+                                <div>main → issue-123 → main</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <h4>Choosing the Right Workflow</h4>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Workflow</th>
+                                <th>Best For</th>
+                                <th>Complexity</th>
+                                <th>Release Cycle</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Git Flow</strong></td>
+                                <td>Scheduled releases, large teams</td>
+                                <td>High</td>
+                                <td>Planned releases</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitHub Flow</strong></td>
+                                <td>Continuous deployment, web apps</td>
+                                <td>Low</td>
+                                <td>Continuous</td>
+                            </tr>
+                            <tr>
+                                <td><strong>GitLab Flow</strong></td>
+                                <td>Multiple environments, issue tracking</td>
+                                <td>Medium</td>
+                                <td>Flexible</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="section">
+                    <h3>🏷️ Semantic Versioning & Tagging</h3>
+                    
+                    <h4>Semantic Versioning (SemVer)</h4>
+                    <div class="highlight-box">
+                        <strong>Version Format: MAJOR.MINOR.PATCH</strong>
+                        <ul>
+                            <li><strong>MAJOR:</strong> Breaking changes</li>
+                            <li><strong>MINOR:</strong> New features (backward compatible)</li>
+                            <li><strong>PATCH:</strong> Bug fixes (backward compatible)</li>
+                        </ul>
+                        <p><strong>Example:</strong> 2.1.3 → 2.2.0 (new feature) → 3.0.0 (breaking change)</p>
+                    </div>
+
+                    <h4>Git Tagging</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Create lightweight tag</span>
+<span class="command">git tag v1.0.0</span>
+
+<span class="comment"># Create annotated tag (recommended)</span>
+<span class="command">git tag -a v1.0.0 -m <span class="string">"Release version 1.0.0"</span></span>
+
+<span class="comment"># Tag specific commit</span>
+<span class="command">git tag -a v1.0.0 abc1234 -m <span class="string">"Release version 1.0.0"</span></span>
+
+<span class="comment"># List tags</span>
+<span class="command">git tag</span>
+<span class="command">git tag -l <span class="string">"v1.*"</span></span>
+
+<span class="comment"># Show tag information</span>
+<span class="command">git show v1.0.0</span>
+
+<span class="comment"># Push tags to remote</span>
+<span class="command">git push origin v1.0.0</span>
+<span class="command">git push origin --tags</span>
+
+<span class="comment"># Delete tag</span>
+<span class="command">git tag -d v1.0.0</span>
+<span class="command">git push origin --delete v1.0.0</span>
+
+<span class="comment"># Checkout specific tag</span>
+<span class="command">git checkout v1.0.0</span>
+                    </div>
+
+                    <h4>Automated Versioning</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Using conventional commits for automated versioning</span>
+<span class="command">npm install -g standard-version</span>
+
+<span class="comment"># Generate changelog and bump version</span>
+<span class="command">standard-version</span>
+
+<span class="comment"># First release</span>
+<span class="command">standard-version --first-release</span>
+
+<span class="comment"># Pre-release</span>
+<span class="command">standard-version --prerelease alpha</span>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🔄 CI/CD Integration</h3>
+                    
+                    <h4>GitHub Actions Workflow</h4>
+                    <div class="code-block" data-lang="yaml">
+<span class="comment"># .github/workflows/ci.yml</span>
+<span class="keyword">name:</span> CI/CD Pipeline
+
+<span class="keyword">on:</span>
+  <span class="keyword">push:</span>
+    <span class="keyword">branches:</span> [ main, develop ]
+  <span class="keyword">pull_request:</span>
+    <span class="keyword">branches:</span> [ main ]
+
+<span class="keyword">jobs:</span>
+  <span class="keyword">test:</span>
+    <span class="keyword">runs-on:</span> ubuntu-latest
+    
+    <span class="keyword">steps:</span>
+    - <span class="keyword">uses:</span> actions/checkout@v3
+    
+    - <span class="keyword">name:</span> Setup Node.js
+      <span class="keyword">uses:</span> actions/setup-node@v3
+      <span class="keyword">with:</span>
+        <span class="keyword">node-version:</span> <span class="string">'18'</span>
+        
+    - <span class="keyword">name:</span> Install dependencies
+      <span class="keyword">run:</span> npm ci
+      
+    - <span class="keyword">name:</span> Run tests
+      <span class="keyword">run:</span> npm test
+      
+    - <span class="keyword">name:</span> Run linting
+      <span class="keyword">run:</span> npm run lint
+
+  <span class="keyword">deploy:</span>
+    <span class="keyword">needs:</span> test
+    <span class="keyword">runs-on:</span> ubuntu-latest
+    <span class="keyword">if:</span> github.ref == 'refs/heads/main'
+    
+    <span class="keyword">steps:</span>
+    - <span class="keyword">uses:</span> actions/checkout@v3
+    
+    - <span class="keyword">name:</span> Deploy to production
+      <span class="keyword">run:</span> |
+        echo "Deploying to production..."
+        # Add deployment commands here
+                    </div>
+
+                    <h4>GitLab CI/CD Pipeline</h4>
+                    <div class="code-block" data-lang="yaml">
+<span class="comment"># .gitlab-ci.yml</span>
+<span class="keyword">stages:</span>
+  - test
+  - build
+  - deploy
+
+<span class="keyword">variables:</span>
+  <span class="keyword">NODE_VERSION:</span> <span class="string">"18"</span>
+
+<span class="keyword">test:</span>
+  <span class="keyword">stage:</span> test
+  <span class="keyword">image:</span> node:$NODE_VERSION
+  <span class="keyword">script:</span>
+    - npm ci
+    - npm test
+    - npm run lint
+  <span class="keyword">coverage:</span> '/Lines\s*:\s*(\d+\.\d+)%/'
+
+<span class="keyword">build:</span>
+  <span class="keyword">stage:</span> build
+  <span class="keyword">image:</span> node:$NODE_VERSION
+  <span class="keyword">script:</span>
+    - npm ci
+    - npm run build
+  <span class="keyword">artifacts:</span>
+    <span class="keyword">paths:</span>
+      - dist/
+    <span class="keyword">expire_in:</span> 1 hour
+
+<span class="keyword">deploy_staging:</span>
+  <span class="keyword">stage:</span> deploy
+  <span class="keyword">script:</span>
+    - echo "Deploying to staging..."
+  <span class="keyword">only:</span>
+    - develop
+
+<span class="keyword">deploy_production:</span>
+  <span class="keyword">stage:</span> deploy
+  <span class="keyword">script:</span>
+    - echo "Deploying to production..."
+  <span class="keyword">only:</span>
+    - main
+  <span class="keyword">when:</span> manual
+                    </div>
+
+                    <h4>Jenkins Pipeline</h4>
+                    <div class="code-block" data-lang="groovy">
+<span class="comment">// Jenkinsfile</span>
+<span class="keyword">pipeline</span> {
+    <span class="keyword">agent</span> <span class="keyword">any</span>
+    
+    <span class="keyword">stages</span> {
+        <span class="keyword">stage</span>(<span class="string">'Checkout'</span>) {
+            <span class="keyword">steps</span> {
+                <span class="command">checkout scm</span>
+            }
+        }
+        
+        <span class="keyword">stage</span>(<span class="string">'Test'</span>) {
+            <span class="keyword">steps</span> {
+                <span class="command">sh 'npm ci'</span>
+                <span class="command">sh 'npm test'</span>
+                <span class="command">sh 'npm run lint'</span>
+            }
+        }
+        
+        <span class="keyword">stage</span>(<span class="string">'Build'</span>) {
+            <span class="keyword">steps</span> {
+                <span class="command">sh 'npm run build'</span>
+            }
+        }
+        
+        <span class="keyword">stage</span>(<span class="string">'Deploy'</span>) {
+            <span class="keyword">when</span> {
+                <span class="keyword">branch</span> <span class="string">'main'</span>
+            }
+            <span class="keyword">steps</span> {
+                <span class="command">sh 'echo "Deploying to production..."'</span>
+            }
+        }
+    }
+    
+    <span class="keyword">post</span> {
+        <span class="keyword">always</span> {
+            <span class="command">cleanWs()</span>
+        }
+    }
+}
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🔒 Git Security Best Practices</h3>
+                    
+                    <h4>Commit Signing</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Generate GPG key</span>
+<span class="command">gpg --full-generate-key</span>
+
+<span class="comment"># List GPG keys</span>
+<span class="command">gpg --list-secret-keys --keyid-format LONG</span>
+
+<span class="comment"># Configure Git to use GPG key</span>
+<span class="command">git config --global user.signingkey YOUR_GPG_KEY_ID</span>
+<span class="command">git config --global commit.gpgsign true</span>
+
+<span class="comment"># Sign specific commit</span>
+<span class="command">git commit -S -m <span class="string">"Signed commit"</span></span>
+
+<span class="comment"># Verify signatures</span>
+<span class="command">git log --show-signature</span>
+                    </div>
+
+                    <h4>SSH Key Authentication</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Generate SSH key</span>
+<span class="command">ssh-keygen -t ed25519 -C <span class="string">"your.email@example.com"</span></span>
+
+<span class="comment"># Add SSH key to ssh-agent</span>
+<span class="command">eval <span class="string">"$(ssh-agent -s)"</span></span>
+<span class="command">ssh-add ~/.ssh/id_ed25519</span>
+
+<span class="comment"># Test SSH connection</span>
+<span class="command">ssh -T git@github.com</span>
+
+<span class="comment"># Clone with SSH</span>
+<span class="command">git clone git@github.com:user/repo.git</span>
+                    </div>
+
+                    <h4>Security Checklist</h4>
+                    <div class="two-column">
+                        <div class="success-box">
+                            <strong>✅ Do:</strong>
+                            <ul>
+                                <li>Use SSH keys for authentication</li>
+                                <li>Sign important commits</li>
+                                <li>Use .gitignore for sensitive files</li>
+                                <li>Enable two-factor authentication</li>
+                                <li>Regularly rotate access tokens</li>
+                                <li>Use branch protection rules</li>
+                            </ul>
+                        </div>
+                        <div class="warning-box">
+                            <strong>❌ Don't:</strong>
+                            <ul>
+                                <li>Commit passwords or API keys</li>
+                                <li>Use HTTP for sensitive repositories</li>
+                                <li>Share private keys</li>
+                                <li>Force push to shared branches</li>
+                                <li>Ignore security warnings</li>
+                                <li>Use weak passwords</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="lab-exercise">
+                    <h4>🧪 Lab 4: Complete Git Workflow</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># 1. Set up repository with Git Flow</span>
+<span class="command">mkdir complete-git-project</span>
+<span class="command">cd complete-git-project</span>
+<span class="command">git init</span>
+<span class="command">git flow init</span>
+
+<span class="comment"># 2. Create initial structure</span>
+<span class="command">echo <span class="string">"# Complete Git Project"</span> > README.md</span>
+<span class="command">echo <span class="string">"node_modules/
+.env
+*.log"</span> > .gitignore</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m <span class="string">"Initial commit"</span></span>
+
+<span class="comment"># 3. Start feature development</span>
+<span class="command">git flow feature start user-authentication</span>
+<span class="command">echo <span class="string">"User authentication module"</span> > auth.js</span>
+<span class="command">git add auth.js</span>
+<span class="command">git commit -m <span class="string">"feat: add user authentication module"</span></span>
+
+<span class="comment"># 4. Finish feature</span>
+<span class="command">git flow feature finish user-authentication</span>
+
+<span class="comment"># 5. Create release</span>
+<span class="command">git flow release start 1.0.0</span>
+<span class="command">echo <span class="string">"1.0.0"</span> > VERSION</span>
+<span class="command">git add VERSION</span>
+<span class="command">git commit -m <span class="string">"chore: bump version to 1.0.0"</span></span>
+<span class="command">git flow release finish 1.0.0</span>
+
+<span class="comment"># 6. Create annotated tag</span>
+<span class="command">git tag -a v1.0.0 -m <span class="string">"Release version 1.0.0"</span></span>
+
+<span class="comment"># 7. View project history</span>
+<span class="command">git log --oneline --graph --all</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- COMPREHENSIVE HANDS-ON LABS -->
+            <section id="hands-on" class="day-section">
+                <div class="day-header">
+                    <h2>🧪 Comprehensive Hands-on Labs</h2>
+                    <p class="day-subtitle">Practice All Git Concepts with Real-world Scenarios</p>
+                </div>
+
+                <div class="lab-exercise">
+                    <h4>🧪 Final Project: Complete DevOps Git Workflow</h4>
+                    <p><strong>Scenario:</strong> You're working on a web application with a team. Implement a complete Git workflow from development to production.</p>
+                    
+                    <div class="code-block" data-lang="bash">
+<span class="comment"># Phase 1: Project Setup</span>
+<span class="command">mkdir devops-webapp</span>
+<span class="command">cd devops-webapp</span>
+<span class="command">git init</span>
+<span class="command">git config user.name <span class="string">"Your Name"</span></span>
+<span class="command">git config user.email <span class="string">"your.email@example.com"</span></span>
+
+<span class="comment"># Create project structure</span>
+<span class="command">mkdir -p src tests docs</span>
+<span class="command">echo <span class="string">"# DevOps Web Application"</span> > README.md</span>
+<span class="command">echo <span class="string">"console.log('Hello DevOps!');"</span> > src/app.js</span>
+<span class="command">echo <span class="string">"// Test file"</span> > tests/app.test.js</span>
+
+<span class="comment"># Create .gitignore</span>
+<span class="command">cat > .gitignore << EOF</span>
+node_modules/
+.env
+*.log
+dist/
+.DS_Store
+EOF
+
+<span class="comment"># Initial commit</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m <span class="string">"feat: initial project setup"</span></span>
+
+<span class="comment"># Phase 2: Feature Development</span>
+<span class="command">git checkout -b feature/user-management</span>
+<span class="command">echo <span class="string">"class User { constructor(name) { this.name = name; } }"</span> > src/user.js</span>
+<span class="command">git add src/user.js</span>
+<span class="command">git commit -m <span class="string">"feat: add user management class"</span></span>
+
+<span class="command">echo <span class="string">"User.prototype.login = function() { return 'Logged in'; };"</span> >> src/user.js</span>
+<span class="command">git add src/user.js</span>
+<span class="command">git commit -m <span class="string">"feat: add user login functionality"</span></span>
+
+<span class="comment"># Phase 3: Testing and Integration</span>
+<span class="command">git checkout main</span>
+<span class="command">git merge feature/user-management</span>
+
+<span class="comment"># Phase 4: Hotfix Scenario</span>
+<span class="command">git checkout -b hotfix/security-patch</span>
+<span class="command">echo <span class="string">"// Security patch applied"</span> >> src/app.js</span>
+<span class="command">git add src/app.js</span>
+<span class="command">git commit -m <span class="string">"fix: apply critical security patch"</span></span>
+
+<span class="command">git checkout main</span>
+<span class="command">git merge hotfix/security-patch</span>
+
+<span class="comment"># Phase 5: Release Management</span>
+<span class="command">git tag -a v1.0.0 -m <span class="string">"Release version 1.0.0 - Initial release with user management"</span></span>
+
+<span class="comment"># Phase 6: Collaboration Simulation</span>
+<span class="command">git checkout -b feature/api-integration</span>
+<span class="command">echo <span class="string">"// API integration code"</span> > src/api.js</span>
+<span class="command">git add src/api.js</span>
+<span class="command">git commit -m <span class="string">"feat: add API integration module"</span></span>
+
+<span class="comment"># Simulate conflict</span>
+<span class="command">git checkout main</span>
+<span class="command">echo <span class="string">"// Main branch changes"</span> >> src/app.js</span>
+<span class="command">git add src/app.js</span>
+<span class="command">git commit -m <span class="string">"feat: update main application"</span></span>
+
+<span class="command">git checkout feature/api-integration</span>
+<span class="command">echo <span class="string">"// Feature branch changes"</span> >> src/app.js</span>
+<span class="command">git add src/app.js</span>
+<span class="command">git commit -m <span class="string">"feat: enhance application for API"</span></span>
+
+<span class="comment"># Resolve conflict</span>
+<span class="command">git checkout main</span>
+<span class="command">git merge feature/api-integration</span>
+<span class="comment"># Resolve conflicts manually, then:</span>
+<span class="command">git add src/app.js</span>
+<span class="command">git commit -m <span class="string">"merge: resolve conflicts in app.js"</span></span>
+
+<span class="comment"># Phase 7: Advanced Git Operations</span>
+<span class="command">git log --oneline --graph --all</span>
+<span class="command">git tag -a v1.1.0 -m <span class="string">"Release version 1.1.0 - API integration"</span></span>
+
+<span class="comment"># Clean up</span>
+<span class="command">git branch -d feature/user-management</span>
+<span class="command">git branch -d feature/api-integration</span>
+<span class="command">git branch -d hotfix/security-patch</span>
+
+<span class="comment"># Final project state</span>
+<span class="command">git status</span>
+<span class="command">git log --oneline</span>
+<span class="command">git tag</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- BEST PRACTICES & RESOURCES -->
+            <section id="best-practices" class="day-section">
+                <div class="day-header">
+                    <h2>📚 Best Practices & Resources</h2>
+                    <p class="day-subtitle">Industry Standards & Continuous Learning</p>
+                </div>
+
+                <div class="section">
+                    <h3>🏆 Git Best Practices Summary</h3>
+                    
+                    <div class="three-column">
+                        <div class="card">
+                            <h5>Commit Practices</h5>
+                            <ul>
+                                <li>Write clear, descriptive commit messages</li>
+                                <li>Use conventional commits format</li>
+                                <li>Make atomic commits (one logical change)</li>
+                                <li>Commit frequently, push regularly</li>
+                                <li>Review changes before committing</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>Branching Practices</h5>
+                            <ul>
+                                <li>Use descriptive branch names</li>
+                                <li>Keep branches focused and short-lived</li>
+                                <li>Delete merged branches</li>
+                                <li>Protect main/master branch</li>
+                                <li>Use pull requests for code review</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>Collaboration Practices</h5>
+                            <ul>
+                                <li>Always pull before starting work</li>
+                                <li>Resolve conflicts promptly</li>
+                                <li>Use meaningful PR descriptions</li>
+                                <li>Review code thoroughly</li>
+                                <li>Communicate changes effectively</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>🎯 Key Takeaways from 3-Day Training:</strong>
+                        <ul>
+                            <li><strong>Day 12:</strong> Master Git fundamentals and essential commands</li>
+                            <li><strong>Day 13:</strong> Advanced operations and collaboration workflows</li>
+                            <li><strong>Day 14:</strong> Production-ready workflows and CI/CD integration</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>📖 Learning Resources</h3>
+                    
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>📚 Books & Documentation</h5>
+                            <ul>
+                                <li><a href="https://git-scm.com/book" target="_blank">Pro Git Book</a> - Free comprehensive guide</li>
+                                <li><a href="https://git-scm.com/docs" target="_blank">Official Git Documentation</a></li>
+                                <li><a href="https://www.atlassian.com/git/tutorials" target="_blank">Atlassian Git Tutorials</a></li>
+                                <li><a href="https://learngitbranching.js.org/" target="_blank">Learn Git Branching</a> - Interactive tutorial</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>🛠️ Tools & Extensions</h5>
+                            <ul>
+                                <li><strong>GitKraken:</strong> Visual Git client</li>
+                                <li><strong>Sourcetree:</strong> Free Git GUI</li>
+                                <li><strong>VS Code Git:</strong> Built-in Git integration</li>
+                                <li><strong>GitHub CLI:</strong> Command-line GitHub integration</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>🎓 Online Courses</h5>
+                            <ul>
+                                <li>GitHub Learning Lab</li>
+                                <li>Coursera Git Courses</li>
+                                <li>Udemy Git Masterclass</li>
+                                <li>Pluralsight Git Fundamentals</li>
+                            </ul>
+                        </div>
+                        <div class="card">
+                            <h5>🤝 Communities</h5>
+                            <ul>
+                                <li>Stack Overflow Git Tag</li>
+                                <li>Reddit r/git</li>
+                                <li>Git Users Mailing List</li>
+                                <li>Local Git Meetups</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🚀 Next Steps</h3>
+                    
+                    <div class="success-box">
+                        <strong>Immediate Actions:</strong>
+                        <ol>
+                            <li>Set up your Git configuration properly</li>
+                            <li>Create a personal project and practice all commands</li>
+                            <li>Set up SSH keys for secure authentication</li>
+                            <li>Choose and implement a workflow for your team</li>
+                            <li>Integrate Git with your CI/CD pipeline</li>
+                        </ol>
+                    </div>
+
+                    <div class="info-box">
+                        <strong>Advanced Topics to Explore:</strong>
+                        <ul>
+                            <li>Git internals and object model</li>
+                            <li>Custom Git commands and aliases</li>
+                            <li>Git performance optimization</li>
+                            <li>Large file handling with Git LFS</li>
+                            <li>Git security and compliance</li>
+                        </ul>
+                    </div>
+
+                    <div class="highlight-box">
+                        <strong>🎯 Homework Assignment:</strong>
+                        <ol>
+                            <li>Complete the final project lab</li>
+                            <li>Set up a repository with proper branching strategy</li>
+                            <li>Implement at least 2 Git hooks</li>
+                            <li>Create a CI/CD pipeline using Git</li>
+                            <li>Practice conflict resolution scenarios</li>
+                        </ol>
+                    </div>
+                </div>
+            </section>
+
+            <!-- QUICK REFERENCE -->
+            <section id="resources" class="day-section">
+                <div class="day-header">
+                    <h2>📋 Quick Reference Guide</h2>
+                    <p class="day-subtitle">Essential Commands & Workflows Cheat Sheet</p>
+                </div>
+
+                <div class="section">
+                    <h3>⚡ Essential Commands</h3>
+                    
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Basic Operations</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git init</span>                    <span class="comment"># Initialize repository</span>
+<span class="command">git clone &lt;url&gt;</span>             <span class="comment"># Clone repository</span>
+<span class="command">git status</span>                  <span class="comment"># Check status</span>
+<span class="command">git add &lt;file&gt;</span>              <span class="comment"># Stage changes</span>
+<span class="command">git commit -m "message"</span>     <span class="comment"># Commit changes</span>
+<span class="command">git push</span>                    <span class="comment"># Push to remote</span>
+<span class="command">git pull</span>                    <span class="comment"># Pull from remote</span>
+<span class="command">git log</span>                     <span class="comment"># View history</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Branching</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git branch</span>                  <span class="comment"># List branches</span>
+<span class="command">git branch &lt;name&gt;</span>           <span class="comment"># Create branch</span>
+<span class="command">git checkout &lt;branch&gt;</span>       <span class="comment"># Switch branch</span>
+<span class="command">git checkout -b &lt;branch&gt;</span>    <span class="comment"># Create & switch</span>
+<span class="command">git merge &lt;branch&gt;</span>          <span class="comment"># Merge branch</span>
+<span class="command">git branch -d &lt;branch&gt;</span>      <span class="comment"># Delete branch</span>
+<span class="command">git rebase &lt;branch&gt;</span>         <span class="comment"># Rebase branch</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="two-column">
+                        <div class="card">
+                            <h5>Advanced Operations</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git stash</span>                   <span class="comment"># Stash changes</span>
+<span class="command">git stash pop</span>               <span class="comment"># Apply stash</span>
+<span class="command">git cherry-pick &lt;commit&gt;</span>    <span class="comment"># Cherry pick</span>
+<span class="command">git reset --hard &lt;commit&gt;</span>   <span class="comment"># Hard reset</span>
+<span class="command">git revert &lt;commit&gt;</span>         <span class="comment"># Revert commit</span>
+<span class="command">git tag -a &lt;tag&gt; -m "msg"</span>    <span class="comment"># Create tag</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Remote Operations</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git remote -v</span>               <span class="comment"># List remotes</span>
+<span class="command">git remote add &lt;name&gt; &lt;url&gt;</span>  <span class="comment"># Add remote</span>
+<span class="command">git fetch</span>                   <span class="comment"># Fetch changes</span>
+<span class="command">git push -u origin &lt;branch&gt;</span> <span class="comment"># Push & set upstream</span>
+<span class="command">git push --tags</span>             <span class="comment"># Push tags</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3>🔄 Workflow Quick Reference</h3>
+                    
+                    <div class="three-column">
+                        <div class="card">
+                            <h5>Feature Development</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git checkout main</span>
+<span class="command">git pull origin main</span>
+<span class="command">git checkout -b feature/xyz</span>
+<span class="comment"># Make changes</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "feat: xyz"</span>
+<span class="command">git push -u origin feature/xyz</span>
+<span class="comment"># Create PR</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Hotfix Process</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git checkout main</span>
+<span class="command">git pull origin main</span>
+<span class="command">git checkout -b hotfix/issue</span>
+<span class="comment"># Fix issue</span>
+<span class="command">git add .</span>
+<span class="command">git commit -m "fix: issue"</span>
+<span class="command">git checkout main</span>
+<span class="command">git merge hotfix/issue</span>
+<span class="command">git push origin main</span>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h5>Release Process</h5>
+                            <div class="code-block" data-lang="bash">
+<span class="command">git checkout main</span>
+<span class="command">git pull origin main</span>
+<span class="command">git tag -a v1.0.0 -m "Release 1.0.0"</span>
+<span class="command">git push origin v1.0.0</span>
+<span class="comment"># Deploy to production</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+
+        <footer class="footer">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>📚 Training Series</h4>
+                    <ul>
+                        <li><a href="#day12">Day 12: Git Fundamentals</a></li>
+                        <li><a href="#day13">Day 13: Advanced Git</a></li>
+                        <li><a href="#day14">Day 14: Git Workflows</a></li>
+                        <li><a href="#hands-on">Hands-on Labs</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>🔗 Useful Links</h4>
+                    <ul>
+                        <li><a href="https://git-scm.com/" target="_blank">Official Git Website</a></li>
+                        <li><a href="https://github.com/" target="_blank">GitHub</a></li>
+                        <li><a href="https://gitlab.com/" target="_blank">GitLab</a></li>
+                        <li><a href="https://bitbucket.org/" target="_blank">Bitbucket</a></li>
+                    </ul>
+                </div>
+                <div class="footer-section">
+                    <h4>🎯 Next Steps</h4>
+                    <ul>
+                        <li>Practice daily with Git</li>
+                        <li>Implement team workflows</li>
+                        <li>Explore advanced features</li>
+                        <li>Join Git communities</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 DevOps Training Series - Days 12-14: Git & Version Control Mastery</p>
+                <p>🚀 From Fundamentals to Production-Ready Workflows | Complete Hands-on Training</p>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Progress bar functionality
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Add animation to cards on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        document.querySelectorAll('.card').forEach(card => {
+            card.style.opacity = '0';
+            card.style.transform = 'translateY(20px)';
+            card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+            observer.observe(card);
+        });
+
+        // Print functionality
+        function printPresentation() {
+            window.print();
+        }
+
+        // Add print button (optional)
+        document.addEventListener('DOMContentLoaded', function() {
+            const header = document.querySelector('.header-content');
+            const printBtn = document.createElement('button');
+            printBtn.innerHTML = '🖨️ Print/PDF';
+            printBtn.style.cssText = `
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background: rgba(255,255,255,0.2);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                font-weight: 600;
+                backdrop-filter: blur(10px);
+            `;
+            printBtn.onclick = printPresentation;
+            header.appendChild(printBtn);
+        });
+    </script>
+</body>
+</html>
+        // Progress bar functionality
+        window.addEventListener('scroll', function() {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById('progressBar').style.width = scrolled + '%';
+        });
+
+        // Smooth scrolling for navigation links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+    </script>
+</body>
+</html>
