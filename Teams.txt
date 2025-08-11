@@ -37,3 +37,28 @@ Riya Singh
 Yash Patel
 Saurabh Wakase
 Vishal Kumar
+
+Team 1:
+http://13.201.81.60:8080/
+username: bugbusters
+password: team1@123
+
+TEAM 2
+http://13.203.64.9:8080/
+username: rashi
+password: rashi@123
+
+TEAM 3 
+username: BuildNova
+password: team3@123
+http://15.207.116.242:8080/
+
+TEAM 4
+username: DevopsNation
+password: team4@123
+http://43.204.232.190:8080/
+
+TEAM 5
+username: Cloudhustlers
+password: team5@123
+http://3.109.153.238:8080/
