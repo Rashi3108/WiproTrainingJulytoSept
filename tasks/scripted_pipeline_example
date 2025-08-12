@@ -1,0 +1,32 @@
+node {
+    def mvnHome = tool name: 'maven', type: 'hudson.tasks.Maven$MavenInstallation'
+
+    withEnv([
+        "SONARQUBE_URL=https://d6312cd2eccd.ngrok-free.app/"
+    ]) {
+        withCredentials([string(credentialsId: '', variable: 'SONARQUBE_TOKEN')]) {
+
+            stage('Checkout') {
+                git branch: 'main', credentialsId: '', url: ''
+                sh 'ls -la'
+            }
+
+            stage('Build') {
+                sh "${mvnHome}/bin/mvn clean install"
+            }
+
+            stage('Package') {
+                sh "${mvnHome}/bin/mvn package"
+            }
+
+            stage('SonarQube Analysis') {
+                sh """
+                ${mvnHome}/bin/mvn sonar:sonar \
+                  -Dsonar.projectKey=springboot-demo \
+                  -Dsonar.host.url=https://d6312cd2eccd.ngrok-free.app/ \
+                  -Dsonar.login=$SONARQUBE_TOKEN
+                """
+            }
+        }
+    }
+}
