@@ -13,14 +13,13 @@ Implement the same CI pipeline in **both Declarative** and **Scripted** pipeline
 ---
 
 ## Details
-- **Git Repository:** Use your own or the sample:  
-  `https://github.com/Rashi3108/MySpringBootApp.git`
+- **Git Repository:** Use your own springboot repo and make sure it is a private repo:  
 - **Branch:** `main`
-- **GitHub Credentials ID in Jenkins:** `local-jenkins-rashi`
-- **Maven Tool Name in Jenkins:** `maven`
-- **SonarQube Project Key:** `springboot-demo`
+- **GitHub Credentials ID in Jenkins:**
+- **Maven Tool Name in Jenkins:** 
+- **SonarQube Project Key:**
 - **SonarQube URL:** Use your ngrok/public URL for SonarQube server
-- **SonarQube Token Credential ID:** `local-sonarqube`
+- **SonarQube Token Credential ID:** 
 
 ---
 
@@ -44,3 +43,5 @@ Implement the **same stages** in Scripted syntax using:
 - Use the same secure credential handling for the SonarQube token
 
 ---
+
+Commit the Jenkinsfile in git repository and submit the repo URL after completion.
